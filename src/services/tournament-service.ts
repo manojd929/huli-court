@@ -241,9 +241,15 @@ export async function createTournament(
       where: { tournamentId: tournament.id },
       select: { id: true, stableKey: true },
     });
+    // Default caps must be permissive (never 0): a cap of 0 blocks EVERY bid
+    // and draft pick in that category out of the box. Commissioners tighten
+    // caps for composition rules from the Rules page ("Auto-set from roster"
+    // or manual). We fall back to picksPerTeam so no category is ever an
+    // accidental hard block; legacy stable keys keep their designed caps.
+    const defaultSquadCap = input.picksPerTeam ?? DEFAULT_PICKS_PER_TEAM;
     await tx.squadRule.createMany({
       data: rosterRows.map((row) => {
-        let maxCount = 0;
+        let maxCount = defaultSquadCap;
         if (row.stableKey !== null) {
           const cap = DEFAULT_ROSTER_CATEGORY_SQUAD_CAPS[row.stableKey];
           if (typeof cap === "number") {
@@ -795,9 +801,12 @@ export async function reconcileSquadRulesForTournament(
   });
 
   if (teamCount === 0) {
+    // With no teams we cannot compute balanced per-team caps yet. Reset to the
+    // permissive default (picksPerTeam) rather than 0 — a 0 cap would silently
+    // block every bid/pick once teams and players are added later.
     await prisma.squadRule.updateMany({
       where: { tournamentId },
-      data: { maxCount: 0 },
+      data: { maxCount: tournament.picksPerTeam },
     });
     return;
   }

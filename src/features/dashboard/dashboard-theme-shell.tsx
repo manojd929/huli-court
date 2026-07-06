@@ -57,7 +57,9 @@ export function DashboardThemeShell({
         </div>
       </header>
 
-      <div className="relative z-10">{children}</div>
+      {/* <main> gives the page a single content landmark and nests the page's
+          own hero <header> inside it so it is not exposed as a second banner. */}
+      <main className="relative z-10">{children}</main>
     </DashboardFloorBackdropShell>
   );
 }

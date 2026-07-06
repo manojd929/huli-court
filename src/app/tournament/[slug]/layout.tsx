@@ -39,9 +39,9 @@ export default async function TournamentLayout({
         draftPhase={tournament.draftPhase}
         navGroups={navGroups}
       />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="py-6 sm:py-10">{children}</div>
-      </div>
+      </main>
     </TournamentThemeShell>
   );
 }

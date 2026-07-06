@@ -218,7 +218,12 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
               <div className="flex flex-wrap gap-2">
                 <Button
                   disabled={busy || currentLot.currentBid === null}
-                  className="bg-brand text-brand-foreground hover:bg-brand/90 focus-visible:ring-brand/50"
+                  title={
+                    currentLot.currentBid === null
+                      ? "No bids yet — a franchise must bid before you can hammer the sale. Use Unsold to send this player back to the pool."
+                      : undefined
+                  }
+                  className="bg-brand text-brand-foreground hover:bg-brand/90 focus-visible:ring-brand/50 disabled:opacity-50 disabled:hover:bg-brand disabled:cursor-not-allowed"
                   onClick={() =>
                     runAction(
                       () =>

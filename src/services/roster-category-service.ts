@@ -6,8 +6,26 @@ import {
   getDefaultRosterCategorySeeds,
   type TournamentFormat,
 } from "@/lib/roster/default-roster-category-seeds";
+import { DEFAULT_PICKS_PER_TEAM } from "@/constants/tournament-defaults";
 import { prisma } from "@/lib/prisma";
 import { TournamentServiceError } from "@/services/tournament-errors";
+
+/**
+ * Permissive default squad cap for a newly created/restored roster group.
+ * Must never be 0 — a 0 cap silently blocks every bid and draft pick in that
+ * category. Falls back to picksPerTeam so the group imposes no accidental
+ * limit; commissioners tighten caps from the Rules page.
+ */
+async function defaultSquadCapForTournament(
+  client: Prisma.TransactionClient | typeof prisma,
+  tournamentId: string,
+): Promise<number> {
+  const tournament = await client.tournament.findFirst({
+    where: { id: tournamentId },
+    select: { picksPerTeam: true },
+  });
+  return tournament?.picksPerTeam ?? DEFAULT_PICKS_PER_TEAM;
+}
 
 import type {
   ArchiveRosterCategoryInput,
@@ -110,7 +128,7 @@ export async function createRosterCategory(
     data: {
       tournamentId,
       rosterCategoryId: created.id,
-      maxCount: 0,
+      maxCount: await defaultSquadCapForTournament(prisma, tournamentId),
     },
   });
 }
@@ -225,7 +243,7 @@ export async function restoreRosterCategory(
         data: {
           tournamentId,
           rosterCategoryId: existing.id,
-          maxCount: 0,
+          maxCount: await defaultSquadCapForTournament(tx, tournamentId),
         },
       });
     }
