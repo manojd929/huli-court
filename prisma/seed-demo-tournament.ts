@@ -17,7 +17,7 @@ const MAX_AUTH_LIST_PAGES = 50;
 const QA_ADMIN = {
   email: "admin@draftforge.com",
   password: "admin@draftforge",
-  displayName: "DraftForge Admin",
+  displayName: "HuliCourt Admin",
 } as const;
 
 const QA_OWNERS = [

@@ -69,6 +69,9 @@ function handle(err: unknown): TournamentActionResult {
   if (err instanceof TournamentServiceError) {
     return { ok: false, error: err.message };
   }
+  // No error tracker yet — at least keep the stack in server logs so prod
+  // failures are diagnosable instead of vanishing behind a generic message.
+  console.error("[tournament-action] unexpected error:", err);
   return { ok: false, error: "Unexpected error. Try again." };
 }
 
@@ -116,8 +119,9 @@ export async function createTournamentAction(
     if (!profile || profile.role !== UserRole.ADMIN) {
       return { ok: false, error: "Only admins can create tournaments." };
     }
-    const { slug } = await createTournament(user.id, parsed.data);
+    const { slug, leagueSlug } = await createTournament(user.id, parsed.data);
     revalidatePath("/dashboard");
+    if (leagueSlug) revalidatePath(`/league/${leagueSlug}`);
     return { ok: true, slug };
   } catch (e) {
     if (e instanceof Error && e.message === "Unauthorized") {

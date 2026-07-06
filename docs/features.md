@@ -1,7 +1,7 @@
 # Feature Documentation
 
 ## Purpose
-DraftForge is a tournament operations platform for running live snake drafts and then managing post-draft fixtures and results for badminton-style leagues. The product is optimized for two roles:
+HuliCourt is a tournament operations platform for running live snake drafts and then managing post-draft fixtures and results for badminton-style leagues. The product is optimized for two roles:
 - `ADMIN` users who create and operate tournaments.
 - `OWNER` users who represent a franchise and participate in the live draft for their assigned team.
 
@@ -34,7 +34,7 @@ The implementation is centered on a tournament slug workspace at `/tournament/[s
 - Bulk player updates are supported for category reassignment and entry-fee flags.
 
 ### 5. Owner-backed roster rows
-- DraftForge models a franchise owner as both a login and, when needed, a linked player row via `Player.linkedOwnerUserId`.
+- HuliCourt models a franchise owner as both a login and, when needed, a linked player row via `Player.linkedOwnerUserId`.
 - These owner-backed rows are treated as real roster members.
 - They are excluded from the draft nomination pool, but still count toward team composition, roster math, and generated fixtures.
 - Sync logic keeps these rows aligned with current owner assignments and cleans up stale stub rows safely.

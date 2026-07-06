@@ -55,7 +55,7 @@ export function PlayersSetupToolbar({
             <SheetHeader className="border-b border-border/60 pb-4">
               <SheetTitle>Add player</SheetTitle>
               <SheetDescription>
-                Capture roster details privately on this desk; share credentials outside DraftForge when
+                Capture roster details privately on this desk; share credentials outside HuliCourt when
                 you invite franchise owners.
               </SheetDescription>
             </SheetHeader>

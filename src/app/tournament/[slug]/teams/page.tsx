@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import {
   Table,
@@ -16,7 +16,7 @@ import { TeamsSetupToolbar } from "@/features/tournaments/teams-setup-toolbar";
 import { DraftPhase } from "@/generated/prisma/enums";
 import { buildFranchiseOwnerAssigneeList } from "@/lib/data/franchise-owner-assignees";
 import { getSessionUser } from "@/lib/auth/session";
-import { getTournamentBySlug } from "@/lib/data/tournament-access";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import { prisma } from "@/lib/prisma";
 import { isLeagueImageUploadConfigured } from "@/lib/uploads/league-image-blob-env";
 import { isLeagueOwnerInviteConfigured } from "@/services/league-account-service";
@@ -34,10 +34,7 @@ export default async function TeamsPage({ params }: PageProps) {
     redirect(`/login?next=/tournament/${slug}/teams`);
   }
 
-  const tournament = await getTournamentBySlug(slug);
-  if (!tournament) {
-    notFound();
-  }
+  const tournament = await requireTournamentViewAccess(slug, user.id);
   const isCommissioner = tournament.createdById === user.id;
 
   const invitingSupported = isLeagueOwnerInviteConfigured();

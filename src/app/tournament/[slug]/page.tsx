@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import {
 import { TournamentBrandingForm } from "@/features/tournaments/tournament-branding-form";
 import { getSessionUser } from "@/lib/auth/session";
 import { formatMinorUnitsForDisplay } from "@/lib/currency/player-entry-fee";
-import { getTournamentBySlug } from "@/lib/data/tournament-access";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import { prisma } from "@/lib/prisma";
 import { isLeagueImageUploadConfigured } from "@/lib/uploads/league-image-blob-env";
 
@@ -20,13 +20,12 @@ interface PageProps {
 
 export default async function TournamentHubPage({ params }: PageProps) {
   const { slug } = await params;
-  const tournament = await getTournamentBySlug(slug);
-  if (!tournament) {
-    notFound();
-  }
-
   const user = await getSessionUser();
-  const isCommissioner = Boolean(user && user.id === tournament.createdById);
+  if (!user) {
+    redirect(`/login?next=/tournament/${slug}`);
+  }
+  const tournament = await requireTournamentViewAccess(slug, user.id);
+  const isCommissioner = user.id === tournament.createdById;
   const canEditBranding = isCommissioner;
   const uploadsEnabled = isLeagueImageUploadConfigured();
   const [playersCount, teamsCount, rosterGroups, groupedPlayers] = await Promise.all([

@@ -47,14 +47,19 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  /* Brand accent: warm amber/gold — the "spotlight / gavel / prize" of a live auction. */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-soft: var(--brand-soft);
 }
 
 :root {
   --font-sans: var(--font-geist-sans);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --background: oklch(0.995 0.006 95);
+  --foreground: oklch(0.145 0.004 80);
+  --card: oklch(1 0.002 95);
+  --card-foreground: oklch(0.145 0.004 80);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
@@ -66,9 +71,14 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.916 0.004 90);
+  --input: oklch(0.916 0.004 90);
+  --ring: oklch(0.78 0.145 84);
+  /* Brand — amber/gold */
+  --brand: oklch(0.83 0.16 85);
+  --brand-foreground: oklch(0.28 0.05 74);
+  --brand-accent: oklch(0.6 0.13 66);
+  --brand-soft: oklch(0.965 0.05 92);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -86,10 +96,10 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
+  --background: oklch(0.16 0.008 82);
+  --foreground: oklch(0.985 0.003 90);
+  --card: oklch(0.212 0.008 84);
+  --card-foreground: oklch(0.985 0.003 90);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
@@ -101,9 +111,14 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --border: oklch(1 0.02 90 / 11%);
+  --input: oklch(1 0.02 90 / 15%);
+  --ring: oklch(0.78 0.145 84);
+  /* Brand — amber/gold pops against the warm-dark base */
+  --brand: oklch(0.83 0.16 85);
+  --brand-foreground: oklch(0.24 0.045 74);
+  --brand-accent: oklch(0.86 0.15 88);
+  --brand-soft: oklch(0.3 0.05 84);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -126,10 +141,30 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Ambient brand wash behind all content. Full-bleed pages (login/tv) paint
+     their own opaque backgrounds and simply cover this. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(62% 48% at 12% -4%, oklch(0.95 0.1 92 / 0.6), transparent 68%),
+      radial-gradient(48% 42% at 104% 6%, oklch(0.97 0.07 96 / 0.5), transparent 66%),
+      radial-gradient(46% 60% at 96% 108%, oklch(0.99 0.02 96 / 0.7), transparent 64%);
+  }
+  .dark body::before {
+    background:
+      radial-gradient(58% 46% at 92% -6%, oklch(0.84 0.15 86 / 0.12), transparent 62%),
+      radial-gradient(42% 44% at -4% 104%, oklch(0.8 0.13 82 / 0.07), transparent 58%);
+  }
   html {
     @apply font-sans;
     /* ~12.5% larger base than browser default so labels and body copy read easier on phones and TVs */
     font-size: 112.5%;
+    /* Native controls (checkboxes, radios, range) pick up the brand gold. */
+    accent-color: var(--brand);
   }
 
   /* Chrome/Safari autofill otherwise paints text the same as background on dark pages */

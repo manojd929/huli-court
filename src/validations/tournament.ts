@@ -1,8 +1,33 @@
 import { z } from "zod";
 
+export const allocationMethodSchema = z.enum([
+  "SNAKE_DRAFT",
+  "RANDOM_ASSIGNMENT",
+  "LIVE_AUCTION",
+]);
+
+export const sportSchema = z.enum([
+  "BADMINTON",
+  "PICKLEBALL",
+  "TENNIS",
+  "TABLE_TENNIS",
+  "SQUASH",
+  "PADEL",
+  "OTHER",
+]);
+
 export const createTournamentSchema = z.object({
   name: z.string().min(2).max(120),
+  sport: sportSchema.optional(),
+  /** Optional league to file this tournament under; blank = standalone. */
+  leagueId: z.string().uuid().optional().or(z.literal("")),
+  season: z.string().max(40).optional(),
   tournamentFormat: z.enum(["DOUBLES_ONLY", "MIXED", "SINGLES_ONLY"]).optional(),
+  allocationMethod: allocationMethodSchema.optional(),
+  /** Auction economy in whole points; only used when allocationMethod is LIVE_AUCTION. */
+  auctionPurse: z.coerce.number().int().min(100).max(100_000_000).optional(),
+  auctionMinIncrement: z.coerce.number().int().min(1).max(1_000_000).optional(),
+  auctionDefaultBasePrice: z.coerce.number().int().min(0).max(1_000_000).optional(),
   description: z.string().max(2000).optional(),
   picksPerTeam: z.number().int().min(1).max(50).optional(),
   logoUrl: z.string().url().optional().or(z.literal("")),
@@ -94,6 +119,8 @@ export const createPlayerSchema = z.object({
   gender: z.enum(["MALE", "FEMALE", "OTHER"]),
   notes: z.string().max(500).optional(),
   hasPaidEntryFee: z.boolean().optional(),
+  /** Auction base price in points; null clears back to the tournament default. */
+  basePrice: z.number().int().min(0).max(1_000_000).nullable().optional(),
 });
 
 export type CreatePlayerInput = z.infer<typeof createPlayerSchema>;
@@ -107,6 +134,8 @@ export const updatePlayerSchema = z.object({
   gender: z.enum(["MALE", "FEMALE", "OTHER"]),
   notes: z.string().max(500).optional(),
   hasPaidEntryFee: z.boolean().optional(),
+  /** Auction base price in points; null clears back to the tournament default. */
+  basePrice: z.number().int().min(0).max(1_000_000).nullable().optional(),
 });
 
 export type UpdatePlayerInput = z.infer<typeof updatePlayerSchema>;
@@ -187,4 +216,27 @@ export const auctionSpotlightSchema = z.object({
 export const playerIdSlugSchema = z.object({
   tournamentSlug: z.string().min(1),
   playerId: z.string().uuid(),
+});
+
+export const runRandomAssignmentSchema = z.object({
+  tournamentSlug: z.string().min(1),
+});
+
+export const openAuctionLotSchema = z.object({
+  tournamentSlug: z.string().min(1),
+  playerId: z.string().uuid(),
+});
+
+export const placeAuctionBidSchema = z.object({
+  tournamentSlug: z.string().min(1),
+  lotId: z.string().uuid(),
+  amount: z.number().int().min(0),
+  /** bidCount the bidder saw; the bid only lands if the lot is unchanged. */
+  expectedBidCount: z.number().int().min(0),
+});
+
+export const closeAuctionLotSchema = z.object({
+  tournamentSlug: z.string().min(1),
+  lotId: z.string().uuid(),
+  outcome: z.enum(["SOLD", "UNSOLD", "CANCELLED"]),
 });

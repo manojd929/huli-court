@@ -15,6 +15,7 @@
     "db:reset-launch": "tsx prisma/reset-launch-database.ts",
     "tournament:clone": "tsx prisma/clone-tournament.ts",
     "seed:demo-tournament": "tsx prisma/seed-demo-tournament.ts",
+    "db:backfill-organizations": "tsx prisma/backfill-organizations.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "fixtures:fix-test-data": "tsx prisma/fix-fixtures-test-data.ts"

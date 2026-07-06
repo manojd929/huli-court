@@ -1,7 +1,7 @@
-# DraftForge QA Test Cases
+# HuliCourt QA Test Cases
 
 ## Purpose
-This document is the reusable manual QA checklist for DraftForge. It is organized feature-by-feature so a future test pass can be executed without reverse-engineering the product again.
+This document is the reusable manual QA checklist for HuliCourt. It is organized feature-by-feature so a future test pass can be executed without reverse-engineering the product again.
 
 The focus is:
 - authenticated access and role boundaries

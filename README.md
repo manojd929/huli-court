@@ -1,6 +1,6 @@
-# DraftForge · Franchise draft platform
+# HuliCourt · Franchise draft platform
 
-**DraftForge** is a web app for running **live snake drafts** for sports clubs and leagues: franchises (teams), athlete roster photos, **fair pick order**, squad caps by **roster group**, and an **organizer vs franchise-owner** workflow where nominees send a pick and the **commissioner confirms** it before it lands on the board.
+**HuliCourt** is a web app for running **live snake drafts** for sports clubs and leagues: franchises (teams), athlete roster photos, **fair pick order**, squad caps by **roster group**, and an **organizer vs franchise-owner** workflow where nominees send a pick and the **commissioner confirms** it before it lands on the board.
 
 Built with **Next.js 16** (App Router), **React 19**, **PostgreSQL** via **Prisma 7**, **Supabase Auth**, and optional **Vercel Blob** for images.
 

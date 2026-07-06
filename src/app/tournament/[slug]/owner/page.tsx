@@ -1,10 +1,10 @@
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { RosterCategoryPill } from "@/features/roster/roster-category-pill";
 import { PickStatus } from "@/generated/prisma/enums";
 import { getSessionUser } from "@/lib/auth/session";
-import { getTournamentBySlug } from "@/lib/data/tournament-access";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -20,10 +20,7 @@ export default async function OwnerViewPage({ params }: PageProps) {
     redirect(`/login?next=/tournament/${slug}/owner`);
   }
 
-  const tournament = await getTournamentBySlug(slug);
-  if (!tournament) {
-    notFound();
-  }
+  const tournament = await requireTournamentViewAccess(slug, user.id);
 
   const team = await prisma.team.findFirst({
     where: {

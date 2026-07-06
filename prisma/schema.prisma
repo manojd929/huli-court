@@ -15,6 +15,26 @@ enum UserRole {
   VIEWER
 }
 
+enum OrgRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+/// How players are allocated to teams before the tournament runs.
+enum AllocationMethod {
+  SNAKE_DRAFT
+  RANDOM_ASSIGNMENT
+  LIVE_AUCTION
+}
+
+enum AuctionLotStatus {
+  OPEN
+  SOLD
+  UNSOLD
+  CANCELLED
+}
+
 enum Gender {
   MALE
   FEMALE
@@ -59,6 +79,24 @@ enum DraftLogAction {
   OVERRIDE_VALIDATION
   ERROR
   AUCTION_FOCUS_CATEGORY
+  LOT_OPENED
+  BID_PLACED
+  LOT_SOLD
+  LOT_UNSOLD
+  LOT_CANCELLED
+  RANDOM_ASSIGNMENT_RUN
+}
+
+/// Racquet sports the platform supports. Match model (singles/doubles + score
+/// per side) is shared across all of them; sport drives terminology and defaults.
+enum Sport {
+  BADMINTON
+  PICKLEBALL
+  TENNIS
+  TABLE_TENNIS
+  SQUASH
+  PADEL
+  OTHER
 }
 
 enum TournamentFormat {
@@ -98,6 +136,59 @@ model UserProfile {
   draftLogs          DraftLog[]
   picksConfirmed     Pick[]       @relation("PickConfirmer")
   ownerStubPlayers   Player[]     @relation("OwnerPlayerStub")
+  auctionBidsPlaced  AuctionBid[] @relation("AuctionBidder")
+  organizationMemberships OrganizationMembership[]
+}
+
+/// SaaS tenant: a league operator that owns tournaments. Legacy tournaments
+/// keep organizationId null and stay visible to their creator only.
+model Organization {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  memberships OrganizationMembership[]
+  tournaments Tournament[]
+  leagues     League[]
+}
+
+/// A recurring, branded competition that groups tournaments/seasons under one
+/// banner (e.g. "Indiranagar Smashers League" → Summer Cup, Winter Cup…). Has
+/// its own public page. Tournaments optionally belong to a league.
+model League {
+  id             String    @id @default(uuid()) @db.Uuid
+  organizationId String    @db.Uuid
+  name           String
+  slug           String    @unique
+  description    String?
+  logoUrl        String?
+  colorHex       String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  tournaments  Tournament[]
+
+  @@index([organizationId])
+}
+
+model OrganizationMembership {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @db.Uuid
+  userId         String   @db.Uuid
+  role           OrgRole  @default(MEMBER)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         UserProfile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
 }
 
 model Tournament {
@@ -105,10 +196,20 @@ model Tournament {
   name                   String
   slug                   String      @unique
   description            String?
+  sport                  Sport            @default(BADMINTON)
   format                 TournamentFormat @default(DOUBLES_ONLY)
   logoUrl                String?
   colorHex               String?
   createdById            String      @db.Uuid
+  organizationId         String?     @db.Uuid
+  leagueId               String?     @db.Uuid
+  /// Free-text season label within a league, e.g. "Summer 2026". Optional.
+  season                 String?
+  allocationMethod       AllocationMethod @default(SNAKE_DRAFT)
+  /// Auction economy in whole points (only meaningful when allocationMethod is LIVE_AUCTION).
+  auctionPurse           Int         @default(10000)
+  auctionMinIncrement    Int         @default(100)
+  auctionDefaultBasePrice Int        @default(100)
   draftPhase             DraftPhase  @default(SETUP)
   picksPerTeam           Int         @default(10)
   currentSlotIndex       Int         @default(0)
@@ -129,6 +230,9 @@ model Tournament {
   deletedAt                DateTime?
 
   creator           UserProfile      @relation("TournamentCreator", fields: [createdById], references: [id])
+  organization      Organization?    @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  league            League?          @relation(fields: [leagueId], references: [id], onDelete: SetNull)
+  auctionLots       AuctionLot[]
   teams             Team[]
   players           Player[]
   rosterCategories RosterCategory[]
@@ -143,6 +247,8 @@ model Tournament {
   pendingTeam   Team?             @relation("PendingTeam", fields: [pendingPickTeamId], references: [id])
 
   @@index([createdById])
+  @@index([organizationId])
+  @@index([leagueId])
   @@index([draftPhase])
 }
 
@@ -177,6 +283,8 @@ model Team {
   ownerUserId    String?   @db.Uuid
   displayOrder   Int       @default(0)
   isEliminated   Boolean   @default(false)
+  /// Per-team auction purse override in points; null falls back to Tournament.auctionPurse.
+  purseOverride  Int?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
@@ -189,6 +297,9 @@ model Team {
   fixtureTiesAsTeamOne FixtureTie[] @relation("FixtureTieTeamOne")
   fixtureTiesAsTeamTwo FixtureTie[] @relation("FixtureTieTeamTwo")
   fixtureParticipants  FixtureMatchParticipant[]
+  auctionLotsLeading   AuctionLot[] @relation("LotCurrentBidTeam")
+  auctionLotsWon       AuctionLot[] @relation("LotWinningTeam")
+  auctionBids          AuctionBid[]
 
   @@index([tournamentId])
   @@index([ownerUserId])
@@ -203,6 +314,8 @@ model Player {
   gender           Gender
   notes            String?
   hasPaidEntryFee  Boolean      @default(false)
+  /// Auction base price in points; null falls back to Tournament.auctionDefaultBasePrice.
+  basePrice        Int?
   isUnavailable    Boolean      @default(false)
   isLocked         Boolean      @default(false)
   isEliminated     Boolean      @default(false)
@@ -217,6 +330,7 @@ model Player {
   picks          Pick[]
   pendingPickFor  Tournament?     @relation("PendingPlayer")
   fixtureParticipants FixtureMatchParticipant[]
+  auctionLots     AuctionLot[]
 
   @@unique([tournamentId, linkedOwnerUserId])
   @@index([tournamentId])
@@ -262,6 +376,8 @@ model Pick {
   teamId           String       @db.Uuid
   slotIndex        Int
   status           PickStatus   @default(CONFIRMED)
+  /// Sold price in points for LIVE_AUCTION picks; null for drafted/assigned picks.
+  price            Int?
   idempotencyKey   String?      @unique
   confirmedByUserId String?     @db.Uuid
   createdAt        DateTime     @default(now())
@@ -277,6 +393,54 @@ model Pick {
   @@index([tournamentId])
   @@index([teamId])
   @@index([slotIndex])
+}
+
+/// One auction "lot" = one player put up for bidding. Re-auctioning an UNSOLD
+/// player creates a fresh lot, so (tournamentId, playerId) is intentionally
+/// not unique. A partial unique index (added in raw migration SQL) guarantees
+/// at most one OPEN lot per tournament.
+model AuctionLot {
+  id               String           @id @default(uuid()) @db.Uuid
+  tournamentId     String           @db.Uuid
+  playerId         String           @db.Uuid
+  status           AuctionLotStatus @default(OPEN)
+  basePrice        Int
+  currentBid       Int?
+  currentBidTeamId String?          @db.Uuid
+  /// Optimistic-concurrency version: a bid only lands if it names the bidCount it saw.
+  bidCount         Int              @default(0)
+  finalPrice       Int?
+  winningTeamId    String?          @db.Uuid
+  openedByUserId   String?          @db.Uuid
+  closedAt         DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  tournament     Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  player         Player     @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  currentBidTeam Team?      @relation("LotCurrentBidTeam", fields: [currentBidTeamId], references: [id], onDelete: SetNull)
+  winningTeam    Team?      @relation("LotWinningTeam", fields: [winningTeamId], references: [id], onDelete: SetNull)
+  bids           AuctionBid[]
+
+  @@index([tournamentId, status])
+  @@index([tournamentId, createdAt])
+  @@index([playerId])
+}
+
+model AuctionBid {
+  id           String   @id @default(uuid()) @db.Uuid
+  lotId        String   @db.Uuid
+  teamId       String   @db.Uuid
+  amount       Int
+  bidderUserId String?  @db.Uuid
+  createdAt    DateTime @default(now())
+
+  lot    AuctionLot   @relation(fields: [lotId], references: [id], onDelete: Cascade)
+  team   Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  bidder UserProfile? @relation("AuctionBidder", fields: [bidderUserId], references: [id])
+
+  @@index([lotId, createdAt])
+  @@index([teamId])
 }
 
 model DraftLog {

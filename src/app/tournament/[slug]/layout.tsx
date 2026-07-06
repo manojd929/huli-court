@@ -35,6 +35,7 @@ export default async function TournamentLayout({
         tournamentName={tournament.name}
         tournamentLogoUrl={tournament.logoUrl}
         tournamentColorHex={tournament.colorHex}
+        sport={tournament.sport}
         draftPhase={tournament.draftPhase}
         navGroups={navGroups}
       />

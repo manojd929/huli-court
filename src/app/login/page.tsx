@@ -25,7 +25,7 @@ export default async function LoginPage({
   return (
     <div className="relative min-h-[100dvh] bg-background text-foreground dark:bg-neutral-950">
       <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-sky-500/[0.07] to-transparent dark:from-sky-500/[0.14]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_78%_55%_at_50%_-8%,oklch(0.9_0.13_92/0.4),transparent_62%)] dark:bg-[radial-gradient(ellipse_72%_52%_at_50%_-8%,oklch(0.83_0.16_86/0.17),transparent_60%)]"
         aria-hidden
       />
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 md:px-6 md:py-8 lg:py-10">

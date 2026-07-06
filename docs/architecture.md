@@ -1,7 +1,7 @@
 # Architecture Documentation
 
 ## System Summary
-DraftForge is a Next.js App Router application with server-first rendering, Supabase-backed authentication, and Prisma-managed PostgreSQL persistence. The architecture follows a practical layered design:
+HuliCourt is a Next.js App Router application with server-first rendering, Supabase-backed authentication, and Prisma-managed PostgreSQL persistence. The architecture follows a practical layered design:
 - `src/app`: route composition and page-level authorization.
 - `src/features`: server actions plus feature-scoped UI.
 - `src/services`: domain workflows and transactional business rules.
@@ -82,7 +82,7 @@ Authorization is enforced in multiple layers:
 This defense-in-depth approach is a strong design choice for a multi-role application.
 
 ## Data and State Model
-DraftForge has one dominant aggregate root: `Tournament`.
+HuliCourt has one dominant aggregate root: `Tournament`.
 Everything else is scoped to it or derived from it.
 
 Important patterns:

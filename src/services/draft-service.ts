@@ -1,11 +1,13 @@
 import {
+  AllocationMethod,
+  AuctionLotStatus,
   DraftLogAction,
   DraftPhase,
   PickStatus,
 } from "@/generated/prisma/enums";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import type { DraftSnapshotDto } from "@/types/draft";
+import type { AuctionSnapshotDto, DraftSnapshotDto } from "@/types/draft";
 import { buildSnakeDraftTeamSequence, shuffleTeamIds } from "@/utils/draft-order";
 import { syncOwnerPlayersForTournament } from "@/services/tournament-service";
 
@@ -131,6 +133,57 @@ async function loadDraftTournamentBySlug(slug: string) {
   return { ...tournament, activeAuctionRosterCategory };
 }
 
+async function buildAuctionSnapshot(
+  t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamentBySlug>>>,
+): Promise<AuctionSnapshotDto> {
+  const [openLot, unsoldLots] = await Promise.all([
+    prisma.auctionLot.findFirst({
+      where: { tournamentId: t.id, status: AuctionLotStatus.OPEN },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.auctionLot.findMany({
+      where: { tournamentId: t.id, status: AuctionLotStatus.UNSOLD },
+      select: { playerId: true },
+      distinct: ["playerId"],
+    }),
+  ]);
+
+  const spentByTeam = new Map<string, number>();
+  for (const pick of t.picks) {
+    if (pick.price !== null) {
+      spentByTeam.set(
+        pick.teamId,
+        (spentByTeam.get(pick.teamId) ?? 0) + pick.price,
+      );
+    }
+  }
+  const soldPlayerIds = new Set(t.picks.map((p) => p.playerId));
+
+  return {
+    minIncrement: t.auctionMinIncrement,
+    defaultBasePrice: t.auctionDefaultBasePrice,
+    purses: t.teams.map((team) => {
+      const purse = team.purseOverride ?? t.auctionPurse;
+      const spent = spentByTeam.get(team.id) ?? 0;
+      return { teamId: team.id, purse, spent, remaining: purse - spent };
+    }),
+    currentLot: openLot
+      ? {
+          lotId: openLot.id,
+          playerId: openLot.playerId,
+          basePrice: openLot.basePrice,
+          currentBid: openLot.currentBid,
+          currentBidTeamId: openLot.currentBidTeamId,
+          bidCount: openLot.bidCount,
+          openedAt: openLot.createdAt.toISOString(),
+        }
+      : null,
+    unsoldPlayerIds: unsoldLots
+      .map((lot) => lot.playerId)
+      .filter((playerId) => !soldPlayerIds.has(playerId)),
+  };
+}
+
 function mapSnapshot(t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamentBySlug>>>): DraftSnapshotDto {
   const playerAssignments = new Map<
     string,
@@ -188,11 +241,18 @@ function mapSnapshot(t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamen
   }).length;
   const confirmedPickCount = t.picks.filter((p) => p.status === PickStatus.CONFIRMED).length;
 
+  const soldPriceByPlayer = new Map<string, number>();
+  for (const pick of t.picks) {
+    if (pick.price !== null) soldPriceByPlayer.set(pick.playerId, pick.price);
+  }
+
   return {
     tournamentId: t.id,
     slug: t.slug,
     name: t.name,
     draftPhase: t.draftPhase,
+    allocationMethod: t.allocationMethod,
+    auction: null,
     currentSlotIndex: t.currentSlotIndex,
     picksPerTeam: t.picksPerTeam,
     draftOrderLocked: t.draftOrderLocked,
@@ -230,6 +290,7 @@ function mapSnapshot(t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamen
         runsFranchiseLogin: player.linkedOwnerUserId !== null,
         assignedTeamId: assignment?.teamId ?? ownerTeamId,
         hasConfirmedPick: assignment?.confirmed ?? Boolean(ownerTeamId),
+        soldPrice: soldPriceByPlayer.get(player.id) ?? null,
       };
     }),
     draftSlots: t.draftSlots.map((slot) => ({
@@ -274,6 +335,9 @@ export async function fetchDraftSnapshotBySlug(
     },
   });
   const snap = mapSnapshot(tournament);
+  if (tournament.allocationMethod === AllocationMethod.LIVE_AUCTION) {
+    snap.auction = await buildAuctionSnapshot(tournament);
+  }
   snap.activity = logs.map((log) => ({
     id: log.id,
     action: log.action,
@@ -528,7 +592,14 @@ export async function startDraft(params: {
       throw new DraftServiceError("Only the tournament admin can start the draft.");
     }
     assertPhase(tournament.draftPhase, [DraftPhase.READY, DraftPhase.SETUP]);
-    if (tournament.draftSlots.length === 0) {
+    if (tournament.allocationMethod === AllocationMethod.RANDOM_ASSIGNMENT) {
+      throw new DraftServiceError(
+        "This tournament uses random assignment — run it from the admin desk instead of starting a live draft.",
+      );
+    }
+    const isAuction =
+      tournament.allocationMethod === AllocationMethod.LIVE_AUCTION;
+    if (!isAuction && tournament.draftSlots.length === 0) {
       throw new DraftServiceError("Generate draft order before starting.");
     }
     await tx.tournament.update({
@@ -536,10 +607,12 @@ export async function startDraft(params: {
       data: {
         draftPhase: DraftPhase.LIVE,
         draftStartedAt: tournament.draftStartedAt ?? new Date(),
-        currentSlotIndex: Math.min(
-          tournament.currentSlotIndex,
-          tournament.draftSlots.length - 1,
-        ),
+        currentSlotIndex: isAuction
+          ? tournament.currentSlotIndex
+          : Math.min(
+              tournament.currentSlotIndex,
+              tournament.draftSlots.length - 1,
+            ),
       },
     });
     await tx.draftLog.create({

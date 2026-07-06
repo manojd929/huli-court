@@ -14,6 +14,7 @@ import {
 import { DeleteTournamentButton } from "@/features/dashboard/delete-tournament-button";
 import { APP_NAME, ROUTES } from "@/constants/app";
 import { DRAFT_PHASE_LABEL } from "@/constants/draft-phase-labels";
+import { SPORT_META } from "@/constants/sport-meta";
 import { TOURNAMENT_FORMAT_LABEL } from "@/constants/tournament-format-labels";
 import { UserRole } from "@/generated/prisma/enums";
 import {
@@ -23,6 +24,8 @@ import {
 import { getSessionUser } from "@/lib/auth/session";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
+import { getManagedOrganizationIds } from "@/services/organization-service";
+import { listLeaguesForUser } from "@/services/league-service";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +36,7 @@ export default async function DashboardPage() {
   }
 
   let tournaments: TournamentDashboardListRow[] = [];
+  let leagues: Awaited<ReturnType<typeof listLeaguesForUser>> = [];
   let loadError: string | null = null;
   let userRole: typeof UserRole.ADMIN | typeof UserRole.OWNER | null = null;
   try {
@@ -46,10 +50,17 @@ export default async function DashboardPage() {
         : null;
 
     if (userRole === UserRole.ADMIN) {
+      leagues = await listLeaguesForUser(user.id);
+      const managedOrgIds = await getManagedOrganizationIds(user.id);
       tournaments = await prisma.tournament.findMany({
         where: {
           deletedAt: null,
-          createdById: user.id,
+          OR: [
+            { createdById: user.id },
+            ...(managedOrgIds.length > 0
+              ? [{ organizationId: { in: managedOrgIds } }]
+              : []),
+          ],
         },
         orderBy: { updatedAt: "desc" },
         select: tournamentDashboardListSelect,
@@ -71,33 +82,79 @@ export default async function DashboardPage() {
     }
   } catch {
     loadError =
-      "DraftForge couldn't reach live data right now. Check back shortly, or contact your administrator if this continues.";
+      "HuliCourt couldn't reach live data right now. Check back shortly, or contact your administrator if this continues.";
   }
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 pb-14 sm:gap-10 sm:px-6 sm:py-12">
       <header className="flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
         <div className="max-w-xl">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground sm:tracking-[0.2em]">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-accent sm:tracking-[0.2em]">
+            <span className="size-1.5 rounded-full bg-brand" aria-hidden />
             {APP_NAME}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl" data-testid="dashboard-title">Your tournaments</h1>
           <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-            Build rosters before auction day — then Manage auction and Live board are your two live-room links.
+            Set up teams and players, pick how squads are formed — draft, random, or a
+            live auction — then run it on the shared board.
           </p>
         </div>
         {userRole === UserRole.ADMIN ? (
-          <Link
-            href={ROUTES.tournamentNew}
-            className={cn(
-              buttonVariants(),
-              "min-h-11 w-full touch-manipulation justify-center sm:w-auto",
-            )}
-          >
-            New tournament
-          </Link>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <Link
+              href={ROUTES.leagueNew}
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "min-h-11 touch-manipulation justify-center",
+              )}
+            >
+              New league
+            </Link>
+            <Link
+              href={ROUTES.tournamentNew}
+              className={cn(
+                buttonVariants(),
+                "min-h-11 touch-manipulation justify-center",
+              )}
+            >
+              New tournament
+            </Link>
+          </div>
         ) : null}
       </header>
+
+      {userRole === UserRole.ADMIN && leagues.length > 0 ? (
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Your leagues
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {leagues.map((league) => (
+              <Link
+                key={league.id}
+                href={ROUTES.league(league.slug)}
+                className="group flex items-center gap-3 rounded-xl border border-border/70 bg-card/60 p-4 backdrop-blur-sm transition-colors hover:border-brand/50"
+              >
+                <span
+                  className="flex size-10 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white"
+                  style={{ backgroundColor: league.colorHex ?? "#f2b21a" }}
+                >
+                  {league.name.slice(0, 1).toUpperCase()}
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate font-medium group-hover:text-brand-accent">
+                    {league.name}
+                  </span>
+                  <span className="block text-xs text-muted-foreground">
+                    {league._count.tournaments}{" "}
+                    {league._count.tournaments === 1 ? "tournament" : "tournaments"}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {loadError ? (
         <Card className="border-destructive/40 bg-destructive/5">
@@ -146,16 +203,31 @@ export default async function DashboardPage() {
                         /{tournament.slug}
                       </CardDescription>
                     </div>
-                    <Badge variant="secondary">
+                    <Badge
+                      variant="secondary"
+                      className={cn(
+                        (tournament.draftPhase === "LIVE" ||
+                          tournament.draftPhase === "PAUSED") &&
+                          "border-brand/40 bg-brand/15 text-brand-accent",
+                      )}
+                    >
+                      {(tournament.draftPhase === "LIVE" ||
+                        tournament.draftPhase === "PAUSED") && (
+                        <span className="mr-1.5 inline-block size-1.5 animate-pulse rounded-full bg-brand align-middle" aria-hidden />
+                      )}
                       {DRAFT_PHASE_LABEL[tournament.draftPhase]}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                   <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                    <span>
+                      {SPORT_META[tournament.sport].emoji}{" "}
+                      {SPORT_META[tournament.sport].label}
+                    </span>
                     <span>{tournament._count.teams} teams</span>
                     <span>{tournament._count.players} players</span>
-                    <span>Format: {TOURNAMENT_FORMAT_LABEL[tournament.format]}</span>
+                    <span>{TOURNAMENT_FORMAT_LABEL[tournament.format]}</span>
                   </div>
                   <div className="border-t border-border/60 pt-4">
                     <Link

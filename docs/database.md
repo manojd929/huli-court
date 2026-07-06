@@ -1,7 +1,7 @@
 # Database Documentation
 
 ## Overview
-DraftForge uses PostgreSQL through Prisma 7. The schema is tournament-centric: nearly every business entity belongs to a `Tournament`, and draft plus fixture workflows are modeled as stateful relations around that root.
+HuliCourt uses PostgreSQL through Prisma 7. The schema is tournament-centric: nearly every business entity belongs to a `Tournament`, and draft plus fixture workflows are modeled as stateful relations around that root.
 
 Core design choices:
 - Soft delete is used for critical user-facing setup entities.

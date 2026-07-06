@@ -31,7 +31,7 @@ const COMMISSIONER_EMAIL =
 const COMMISSIONER_PASSWORD =
   process.env.LAUNCH_COMMISSIONER_PASSWORD?.trim() || "admin@draftforge";
 const COMMISSIONER_DISPLAY_NAME =
-  process.env.LAUNCH_COMMISSIONER_DISPLAY_NAME?.trim() || "DraftForge Admin";
+  process.env.LAUNCH_COMMISSIONER_DISPLAY_NAME?.trim() || "HuliCourt Admin";
 
 function requireEnv(name: string): string {
   const value = process.env[name]?.trim();

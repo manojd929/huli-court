@@ -26,6 +26,11 @@ import { DEFAULT_PICKS_PER_TEAM } from "@/constants/tournament-defaults";
 import { buildFranchiseOwnerAssigneeList } from "@/lib/data/franchise-owner-assignees";
 import { deleteAuthUserIfNoOwnerReferences } from "@/services/franchise-owner-auth";
 import {
+  ensureOrganizationForUser,
+  userCanManageTournament,
+} from "@/services/organization-service";
+import { assertLeagueManageable } from "@/services/league-service";
+import {
   resolveOwnerStubCategoryIdTx,
   seedDefaultRosterCategories,
   assertActiveRosterCategoryForPlayer,
@@ -183,7 +188,7 @@ export async function syncOwnerPlayersForTournament(
 export async function createTournament(
   userId: string,
   input: CreateTournamentInput,
-): Promise<{ slug: string }> {
+): Promise<{ slug: string; leagueSlug: string | null }> {
   const profile = await prisma.userProfile.findFirst({
     where: { id: userId, deletedAt: null },
     select: { role: true },
@@ -192,6 +197,12 @@ export async function createTournament(
     throw new TournamentServiceError("Only admins can create tournaments.");
   }
 
+  const organizationId = await ensureOrganizationForUser(userId);
+  const trimmedLeagueId = input.leagueId?.trim() ? input.leagueId.trim() : null;
+  const leagueId = trimmedLeagueId
+    ? await assertLeagueManageable(userId, trimmedLeagueId)
+    : null;
+  const season = input.season?.trim() ? input.season.trim() : null;
   const slug = tournamentSlugFromName(input.name);
   await prisma.$transaction(async (tx) => {
     const feeMinorUnits =
@@ -208,11 +219,19 @@ export async function createTournament(
         logoUrl: input.logoUrl?.trim() ? input.logoUrl.trim() : null,
         colorHex: input.colorHex?.trim() ? input.colorHex.trim() : null,
         createdById: userId,
+        organizationId,
+        leagueId,
+        season,
+        sport: input.sport ?? "BADMINTON",
         format: input.tournamentFormat ?? "DOUBLES_ONLY",
+        allocationMethod: input.allocationMethod ?? "SNAKE_DRAFT",
+        auctionPurse: input.auctionPurse ?? undefined,
+        auctionMinIncrement: input.auctionMinIncrement ?? undefined,
+        auctionDefaultBasePrice: input.auctionDefaultBasePrice ?? undefined,
         picksPerTeam: input.picksPerTeam ?? DEFAULT_PICKS_PER_TEAM,
         draftPhase: DraftPhase.SETUP,
         playerEntryFeeMinorUnits: feeMinorUnits,
-        playerEntryFeeCurrencyCode: feeMinorUnits !== null ? "INR" : "INR",
+        playerEntryFeeCurrencyCode: "INR",
       },
     });
 
@@ -239,7 +258,15 @@ export async function createTournament(
       }),
     });
   });
-  return { slug };
+  const leagueSlug = leagueId
+    ? ((
+        await prisma.league.findUnique({
+          where: { id: leagueId },
+          select: { slug: true },
+        })
+      )?.slug ?? null)
+    : null;
+  return { slug, leagueSlug };
 }
 
 export async function updateTournament(
@@ -284,10 +311,11 @@ export async function listTournamentsForUser(userId: string) {
 export async function assertTournamentOwnership(slug: string, userId: string) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug, deletedAt: null },
-    select: { id: true, createdById: true },
+    select: { id: true, createdById: true, organizationId: true },
   });
   if (!tournament) throw new TournamentServiceError("Tournament not found.");
-  if (tournament.createdById !== userId) {
+  const canManage = await userCanManageTournament(userId, tournament);
+  if (!canManage) {
     throw new TournamentServiceError("You do not have access to this tournament.");
   }
   return tournament.id;
@@ -579,6 +607,7 @@ export async function createPlayer(userId: string, input: CreatePlayerInput) {
       gender: input.gender,
       notes: input.notes || null,
       hasPaidEntryFee: input.hasPaidEntryFee ?? false,
+      basePrice: input.basePrice ?? null,
     },
   });
 }
@@ -615,6 +644,7 @@ export async function updatePlayer(userId: string, input: UpdatePlayerInput) {
       gender: input.gender,
       notes: input.notes?.trim() ? input.notes.trim() : null,
       hasPaidEntryFee: input.hasPaidEntryFee ?? false,
+      basePrice: input.basePrice === undefined ? undefined : input.basePrice,
     },
   });
 

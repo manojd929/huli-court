@@ -148,7 +148,11 @@ export function LoginForm({ nextPath }: LoginFormProps) {
       <p className="border-t border-border/50 pt-4 text-center text-sm leading-snug text-foreground/72 dark:text-foreground/78 md:leading-relaxed">
         New franchise owner? Your commissioner creates your login from{" "}
         <span className="font-medium text-foreground">Teams</span>. Forgot password? Ask them to reset
-        or re-invite you.
+        or re-invite you. Starting your own league?{" "}
+        <a className="font-medium text-foreground underline" href="/signup">
+          Create an organizer account
+        </a>
+        .
       </p>
     </div>
   );

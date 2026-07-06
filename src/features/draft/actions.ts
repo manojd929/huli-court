@@ -27,13 +27,23 @@ import {
   undoLastPick,
   unlockDraft,
 } from "@/services/draft-service";
+import { runRandomAssignment } from "@/services/allocation-service";
+import {
+  closeAuctionLot,
+  openAuctionLot,
+  placeAuctionBid,
+} from "@/services/auction-service";
 import {
   assignManualSchema,
   auctionSpotlightSchema,
+  closeAuctionLotSchema,
   confirmPickSchema,
   draftActionSlugSchema,
+  openAuctionLotSchema,
   pickRequestSchema,
+  placeAuctionBidSchema,
   playerIdSlugSchema,
+  runRandomAssignmentSchema,
 } from "@/validations/tournament";
 
 const zToggle = z.object({
@@ -57,14 +67,14 @@ export type ActionResult<T = void> =
   | { ok: true; data?: T }
   | { ok: false; error: string };
 
-function handle(err: unknown): ActionResult {
+function handle(err: unknown): { ok: false; error: string } {
   if (err instanceof DraftServiceError) {
     return { ok: false, error: err.message };
   }
   return { ok: false, error: "Unexpected error. Try again." };
 }
 
-function unauthorized(): ActionResult {
+function unauthorized(): { ok: false; error: string } {
   return { ok: false, error: "Unauthorized" };
 }
 
@@ -419,6 +429,96 @@ export async function assignManualPickAction(
       playerId: parsed.data.playerId,
       teamId: parsed.data.teamId,
       idempotencyKey: parsed.data.idempotencyKey,
+    });
+    revalidateTournament(parsed.data.tournamentSlug);
+    return { ok: true };
+  } catch (e) {
+    if (e instanceof Error && e.message === "Unauthorized") {
+      return unauthorized();
+    }
+    return handle(e);
+  }
+}
+
+export async function runRandomAssignmentAction(
+  input: unknown,
+): Promise<ActionResult<{ assignedCount: number; unassignedCount: number }>> {
+  try {
+    const parsed = runRandomAssignmentSchema.safeParse(input);
+    if (!parsed.success) return { ok: false, error: "Invalid payload." };
+    const user = await requireSessionUser();
+    const result = await runRandomAssignment({
+      tournamentSlug: parsed.data.tournamentSlug,
+      actorUserId: user.id,
+    });
+    revalidateTournament(parsed.data.tournamentSlug);
+    return { ok: true, data: result };
+  } catch (e) {
+    if (e instanceof Error && e.message === "Unauthorized") {
+      return unauthorized();
+    }
+    return handle(e);
+  }
+}
+
+export async function openAuctionLotAction(
+  input: unknown,
+): Promise<ActionResult> {
+  try {
+    const parsed = openAuctionLotSchema.safeParse(input);
+    if (!parsed.success) return { ok: false, error: "Invalid payload." };
+    const user = await requireSessionUser();
+    await openAuctionLot({
+      tournamentSlug: parsed.data.tournamentSlug,
+      actorUserId: user.id,
+      playerId: parsed.data.playerId,
+    });
+    revalidateTournament(parsed.data.tournamentSlug);
+    return { ok: true };
+  } catch (e) {
+    if (e instanceof Error && e.message === "Unauthorized") {
+      return unauthorized();
+    }
+    return handle(e);
+  }
+}
+
+export async function placeAuctionBidAction(
+  input: unknown,
+): Promise<ActionResult> {
+  try {
+    const parsed = placeAuctionBidSchema.safeParse(input);
+    if (!parsed.success) return { ok: false, error: "Invalid payload." };
+    const user = await requireSessionUser();
+    await placeAuctionBid({
+      tournamentSlug: parsed.data.tournamentSlug,
+      actorUserId: user.id,
+      lotId: parsed.data.lotId,
+      amount: parsed.data.amount,
+      expectedBidCount: parsed.data.expectedBidCount,
+    });
+    revalidateTournament(parsed.data.tournamentSlug);
+    return { ok: true };
+  } catch (e) {
+    if (e instanceof Error && e.message === "Unauthorized") {
+      return unauthorized();
+    }
+    return handle(e);
+  }
+}
+
+export async function closeAuctionLotAction(
+  input: unknown,
+): Promise<ActionResult> {
+  try {
+    const parsed = closeAuctionLotSchema.safeParse(input);
+    if (!parsed.success) return { ok: false, error: "Invalid payload." };
+    const user = await requireSessionUser();
+    await closeAuctionLot({
+      tournamentSlug: parsed.data.tournamentSlug,
+      actorUserId: user.id,
+      lotId: parsed.data.lotId,
+      outcome: parsed.data.outcome,
     });
     revalidateTournament(parsed.data.tournamentSlug);
     return { ok: true };

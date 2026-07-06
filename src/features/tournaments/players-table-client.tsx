@@ -34,6 +34,7 @@ export interface PlayersTableRow {
   isUnavailable: boolean;
   isLocked: boolean;
   hasPaidEntryFee: boolean;
+  basePrice: number | null;
 }
 
 interface PlayersTableClientProps {
@@ -281,6 +282,7 @@ export function PlayersTableClient({
                             photoUrl: player.photoUrl,
                             notes: player.notes,
                             hasPaidEntryFee: player.hasPaidEntryFee,
+                            basePrice: player.basePrice,
                           }}
                         />
                         {player.linkedOwnerUserId ? (

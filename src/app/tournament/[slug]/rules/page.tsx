@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import {
   PickLimitsGuidance,
@@ -9,7 +9,7 @@ import { SquadRulesForm } from "@/features/tournaments/squad-rules-form";
 import { RosterCategoryPill } from "@/features/roster/roster-category-pill";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getSessionUser } from "@/lib/auth/session";
-import { getTournamentBySlug } from "@/lib/data/tournament-access";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import {
   rosterCategoryOrderIds,
 } from "@/lib/squad-rules/compute-per-team-caps";
@@ -29,10 +29,7 @@ export default async function RulesPage({ params }: PageProps) {
     redirect(`/login?next=/tournament/${slug}/rules`);
   }
 
-  const tournament = await getTournamentBySlug(slug);
-  if (!tournament) {
-    notFound();
-  }
+  const tournament = await requireTournamentViewAccess(slug, user.id);
   const isCommissioner = tournament.createdById === user.id;
 
   const [categories, squadRulesRaw, teamCount, groupedPlayers] = await Promise.all([

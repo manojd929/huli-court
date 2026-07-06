@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import {
   RosterCategoriesAdmin,
@@ -6,7 +6,7 @@ import {
 } from "@/features/tournaments/roster-categories-admin";
 import { DraftPhase } from "@/generated/prisma/enums";
 import { getSessionUser } from "@/lib/auth/session";
-import { getTournamentBySlug } from "@/lib/data/tournament-access";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -22,10 +22,7 @@ export default async function TournamentCategoriesPage({ params }: PageProps) {
     redirect(`/login?next=/tournament/${slug}/categories`);
   }
 
-  const tournament = await getTournamentBySlug(slug);
-  if (!tournament) {
-    notFound();
-  }
+  const tournament = await requireTournamentViewAccess(slug, user.id);
   const isCommissioner = tournament.createdById === user.id;
 
   const canManageCategories =

@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { ROUTES } from "@/constants/app";
@@ -10,7 +10,7 @@ import {
 import { PlayersSetupToolbar } from "@/features/tournaments/players-setup-toolbar";
 import { DraftPhase } from "@/generated/prisma/enums";
 import { getSessionUser } from "@/lib/auth/session";
-import { getTournamentBySlug } from "@/lib/data/tournament-access";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import { prisma } from "@/lib/prisma";
 import { isLeagueImageUploadConfigured } from "@/lib/uploads/league-image-blob-env";
 import { isLeagueOwnerInviteConfigured } from "@/services/league-account-service";
@@ -28,10 +28,7 @@ export default async function PlayersPage({ params }: PageProps) {
     redirect(`/login?next=/tournament/${slug}/players`);
   }
 
-  const tournament = await getTournamentBySlug(slug);
-  if (!tournament) {
-    notFound();
-  }
+  const tournament = await requireTournamentViewAccess(slug, user.id);
   const isCommissioner = tournament.createdById === user.id;
 
   const uploadsEnabled = isLeagueImageUploadConfigured();
@@ -75,6 +72,7 @@ export default async function PlayersPage({ params }: PageProps) {
     isUnavailable: player.isUnavailable,
     isLocked: player.isLocked,
     hasPaidEntryFee: player.hasPaidEntryFee,
+    basePrice: player.basePrice,
   }));
 
   return (

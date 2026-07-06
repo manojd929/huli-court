@@ -1,4 +1,4 @@
-export const APP_NAME = "DraftForge";
+export const APP_NAME = "HuliCourt";
 
 export const ROUTES = {
   home: "/",
@@ -6,6 +6,9 @@ export const ROUTES = {
   apiAuthEstablishSession: "/api/auth/establish-session",
   dashboard: "/dashboard",
   settings: "/settings",
+  leagueNew: "/league/new",
+  league: (slug: string) => `/league/${slug}`,
+  leagueEdit: (slug: string) => `/league/${slug}/edit`,
   tournamentNew: "/tournament/new",
   tournament: (slug: string) => `/tournament/${slug}`,
   teams: (slug: string) => `/tournament/${slug}/teams`,

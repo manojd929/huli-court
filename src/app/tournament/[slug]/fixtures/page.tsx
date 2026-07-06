@@ -7,6 +7,7 @@ import {
   getFixtureSideLabel,
 } from "@/features/tournament-run/match-presentation";
 import { getSessionUser } from "@/lib/auth/session";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import {
   getFixturesAdminOptions,
   getFixturesSummary,
@@ -20,6 +21,7 @@ export default async function FixturesPage({ params }: PageProps) {
   const { slug } = await params;
   const user = await getSessionUser();
   if (!user) redirect(`/login?next=/tournament/${slug}/fixtures`);
+  await requireTournamentViewAccess(slug, user.id);
 
   const summary = await getFixturesSummary(slug);
   if (!summary) notFound();

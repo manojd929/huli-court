@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { AuctionTvBanner } from "@/components/draft/auction-tv-banner";
 import { TvTeamRosterPanel } from "@/components/draft/tv-team-roster-panel";
 import { DRAFT_PHASE_LABEL } from "@/constants/draft-phase-labels";
 import { RosterCategoryPill } from "@/features/roster/roster-category-pill";
@@ -81,11 +82,11 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
   return (
     <div className="relative flex min-h-[100dvh] flex-col overflow-x-hidden bg-background text-foreground dark:bg-[#070b14] dark:text-white">
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-100/85 via-background to-muted/35 opacity-95 dark:hidden"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_70%_at_50%_-15%,oklch(0.92_0.12_92/0.7),transparent_58%),radial-gradient(ellipse_80%_50%_at_98%_104%,oklch(0.95_0.06_96/0.6),transparent_55%)] opacity-95 dark:hidden"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_100%_70%_at_50%_-15%,rgba(56,189,248,0.18),transparent_58%),radial-gradient(ellipse_80%_50%_at_95%_100%,rgba(168,85,247,0.08),transparent_55%)] dark:block"
+        className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_100%_70%_at_50%_-15%,oklch(0.83_0.16_86/0.16),transparent_58%),radial-gradient(ellipse_80%_50%_at_95%_100%,oklch(0.8_0.13_82/0.07),transparent_55%)] dark:block"
         aria-hidden
       />
       <div
@@ -96,8 +97,12 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
       <header className="relative z-10 shrink-0 border-b border-border px-3 pb-8 pt-6 min-[400px]:px-4 sm:px-6 sm:pb-10 sm:pt-10 md:px-8 md:pb-12">
         <div className="mx-auto flex max-w-4xl flex-col gap-6 md:max-w-[1920px] md:flex-row md:items-end md:justify-between md:gap-10 lg:gap-12">
           <div className="min-w-0 space-y-2 sm:space-y-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary sm:text-[11px] sm:tracking-[0.28em] dark:text-sky-200/90">
-              Live Auction Status
+            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-brand-accent sm:text-[11px] sm:tracking-[0.28em]">
+              {snapshot.allocationMethod === "LIVE_AUCTION"
+                ? "Live Auction"
+                : snapshot.allocationMethod === "RANDOM_ASSIGNMENT"
+                  ? "Team Assignment"
+                  : "Live Draft"}
             </p>
             <h1 className="text-balance text-[clamp(1.5rem,6vw,3.5rem)] font-bold leading-[1.08] tracking-tight md:text-[clamp(1.85rem,3.8vw,3.85rem)]">
               {snapshot.name}
@@ -113,8 +118,8 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
                 {DRAFT_PHASE_LABEL[snapshot.draftPhase]}
               </Badge>
               {live && snapshot.auctionSpotlightRosterCategoryId ? (
-                <div className="flex flex-wrap items-center gap-2 rounded-full border border-sky-200 bg-sky-50/95 px-2.5 py-1 dark:border-sky-400/35 dark:bg-sky-500/15 sm:gap-3 sm:px-3 sm:py-1.5">
-                  <span className="text-[9px] font-semibold uppercase tracking-widest text-sky-800 dark:text-sky-100/90 sm:text-[10px]">
+                <div className="flex flex-wrap items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-2.5 py-1 dark:border-brand/40 dark:bg-brand/15 sm:gap-3 sm:px-3 sm:py-1.5">
+                  <span className="text-[9px] font-semibold uppercase tracking-widest text-brand-accent sm:text-[10px]">
                     Active round
                   </span>
                   <RosterCategoryPill
@@ -166,6 +171,10 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
           </div>
         </div>
       </header>
+
+      {snapshot.allocationMethod === "LIVE_AUCTION" && (
+        <AuctionTvBanner snapshot={snapshot} />
+      )}
 
       {snapshot.lastConfirmedPick && !completed ? (
         <section className="relative z-10 border-b border-emerald-200 bg-emerald-50/90 px-3 py-5 text-foreground sm:px-6 md:px-8 dark:border-emerald-500/20 dark:bg-emerald-950/35 dark:text-white">

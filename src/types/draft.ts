@@ -1,4 +1,8 @@
-import type { DraftPhase, Gender } from "@/generated/prisma/enums";
+import type {
+  AllocationMethod,
+  DraftPhase,
+  Gender,
+} from "@/generated/prisma/enums";
 
 export interface DraftTeamDto {
   id: string;
@@ -24,6 +28,35 @@ export interface DraftPlayerDto {
   runsFranchiseLogin: boolean;
   assignedTeamId: string | null;
   hasConfirmedPick: boolean;
+  /** Auction sold price in points; null for drafted/assigned players. */
+  soldPrice: number | null;
+}
+
+export interface AuctionTeamPurseDto {
+  teamId: string;
+  purse: number;
+  spent: number;
+  remaining: number;
+}
+
+export interface AuctionCurrentLotDto {
+  lotId: string;
+  playerId: string;
+  basePrice: number;
+  currentBid: number | null;
+  currentBidTeamId: string | null;
+  /** Optimistic-concurrency version; send back as expectedBidCount when bidding. */
+  bidCount: number;
+  openedAt: string;
+}
+
+export interface AuctionSnapshotDto {
+  minIncrement: number;
+  defaultBasePrice: number;
+  purses: AuctionTeamPurseDto[];
+  currentLot: AuctionCurrentLotDto | null;
+  /** Player IDs that went unsold at least once and are back in the pool. */
+  unsoldPlayerIds: string[];
 }
 
 export interface DraftOrderSlotDto {
@@ -50,6 +83,9 @@ export interface DraftSnapshotDto {
   slug: string;
   name: string;
   draftPhase: DraftPhase;
+  allocationMethod: AllocationMethod;
+  /** Populated only when allocationMethod is LIVE_AUCTION. */
+  auction: AuctionSnapshotDto | null;
   currentSlotIndex: number;
   picksPerTeam: number;
   draftOrderLocked: boolean;

@@ -7,6 +7,7 @@ import {
   getFixtureSideLabel,
 } from "@/features/tournament-run/match-presentation";
 import { getSessionUser } from "@/lib/auth/session";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import { getTournamentRunSummary } from "@/services/tournament-run-service";
 
 interface PageProps {
@@ -17,6 +18,7 @@ export default async function LeaderboardPage({ params }: PageProps) {
   const { slug } = await params;
   const user = await getSessionUser();
   if (!user) redirect(`/login?next=/tournament/${slug}/leaderboard`);
+  await requireTournamentViewAccess(slug, user.id);
 
   const summary = await getTournamentRunSummary(slug);
   if (!summary) notFound();

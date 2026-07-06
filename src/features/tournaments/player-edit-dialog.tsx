@@ -31,6 +31,8 @@ export interface PlayerEditSnapshot {
   photoUrl: string | null;
   notes: string | null;
   hasPaidEntryFee: boolean;
+  /** Auction base price in points; omit/null when the tournament default applies. */
+  basePrice?: number | null;
 }
 
 interface PlayerEditDialogProps {
@@ -58,6 +60,9 @@ export function PlayerEditDialog({
   const [photoUrl, setPhotoUrl] = useState(player.photoUrl ?? "");
   const [notes, setNotes] = useState(player.notes ?? "");
   const [hasPaidEntryFee, setHasPaidEntryFee] = useState(player.hasPaidEntryFee);
+  const [basePriceInput, setBasePriceInput] = useState(
+    player.basePrice != null ? String(player.basePrice) : "",
+  );
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -68,6 +73,7 @@ export function PlayerEditDialog({
     setPhotoUrl(player.photoUrl ?? "");
     setNotes(player.notes ?? "");
     setHasPaidEntryFee(player.hasPaidEntryFee);
+    setBasePriceInput(player.basePrice != null ? String(player.basePrice) : "");
     setError(null);
     setOpen(true);
   }
@@ -85,6 +91,8 @@ export function PlayerEditDialog({
         gender,
         notes: notes.trim() || undefined,
         hasPaidEntryFee,
+        basePrice:
+          basePriceInput.trim() === "" ? null : Number(basePriceInput.trim()),
       });
       if (!result.ok) {
         setError(result.error);
@@ -214,6 +222,28 @@ export function PlayerEditDialog({
                   maxLength={500}
                   placeholder="Playing style, doubles preference…"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor={`player-base-price-${player.id}`}>
+                  Auction base price{" "}
+                  <span className="font-normal text-muted-foreground">
+                    (points, optional)
+                  </span>
+                </Label>
+                <Input
+                  id={`player-base-price-${player.id}`}
+                  type="number"
+                  min={0}
+                  max={1_000_000}
+                  inputMode="numeric"
+                  value={basePriceInput}
+                  onChange={(event) => setBasePriceInput(event.target.value)}
+                  placeholder="Tournament default"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Only used in live-auction tournaments. Blank falls back to the
+                  tournament&apos;s default base price.
+                </p>
               </div>
               <label className="flex items-start gap-3 rounded-xl border border-border/70 bg-card/20 px-4 py-3">
                 <input

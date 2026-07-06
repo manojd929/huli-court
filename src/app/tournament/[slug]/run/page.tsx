@@ -17,6 +17,7 @@ import {
 import { ROUTES } from "@/constants/app";
 import { TournamentFormat } from "@/generated/prisma/enums";
 import { getSessionUser } from "@/lib/auth/session";
+import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
 import { getTournamentRunSummary } from "@/services/tournament-run-service";
 
 interface PageProps {
@@ -27,6 +28,7 @@ export default async function RunTournamentPage({ params }: PageProps) {
   const { slug } = await params;
   const user = await getSessionUser();
   if (!user) redirect(`/login?next=/tournament/${slug}/run`);
+  await requireTournamentViewAccess(slug, user.id);
 
   const summary = await getTournamentRunSummary(slug);
   if (!summary) notFound();

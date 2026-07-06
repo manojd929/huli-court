@@ -10,7 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { APP_NAME, ROUTES } from "@/constants/app";
 import { DRAFT_PHASE_LABEL } from "@/constants/draft-phase-labels";
-import type { DraftPhase } from "@/generated/prisma/enums";
+import { SPORT_META } from "@/constants/sport-meta";
+import type { DraftPhase, Sport } from "@/generated/prisma/enums";
 import type { TournamentChromeNavGroup } from "@/lib/navigation/tournament-nav-links";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,7 @@ interface TournamentShellHeaderProps {
   tournamentName: string;
   tournamentLogoUrl: string | null;
   tournamentColorHex: string | null;
+  sport: Sport;
   draftPhase: DraftPhase;
   navGroups: TournamentChromeNavGroup[];
 }
@@ -38,6 +40,7 @@ export function TournamentShellHeader({
   tournamentName,
   tournamentLogoUrl,
   tournamentColorHex,
+  sport,
   draftPhase,
   navGroups,
 }: TournamentShellHeaderProps) {
@@ -105,6 +108,12 @@ export function TournamentShellHeader({
                       <h1 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                         {tournamentName}
                       </h1>
+                      <Badge
+                        variant="secondary"
+                        className="rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-accent"
+                      >
+                        {SPORT_META[sport].emoji} {SPORT_META[sport].label}
+                      </Badge>
                       <Badge
                         variant="secondary"
                         className="rounded-full border border-border/70 bg-background/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/80"
@@ -189,7 +198,7 @@ export function TournamentShellHeader({
                     className={cn(
                       "inline-flex min-h-10 items-center rounded-full border px-4 py-2 text-sm font-medium transition-all",
                       isActiveLink
-                        ? "border-primary/20 bg-primary/10 text-foreground shadow-sm"
+                        ? "border-brand/40 bg-brand/10 text-foreground shadow-sm"
                         : "border-border/70 bg-background/80 text-muted-foreground hover:border-border hover:bg-background hover:text-foreground",
                     )}
                   >

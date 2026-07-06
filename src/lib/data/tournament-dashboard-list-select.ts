@@ -17,6 +17,7 @@ export const tournamentDashboardListSelect = {
   id: true,
   name: true,
   slug: true,
+  sport: true,
   format: true,
   draftPhase: true,
   updatedAt: true,
