@@ -8,17 +8,18 @@ database is already migrated). The steps below need **your interactive Vercel
 auth**, which a headless agent session can't perform — so run them yourself;
 they take ~5 minutes.
 
-## 0. Decision: which Supabase project is production?
+## 0. Database: reuse the current Supabase project as production ✅ (DECIDED)
 
-- **Recommended (MVP): reuse the current Supabase project as production.** It's
-  already on the latest schema (all migrations applied), has clean data (test
-  data was wiped), and holds the 4 commissioner accounts. Fastest path live.
-- **Alternative (cleaner separation): create a fresh prod Supabase project.**
-  More isolation between dev and prod, but you'd re-run migrations
-  (`npx prisma migrate deploy`), re-provision commissioner accounts, and swap
-  all the env vars. Do this later if/when you want a separate staging DB.
+Decision (2026-07-06): **the current Supabase project IS production.** Verified
+ready:
+- All 11 migrations applied — `prisma migrate status` → "schema is up to date".
+- Clean data: 0 tournaments / leagues / teams / players / orgs.
+- 4 ADMIN commissioner accounts present (see `docs/commissioner-accounts.md`).
 
-The steps below assume the recommended path (reuse current project).
+So there is **nothing more to do on the database** — just wire the same Supabase
+env vars into Vercel below. (If you ever want a separate staging DB later, spin
+up a second Supabase project, `npx prisma migrate deploy` against it, and
+re-provision accounts — but that's optional and not needed to launch.)
 
 ## 1. Environment variables (set these on Vercel)
 
