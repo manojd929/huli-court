@@ -1,8 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ROUTES } from "@/constants/app";
+import { APP_NAME, ROUTES } from "@/constants/app";
 import { SignupForm } from "@/features/auth/signup-form";
 import { getSessionUser } from "@/lib/auth/session";
 
@@ -32,6 +33,14 @@ export default async function SignupPage() {
         </header>
 
         <main className="flex flex-1 flex-col justify-center py-7 sm:py-8 md:py-10">
+          <Image
+            src="/brand/hulicourt-lockup-full.webp"
+            alt={`${APP_NAME} — Draft. Auction. Play. Win.`}
+            width={291}
+            height={340}
+            className="mx-auto mb-6 h-24 w-auto rounded-xl sm:h-28"
+            priority
+          />
           <SignupForm />
         </main>
 

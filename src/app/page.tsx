@@ -1,9 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { APP_NAME, ROUTES } from "@/constants/app";
 import { cn } from "@/lib/utils";
+
+const LOGO_SRC = "/brand/hulicourt-lockup.webp";
+const LOGO_RATIO = { width: 173, height: 150 };
 
 export default function LandingPage() {
   return (
@@ -13,9 +17,14 @@ export default function LandingPage() {
         aria-hidden
       />
       <header className="relative z-10 flex flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-8 md:px-16 md:py-6">
-        <span className="text-xs font-semibold uppercase tracking-widest text-primary sm:text-sm sm:tracking-[0.25em]">
-          {APP_NAME}
-        </span>
+        <Image
+          src={LOGO_SRC}
+          alt={APP_NAME}
+          width={LOGO_RATIO.width}
+          height={LOGO_RATIO.height}
+          className="h-11 w-auto shrink-0 rounded-xl sm:h-12"
+          priority
+        />
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <ThemeToggle />
           <Link href={ROUTES.login} className={cn(buttonVariants({ variant: "ghost" }), "min-h-10")}>
@@ -30,7 +39,7 @@ export default function LandingPage() {
       <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 pb-16 pt-6 sm:px-8 md:px-16 md:pb-24 md:pt-10">
         <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-brand-accent sm:text-xs">
           <span className="size-1.5 rounded-full bg-brand" aria-hidden />
-          Drafts · Auctions · Live tournaments
+          Draft. Auction. Play. Win.
         </p>
         <h1 className="mt-4 max-w-4xl text-balance text-3xl font-semibold leading-tight tracking-tight sm:mt-8 sm:text-5xl md:text-6xl lg:text-7xl dark:text-white">
           Run your club&apos;s draft or auction like the big leagues.

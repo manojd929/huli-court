@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { APP_NAME } from "@/constants/app";
@@ -11,9 +12,13 @@ import { APP_NAME } from "@/constants/app";
 export default function NotFound() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand">
-        {APP_NAME}
-      </p>
+      <Image
+        src="/brand/hulicourt-lockup-full.webp"
+        alt={`${APP_NAME} — Draft. Auction. Play. Win.`}
+        width={291}
+        height={340}
+        className="h-24 w-auto rounded-xl sm:h-28"
+      />
       <div className="flex items-center gap-4">
         <span className="text-5xl font-bold tabular-nums text-foreground">
           404

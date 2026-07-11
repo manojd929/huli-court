@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DeleteTournamentButton } from "@/features/dashboard/delete-tournament-button";
-import { APP_NAME, ROUTES } from "@/constants/app";
+import { ROUTES } from "@/constants/app";
 import { DRAFT_PHASE_LABEL } from "@/constants/draft-phase-labels";
 import { SPORT_META } from "@/constants/sport-meta";
 import { TOURNAMENT_FORMAT_LABEL } from "@/constants/tournament-format-labels";
@@ -89,11 +89,7 @@ export default async function DashboardPage() {
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 pb-14 sm:gap-10 sm:px-6 sm:py-12">
       <header className="flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
         <div className="max-w-xl">
-          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-accent sm:tracking-[0.2em]">
-            <span className="size-1.5 rounded-full bg-brand" aria-hidden />
-            {APP_NAME}
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl" data-testid="dashboard-title">Your tournaments</h1>
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl" data-testid="dashboard-title">Your tournaments</h1>
           <p className="mt-2 text-sm text-muted-foreground sm:text-base">
             Set up teams and players, pick how squads are formed — draft, random, or a
             live auction — then run it on the shared board.

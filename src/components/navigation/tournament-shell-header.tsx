@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
@@ -8,7 +8,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { AccountHeaderActions } from "@/components/auth/account-header-actions";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { APP_NAME, ROUTES } from "@/constants/app";
+import { ROUTES } from "@/constants/app";
 import { DRAFT_PHASE_LABEL } from "@/constants/draft-phase-labels";
 import { SPORT_META } from "@/constants/sport-meta";
 import type { DraftPhase, Sport } from "@/generated/prisma/enums";
@@ -71,13 +71,6 @@ export function TournamentShellHeader({
             <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                  <Link
-                    href={ROUTES.dashboard}
-                    className="font-semibold tracking-[0.16em] text-foreground/85 transition-colors hover:text-foreground"
-                  >
-                    {APP_NAME}
-                  </Link>
-                  <ChevronRightIcon className="size-3.5 opacity-50" aria-hidden />
                   <Link
                     href={ROUTES.dashboard}
                     className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"

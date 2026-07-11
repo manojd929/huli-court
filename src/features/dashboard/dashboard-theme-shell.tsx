@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Settings } from "lucide-react";
 
 import { AccountHeaderActions } from "@/components/auth/account-header-actions";
-import { APP_NAME, ROUTES } from "@/constants/app";
+import { ROUTES } from "@/constants/app";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -27,12 +27,6 @@ export function DashboardThemeShell({
       <header className="border-b border-border/40 bg-background/80">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-2.5 md:gap-x-5 md:px-6 md:py-3">
           <div className="flex min-w-0 flex-wrap items-center gap-x-5 gap-y-2 sm:gap-x-8">
-            <Link
-              href={ROUTES.dashboard}
-              className="inline-flex truncate text-sm font-semibold tracking-tight text-foreground/90 underline-offset-4 transition-colors hover:text-foreground"
-            >
-              {APP_NAME}
-            </Link>
             <Link
               href={ROUTES.settings}
               prefetch={true}
