@@ -80,10 +80,13 @@ export default async function PlayersPage({ params }: PageProps) {
       <header>
         <h2 className="text-xl font-semibold tracking-tight sm:text-2xl lg:text-3xl">Players</h2>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base">
-          Build the draft pool privately on this desk, then{' '}
-          <Link href={ROUTES.categories(slug)} className="font-medium text-foreground underline-offset-4 hover:underline">
+          Build the draft pool privately on this desk, then{" "}
+          <Link
+            href={ROUTES.categories(slug)}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
             tune roster groups
-          </Link>{' '}
+          </Link>{" "}
           before syncing franchise owners from Teams.
         </p>
       </header>

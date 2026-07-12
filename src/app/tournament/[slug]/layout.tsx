@@ -14,10 +14,7 @@ interface TournamentLayoutProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function TournamentLayout({
-  children,
-  params,
-}: TournamentLayoutProps) {
+export default async function TournamentLayout({ children, params }: TournamentLayoutProps) {
   const { slug } = await params;
   const tournament = await getTournamentBySlug(slug);
   if (!tournament) notFound();

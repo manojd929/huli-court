@@ -91,10 +91,7 @@ async function countTeamCategoryOccupancyTx(
 
 function isUniqueViolation(e: unknown): boolean {
   return (
-    typeof e === "object" &&
-    e !== null &&
-    "code" in e &&
-    (e as { code?: string }).code === "P2002"
+    typeof e === "object" && e !== null && "code" in e && (e as { code?: string }).code === "P2002"
   );
 }
 
@@ -105,74 +102,71 @@ export async function openAuctionLot(params: {
 }) {
   try {
     await prisma.$transaction(async (tx) => {
-    const tournament = await tx.tournament.findFirst({
-      where: { slug: params.tournamentSlug, deletedAt: null },
-    });
-    if (!tournament) throw new DraftServiceError("Tournament not found.");
-    if (tournament.createdById !== params.actorUserId) {
-      throw new DraftServiceError("Only the tournament admin can open a lot.");
-    }
-    assertLiveAuctionTournament(tournament);
+      const tournament = await tx.tournament.findFirst({
+        where: { slug: params.tournamentSlug, deletedAt: null },
+      });
+      if (!tournament) throw new DraftServiceError("Tournament not found.");
+      if (tournament.createdById !== params.actorUserId) {
+        throw new DraftServiceError("Only the tournament admin can open a lot.");
+      }
+      assertLiveAuctionTournament(tournament);
 
-    const openLot = await tx.auctionLot.findFirst({
-      where: { tournamentId: tournament.id, status: AuctionLotStatus.OPEN },
-      select: { id: true },
-    });
-    if (openLot) {
-      throw new DraftServiceError(
-        "Another lot is still open. Close it (sold/unsold) before opening the next one.",
-      );
-    }
+      const openLot = await tx.auctionLot.findFirst({
+        where: { tournamentId: tournament.id, status: AuctionLotStatus.OPEN },
+        select: { id: true },
+      });
+      if (openLot) {
+        throw new DraftServiceError(
+          "Another lot is still open. Close it (sold/unsold) before opening the next one.",
+        );
+      }
 
-    const player = await tx.player.findFirst({
-      where: {
-        id: params.playerId,
-        tournamentId: tournament.id,
-        deletedAt: null,
-      },
-      include: { rosterCategory: { select: { name: true } } },
-    });
-    if (!player) throw new DraftServiceError("Player not found.");
-    if (player.isUnavailable) throw new DraftServiceError("Player is unavailable.");
-    if (player.isLocked) throw new DraftServiceError("Player is locked.");
-    if (player.linkedOwnerUserId !== null) {
-      throw new DraftServiceError(
-        "Roster rows tied to a franchise owner's login cannot go under the hammer.",
-      );
-    }
-    const alreadyPicked = await tx.pick.findFirst({
-      where: {
-        tournamentId: tournament.id,
-        playerId: player.id,
-        status: PickStatus.CONFIRMED,
-      },
-      select: { id: true },
-    });
-    if (alreadyPicked) throw new DraftServiceError("Player already sold or drafted.");
+      const player = await tx.player.findFirst({
+        where: {
+          id: params.playerId,
+          tournamentId: tournament.id,
+          deletedAt: null,
+        },
+        include: { rosterCategory: { select: { name: true } } },
+      });
+      if (!player) throw new DraftServiceError("Player not found.");
+      if (player.isUnavailable) throw new DraftServiceError("Player is unavailable.");
+      if (player.isLocked) throw new DraftServiceError("Player is locked.");
+      if (player.linkedOwnerUserId !== null) {
+        throw new DraftServiceError(
+          "Roster rows tied to a franchise owner's login cannot go under the hammer.",
+        );
+      }
+      const alreadyPicked = await tx.pick.findFirst({
+        where: {
+          tournamentId: tournament.id,
+          playerId: player.id,
+          status: PickStatus.CONFIRMED,
+        },
+        select: { id: true },
+      });
+      if (alreadyPicked) throw new DraftServiceError("Player already sold or drafted.");
 
-    // Never open a lot at 0 (would let a player "sell" for free).
-    const basePrice = Math.max(
-      1,
-      player.basePrice ?? tournament.auctionDefaultBasePrice,
-    );
-    const lot = await tx.auctionLot.create({
-      data: {
-        tournamentId: tournament.id,
-        playerId: player.id,
-        basePrice,
-        openedByUserId: params.actorUserId,
-      },
-    });
+      // Never open a lot at 0 (would let a player "sell" for free).
+      const basePrice = Math.max(1, player.basePrice ?? tournament.auctionDefaultBasePrice);
+      const lot = await tx.auctionLot.create({
+        data: {
+          tournamentId: tournament.id,
+          playerId: player.id,
+          basePrice,
+          openedByUserId: params.actorUserId,
+        },
+      });
 
-    await tx.draftLog.create({
-      data: {
-        tournamentId: tournament.id,
-        action: DraftLogAction.LOT_OPENED,
-        message: `${player.name} (${player.rosterCategory.name}) is under the hammer at base ${basePrice}.`,
-        payload: { lotId: lot.id, playerId: player.id, basePrice } as Prisma.InputJsonValue,
-        actorUserId: params.actorUserId,
-      },
-    });
+      await tx.draftLog.create({
+        data: {
+          tournamentId: tournament.id,
+          action: DraftLogAction.LOT_OPENED,
+          message: `${player.name} (${player.rosterCategory.name}) is under the hammer at base ${basePrice}.`,
+          payload: { lotId: lot.id, playerId: player.id, basePrice } as Prisma.InputJsonValue,
+          actorUserId: params.actorUserId,
+        },
+      });
     });
   } catch (e) {
     // The partial unique index (one OPEN lot per tournament) can race the
@@ -239,9 +233,7 @@ export async function placeAuctionBid(params: {
       );
     }
     if (rejection?.reason === "INSUFFICIENT_PURSE") {
-      throw new DraftServiceError(
-        `Insufficient purse. You have ${rejection.purseRemaining} left.`,
-      );
+      throw new DraftServiceError(`Insufficient purse. You have ${rejection.purseRemaining} left.`);
     }
 
     if (!tournament.overrideValidation) {
@@ -280,9 +272,7 @@ export async function placeAuctionBid(params: {
       },
     });
     if (updated.count === 0) {
-      throw new DraftServiceError(
-        "Another bid landed first. Check the new price and bid again.",
-      );
+      throw new DraftServiceError("Another bid landed first. Check the new price and bid again.");
     }
 
     await tx.auctionBid.create({
@@ -319,7 +309,9 @@ export async function closeAuctionLot(params: {
   await prisma.$transaction(async (tx) => {
     const tournament = await tx.tournament.findFirst({
       where: { slug: params.tournamentSlug, deletedAt: null },
-      include: { teams: { where: { deletedAt: null }, select: { id: true, name: true, ownerUserId: true } } },
+      include: {
+        teams: { where: { deletedAt: null }, select: { id: true, name: true, ownerUserId: true } },
+      },
     });
     if (!tournament) throw new DraftServiceError("Tournament not found.");
     if (tournament.createdById !== params.actorUserId) {
@@ -342,20 +334,18 @@ export async function closeAuctionLot(params: {
 
     if (params.outcome === "SOLD") {
       if (lot.currentBid === null || lot.currentBidTeamId === null) {
-        throw new DraftServiceError(
-          "No bids on this lot. Mark it unsold instead.",
-        );
+        throw new DraftServiceError("No bids on this lot. Mark it unsold instead.");
       }
       // Defense-in-depth: re-check the winning team can still afford the bid at
       // close time (purse/overrides could have changed since the bid landed).
-      const winningTeam = tournament.teams.find(
-        (t) => t.id === lot.currentBidTeamId,
-      );
+      const winningTeam = tournament.teams.find((t) => t.id === lot.currentBidTeamId);
       const purse =
-        (await tx.team.findFirst({
-          where: { id: lot.currentBidTeamId, tournamentId: tournament.id },
-          select: { purseOverride: true },
-        }))?.purseOverride ?? tournament.auctionPurse;
+        (
+          await tx.team.findFirst({
+            where: { id: lot.currentBidTeamId, tournamentId: tournament.id },
+            select: { purseOverride: true },
+          })
+        )?.purseOverride ?? tournament.auctionPurse;
       const spent = await computeTeamSpentTx(tx, tournament.id, lot.currentBidTeamId);
       if (lot.currentBid > purse - spent) {
         throw new DraftServiceError(
@@ -436,10 +426,7 @@ export async function closeAuctionLot(params: {
     await tx.auctionLot.update({
       where: { id: lot.id },
       data: {
-        status:
-          params.outcome === "UNSOLD"
-            ? AuctionLotStatus.UNSOLD
-            : AuctionLotStatus.CANCELLED,
+        status: params.outcome === "UNSOLD" ? AuctionLotStatus.UNSOLD : AuctionLotStatus.CANCELLED,
         closedAt: now,
       },
     });
@@ -447,9 +434,7 @@ export async function closeAuctionLot(params: {
       data: {
         tournamentId: tournament.id,
         action:
-          params.outcome === "UNSOLD"
-            ? DraftLogAction.LOT_UNSOLD
-            : DraftLogAction.LOT_CANCELLED,
+          params.outcome === "UNSOLD" ? DraftLogAction.LOT_UNSOLD : DraftLogAction.LOT_CANCELLED,
         message:
           params.outcome === "UNSOLD"
             ? `${lot.player.name} goes unsold, back in the pool for a later round.`
@@ -462,9 +447,7 @@ export async function closeAuctionLot(params: {
 }
 
 /** Purse standings for every team in a LIVE_AUCTION tournament. */
-export async function computePurseStates(
-  tournamentId: string,
-): Promise<TeamPurseState[]> {
+export async function computePurseStates(tournamentId: string): Promise<TeamPurseState[]> {
   const [tournament, teams, spentRows] = await Promise.all([
     prisma.tournament.findFirst({
       where: { id: tournamentId, deletedAt: null },
@@ -485,9 +468,7 @@ export async function computePurseStates(
     }),
   ]);
   if (!tournament) throw new DraftServiceError("Tournament not found.");
-  const spentByTeam = new Map(
-    spentRows.map((row) => [row.teamId, row._sum.price ?? 0]),
-  );
+  const spentByTeam = new Map(spentRows.map((row) => [row.teamId, row._sum.price ?? 0]));
   return teams.map((team) => {
     const purse = team.purseOverride ?? tournament.auctionPurse;
     const spent = spentByTeam.get(team.id) ?? 0;

@@ -36,10 +36,7 @@ interface AuctionPendingReviewSheetProps {
   snapshot: DraftSnapshotDto;
 }
 
-export function AuctionPendingReviewSheet({
-  slug,
-  snapshot,
-}: AuctionPendingReviewSheetProps) {
+export function AuctionPendingReviewSheet({ slug, snapshot }: AuctionPendingReviewSheetProps) {
   const open =
     snapshot.draftPhase === DraftPhase.LIVE &&
     Boolean(snapshot.pendingPickPlayerId && snapshot.pendingPickTeamId);
@@ -47,7 +44,7 @@ export function AuctionPendingReviewSheet({
   const pendingPlayer = useMemo(
     () =>
       snapshot.pendingPickPlayerId
-        ? snapshot.players.find((p) => p.id === snapshot.pendingPickPlayerId) ?? null
+        ? (snapshot.players.find((p) => p.id === snapshot.pendingPickPlayerId) ?? null)
         : null,
     [snapshot.pendingPickPlayerId, snapshot.players],
   );
@@ -55,7 +52,7 @@ export function AuctionPendingReviewSheet({
   const nominatingTeam = useMemo(
     () =>
       snapshot.pendingPickTeamId
-        ? snapshot.teams.find((t) => t.id === snapshot.pendingPickTeamId) ?? null
+        ? (snapshot.teams.find((t) => t.id === snapshot.pendingPickTeamId) ?? null)
         : null,
     [snapshot.pendingPickTeamId, snapshot.teams],
   );
@@ -65,19 +62,16 @@ export function AuctionPendingReviewSheet({
   const [busy, setBusy] = useState(false);
 
   const currentTurnTeamId = useMemo(() => {
-    const slot = snapshot.draftSlots.find(
-      (s) => s.slotIndex === snapshot.currentSlotIndex,
-    );
+    const slot = snapshot.draftSlots.find((s) => s.slotIndex === snapshot.currentSlotIndex);
     return slot?.teamId ?? null;
   }, [snapshot.currentSlotIndex, snapshot.draftSlots]);
 
-  const clockMismatch =
-    Boolean(
-      currentTurnTeamId &&
-        snapshot.pendingPickTeamId &&
-        currentTurnTeamId !== snapshot.pendingPickTeamId &&
-        !snapshot.overrideValidation,
-    );
+  const clockMismatch = Boolean(
+    currentTurnTeamId &&
+    snapshot.pendingPickTeamId &&
+    currentTurnTeamId !== snapshot.pendingPickTeamId &&
+    !snapshot.overrideValidation,
+  );
 
   const manualAssignTeamTriggerLabel = useMemo(() => {
     if (!manualTeamId) {
@@ -117,7 +111,7 @@ export function AuctionPendingReviewSheet({
         showCloseButton={false}
         className="max-h-[92vh] gap-0 overflow-y-auto rounded-t-3xl border-t border-border bg-background/97 p-0 shadow-2xl backdrop-blur-xl sm:max-h-[85vh]"
       >
-        <SheetHeader className="sticky top-0 z-10 border-b border-border/80 bg-background/95 px-4 pb-4 pt-5 backdrop-blur-md sm:px-6">
+        <SheetHeader className="sticky top-0 z-10 border-b border-border/80 bg-background/95 px-4 pt-5 pb-4 backdrop-blur-md sm:px-6">
           <SheetTitle className="text-lg sm:text-xl">Nominee ready</SheetTitle>
           <SheetDescription className="text-sm">
             Confirm to add them to that franchise roster, or reject to release the nominee.
@@ -171,7 +165,7 @@ export function AuctionPendingReviewSheet({
               </div>
 
               <div className="rounded-xl border border-border/80 bg-muted/30 px-3 py-3 text-sm">
-                <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                   Franchise / turn
                 </span>
                 <p className="mt-1 text-base font-semibold">
@@ -185,7 +179,9 @@ export function AuctionPendingReviewSheet({
               </div>
 
               {pendingPlayer.notes ? (
-                <p className="text-sm leading-relaxed text-muted-foreground">{pendingPlayer.notes}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {pendingPlayer.notes}
+                </p>
               ) : null}
 
               {!showOverride ? (
@@ -196,9 +192,7 @@ export function AuctionPendingReviewSheet({
                       className="min-h-12 flex-[2] text-base font-semibold"
                       disabled={busy}
                       onClick={() =>
-                        void run("Pick saved", () =>
-                          confirmPickAction({ tournamentSlug: slug }),
-                        )
+                        void run("Pick saved", () => confirmPickAction({ tournamentSlug: slug }))
                       }
                     >
                       Confirm pick
@@ -240,8 +234,8 @@ export function AuctionPendingReviewSheet({
               ) : (
                 <div className="mt-auto space-y-3 rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4">
                   <p className="text-xs font-medium text-primary">
-                    Manual assign skips the nominee queue; use for clock corrections while rules
-                    are on (subject to squad caps).
+                    Manual assign skips the nominee queue; use for clock corrections while rules are
+                    on (subject to squad caps).
                   </p>
                   <Select
                     value={manualTeamId || undefined}
@@ -256,8 +250,7 @@ export function AuctionPendingReviewSheet({
                       {snapshot.teams.map((t) => (
                         <SelectItem key={t.id} value={t.id}>
                           {t.name}
-                          {manualTeamId === t.id &&
-                          snapshot.pendingPickTeamId === t.id
+                          {manualTeamId === t.id && snapshot.pendingPickTeamId === t.id
                             ? " (nominated franchise)"
                             : ""}
                         </SelectItem>
@@ -306,7 +299,9 @@ export function AuctionPendingReviewSheet({
         <SheetFooter className="sticky bottom-0 border-t border-border/80 bg-background/95 px-4 py-3 backdrop-blur-md sm:px-6">
           <p className="w-full text-center text-[11px] leading-snug text-muted-foreground sm:text-xs">
             Shortcuts ·{" "}
-            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono">Enter</kbd>{" "}
+            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono">
+              Enter
+            </kbd>{" "}
             confirm ·{" "}
             <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono">
               Backspace

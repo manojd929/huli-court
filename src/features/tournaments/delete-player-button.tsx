@@ -87,9 +87,8 @@ export function DeletePlayerButton({
           <AlertDialogHeader>
             <AlertDialogTitle>Remove player?</AlertDialogTitle>
             <AlertDialogDescription className="text-left">
-              Permanently remove{" "}
-              <span className="font-medium text-foreground">{playerName}</span> from this auction
-              roster (only when they have no picks on record).
+              Permanently remove <span className="font-medium text-foreground">{playerName}</span>{" "}
+              from this auction roster (only when they have no picks on record).
             </AlertDialogDescription>
           </AlertDialogHeader>
           {error ? (

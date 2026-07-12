@@ -59,16 +59,16 @@ export default async function TeamsPage({ params }: PageProps) {
   });
 
   const canInviteOwners =
-    tournament.draftPhase === DraftPhase.SETUP ||
-    tournament.draftPhase === DraftPhase.READY;
+    tournament.draftPhase === DraftPhase.SETUP || tournament.draftPhase === DraftPhase.READY;
 
   return (
     <div className="space-y-6 sm:space-y-8">
       <header>
         <h2 className="text-xl font-semibold tracking-tight sm:text-2xl lg:text-3xl">Teams</h2>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base">
-          Franchise labels, visuals, and owner assignment. Capture new franchises from{' '}
-          <span className="font-medium text-foreground">Add franchise</span> so this page stays tidy.
+          Franchise labels, visuals, and owner assignment. Capture new franchises from{" "}
+          <span className="font-medium text-foreground">Add franchise</span> so this page stays
+          tidy.
         </p>
       </header>
 
@@ -119,7 +119,7 @@ export default async function TeamsPage({ params }: PageProps) {
                   <TableCell className="align-middle font-medium">{team.name}</TableCell>
                   <TableCell className="align-middle">{team.shortName ?? "-"}</TableCell>
                   <TableCell className="align-middle">
-                    <div className="flex min-w-0 max-w-[min(26rem,92vw)] flex-col gap-2 lg:max-w-none lg:flex-row lg:items-center lg:gap-3">
+                    <div className="flex max-w-[min(26rem,92vw)] min-w-0 flex-col gap-2 lg:max-w-none lg:flex-row lg:items-center lg:gap-3">
                       <span className="min-w-0 flex-1 text-sm leading-snug break-words">
                         {team.owner ? (team.owner.displayName ?? team.owner.email) : "-"}
                       </span>

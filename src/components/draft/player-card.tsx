@@ -41,9 +41,7 @@ export function PlayerCard({
   presentationHighlight = false,
 }: PlayerCardProps) {
   const picked = Boolean(player.hasConfirmedPick && player.assignedTeamId);
-  const pending =
-    !player.hasConfirmedPick &&
-    Boolean(player.assignedTeamId);
+  const pending = !player.hasConfirmedPick && Boolean(player.assignedTeamId);
 
   return (
     <motion.div
@@ -59,10 +57,9 @@ export function PlayerCard({
           "relative flex h-full flex-col overflow-hidden border bg-card/80 shadow-sm backdrop-blur-sm transition-all duration-300",
           presentationHighlight && !picked && !pending && "border-primary/20 bg-card shadow-md",
           compact ? "border-border/70 p-2 sm:p-2.5" : "p-3 sm:p-4",
-          picked &&
-            "pointer-events-none scale-[0.99] opacity-65 grayscale border-muted",
+          picked && "pointer-events-none scale-[0.99] border-muted opacity-65 grayscale",
           pending &&
-            "border-amber-400/70 ring-2 ring-amber-400/40 shadow-[0_0_40px_-12px_rgba(251,191,36,0.55)]",
+            "border-amber-400/70 shadow-[0_0_40px_-12px_rgba(251,191,36,0.55)] ring-2 ring-amber-400/40",
           !picked &&
             !pending &&
             emphasize &&
@@ -70,7 +67,7 @@ export function PlayerCard({
           !picked &&
             !pending &&
             player.runsFranchiseLogin &&
-            "opacity-75 border-muted-foreground/30 bg-muted/30",
+            "border-muted-foreground/30 bg-muted/30 opacity-75",
         )}
       >
         {(picked || pending) && (
@@ -84,10 +81,10 @@ export function PlayerCard({
             className={cn(
               "relative w-full overflow-hidden rounded-xl bg-muted ring-1 ring-border",
               presentationHighlight &&
-                "rounded-2xl bg-gradient-to-b from-muted to-muted/60 ring-2 ring-primary/30 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.35)] dark:shadow-[0_12px_48px_-12px_rgba(0,0,0,0.55)]",
+                "rounded-2xl bg-gradient-to-b from-muted to-muted/60 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.35)] ring-2 ring-primary/30 dark:shadow-[0_12px_48px_-12px_rgba(0,0,0,0.55)]",
               compact
                 ? presentationHighlight
-                  ? "aspect-[5/6] min-h-[11.5rem] max-h-none sm:min-h-[13.5rem] sm:aspect-[4/5]"
+                  ? "aspect-[5/6] max-h-none min-h-[11.5rem] sm:aspect-[4/5] sm:min-h-[13.5rem]"
                   : "aspect-[5/6] max-h-40 sm:aspect-square sm:max-h-44"
                 : presentationHighlight
                   ? "aspect-[3/4] min-h-[210px] sm:min-h-[272px]"
@@ -127,7 +124,7 @@ export function PlayerCard({
           <div className="flex flex-col gap-2">
             <p
               className={cn(
-                "break-words text-center font-semibold leading-snug tracking-tight",
+                "text-center leading-snug font-semibold tracking-tight break-words",
                 compact
                   ? presentationHighlight
                     ? "text-[15px] sm:text-base"
@@ -156,11 +153,7 @@ export function PlayerCard({
               />
               <Badge
                 variant="outline"
-                className={cn(
-                  badgeWrap,
-                  "text-center",
-                  compact && "min-h-6 py-0.5 text-[11px]",
-                )}
+                className={cn(badgeWrap, "text-center", compact && "min-h-6 py-0.5 text-[11px]")}
               >
                 {GENDER_LABEL[player.gender]}
               </Badge>
@@ -183,23 +176,23 @@ export function PlayerCard({
           </div>
 
           {player.notes ? (
-            <p className="break-words text-center text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className="text-center text-sm leading-relaxed break-words text-muted-foreground sm:text-base">
               {player.notes}
             </p>
           ) : null}
 
           {picked && team ? (
             <div className="mt-auto flex flex-col gap-1 rounded-lg bg-muted/70 px-3 py-3 text-center sm:text-left">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:text-sm">
+              <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase sm:text-sm">
                 Taken by
               </span>
-              <span className="break-words text-base font-semibold leading-snug sm:text-lg">
+              <span className="text-base leading-snug font-semibold break-words sm:text-lg">
                 {team.name}
               </span>
             </div>
           ) : null}
           {pending && team ? (
-            <div className="mt-auto rounded-lg border border-amber-400/40 bg-amber-500/10 px-3 py-3 text-center text-sm font-medium leading-snug text-amber-950 sm:text-base dark:text-amber-100">
+            <div className="mt-auto rounded-lg border border-amber-400/40 bg-amber-500/10 px-3 py-3 text-center text-sm leading-snug font-medium text-amber-950 sm:text-base dark:text-amber-100">
               Waiting for organizer · {team.shortName ?? team.name}
             </div>
           ) : null}
@@ -211,7 +204,9 @@ export function PlayerCard({
               aria-busy={nominateLoading}
               className={cn(
                 "mt-auto inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary text-center font-semibold text-primary-foreground transition hover:bg-primary/90 active:translate-y-px active:scale-[0.985] active:brightness-[0.98] disabled:cursor-not-allowed disabled:opacity-40",
-                compact ? "min-h-9 px-2 py-2 text-xs sm:text-[13px]" : "min-h-12 px-4 py-3 text-base sm:min-h-14 sm:text-lg",
+                compact
+                  ? "min-h-9 px-2 py-2 text-xs sm:text-[13px]"
+                  : "min-h-12 px-4 py-3 text-base sm:min-h-14 sm:text-lg",
               )}
             >
               {nominateLoading ? (

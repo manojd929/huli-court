@@ -92,9 +92,7 @@ describe("validateSquadRulesAgainstRoster", () => {
 
     expect(result.ok).toBe(false);
     if (result.ok) throw new Error("expected failure");
-    expect(result.errors.some((e) => e.includes("Not enough players"))).toBe(
-      true,
-    );
+    expect(result.errors.some((e) => e.includes("Not enough players"))).toBe(true);
   });
 
   it("passes draft-length check when requireDraftSlotsVsRoster is false (auto-set)", () => {

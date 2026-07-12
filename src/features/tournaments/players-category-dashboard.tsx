@@ -13,10 +13,7 @@ interface PlayersCategoryDashboardProps {
   totalPlayers: number;
 }
 
-export function PlayersCategoryDashboard({
-  rows,
-  totalPlayers,
-}: PlayersCategoryDashboardProps) {
+export function PlayersCategoryDashboard({ rows, totalPlayers }: PlayersCategoryDashboardProps) {
   const activeRows = rows.filter((row) => row.count > 0);
 
   return (
@@ -31,7 +28,7 @@ export function PlayersCategoryDashboard({
         Roster mix
       </h3>
       <p className="mt-1 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-        <span className="font-semibold tabular-nums text-foreground">{totalPlayers}</span>{" "}
+        <span className="font-semibold text-foreground tabular-nums">{totalPlayers}</span>{" "}
         {totalPlayers === 1 ? "player" : "players"} across roster groups ({activeRows.length} group
         {activeRows.length === 1 ? "" : "s"} occupied).
       </p>
@@ -42,15 +39,10 @@ export function PlayersCategoryDashboard({
           </p>
         ) : (
           rows.map((row) => (
-            <Card
-              key={row.rosterCategoryId}
-              className="h-full border-border/80 bg-card/40"
-            >
+            <Card key={row.rosterCategoryId} className="h-full border-border/80 bg-card/40">
               <CardHeader className="gap-2">
                 <RosterCategoryPill name={row.name} colorHex={row.colorHex} />
-                <CardTitle className="text-3xl font-semibold tracking-tight">
-                  {row.count}
-                </CardTitle>
+                <CardTitle className="text-3xl font-semibold tracking-tight">{row.count}</CardTitle>
                 <CardDescription>
                   {row.count === 1 ? "Player" : "Players"} in this roster group
                 </CardDescription>

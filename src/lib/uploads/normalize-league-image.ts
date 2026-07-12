@@ -4,8 +4,7 @@ import sharp from "sharp";
 export const LEAGUE_IMAGE_OUTPUT_MAX_BYTES = Math.floor(2.5 * 1024 * 1024);
 
 export type NormalizeLeagueImageResult =
-  | { ok: true; buffer: Buffer }
-  | { ok: false; reason: "decode_error" | "still_too_large" };
+  { ok: true; buffer: Buffer } | { ok: false; reason: "decode_error" | "still_too_large" };
 
 /**
  * Decodes common raster formats, applies EXIF rotation, resizes if needed,

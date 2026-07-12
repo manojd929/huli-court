@@ -61,10 +61,7 @@ async function countOwnerOccupiedSlotsTx(
   });
 }
 
-export async function assertTournamentAdmin(
-  tournamentId: string,
-  userId: string,
-): Promise<void> {
+export async function assertTournamentAdmin(tournamentId: string, userId: string): Promise<void> {
   const t = await prisma.tournament.findFirst({
     where: { id: tournamentId, deletedAt: null },
     select: { createdById: true },
@@ -151,10 +148,7 @@ async function buildAuctionSnapshot(
   const spentByTeam = new Map<string, number>();
   for (const pick of t.picks) {
     if (pick.price !== null) {
-      spentByTeam.set(
-        pick.teamId,
-        (spentByTeam.get(pick.teamId) ?? 0) + pick.price,
-      );
+      spentByTeam.set(pick.teamId, (spentByTeam.get(pick.teamId) ?? 0) + pick.price);
     }
   }
   const soldPlayerIds = new Set(t.picks.map((p) => p.playerId));
@@ -184,11 +178,10 @@ async function buildAuctionSnapshot(
   };
 }
 
-function mapSnapshot(t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamentBySlug>>>): DraftSnapshotDto {
-  const playerAssignments = new Map<
-    string,
-    { teamId: string; confirmed: boolean }
-  >();
+function mapSnapshot(
+  t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamentBySlug>>>,
+): DraftSnapshotDto {
+  const playerAssignments = new Map<string, { teamId: string; confirmed: boolean }>();
   const ownerTeamIdsByUserId = new Map<string, string>();
   for (const team of t.teams) {
     if (team.ownerUserId) {
@@ -212,16 +205,9 @@ function mapSnapshot(t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamen
 
   const lastPick = [...t.picks]
     .filter((p) => p.status === PickStatus.CONFIRMED)
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )[0];
-  const lastTeam = lastPick
-    ? t.teams.find((team) => team.id === lastPick.teamId)
-    : undefined;
-  const lastPlayer = lastPick
-    ? t.players.find((pl) => pl.id === lastPick.playerId)
-    : undefined;
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+  const lastTeam = lastPick ? t.teams.find((team) => team.id === lastPick.teamId) : undefined;
+  const lastPlayer = lastPick ? t.players.find((pl) => pl.id === lastPick.playerId) : undefined;
 
   const spotlightCategoryId = getEffectiveAuctionSpotlightCategoryId({
     activeAuctionRosterCategoryId: t.activeAuctionRosterCategoryId,
@@ -274,7 +260,7 @@ function mapSnapshot(t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamen
     players: t.players.map((player) => {
       const assignment = playerAssignments.get(player.id);
       const ownerTeamId = player.linkedOwnerUserId
-        ? ownerTeamIdsByUserId.get(player.linkedOwnerUserId) ?? null
+        ? (ownerTeamIdsByUserId.get(player.linkedOwnerUserId) ?? null)
         : null;
       return {
         id: player.id,
@@ -318,9 +304,7 @@ function mapSnapshot(t: NonNullable<Awaited<ReturnType<typeof loadDraftTournamen
   };
 }
 
-export async function fetchDraftSnapshotBySlug(
-  slug: string,
-): Promise<DraftSnapshotDto | null> {
+export async function fetchDraftSnapshotBySlug(slug: string): Promise<DraftSnapshotDto | null> {
   const tournament = await loadDraftTournamentBySlug(slug);
   if (!tournament) return null;
   const logs = await prisma.draftLog.findMany({
@@ -356,15 +340,11 @@ function assertPhase(
   }
 }
 
-function getCurrentTurnTeamId(
-  tournament: {
-    currentSlotIndex: number;
-    draftSlots: { slotIndex: number; teamId: string }[];
-  },
-): string | null {
-  const slot = tournament.draftSlots.find(
-    (s) => s.slotIndex === tournament.currentSlotIndex,
-  );
+function getCurrentTurnTeamId(tournament: {
+  currentSlotIndex: number;
+  draftSlots: { slotIndex: number; teamId: string }[];
+}): string | null {
+  const slot = tournament.draftSlots.find((s) => s.slotIndex === tournament.currentSlotIndex);
   return slot?.teamId ?? null;
 }
 
@@ -502,16 +482,11 @@ async function validatePickAllowed(params: {
   const rule = rules.find((r) => r.rosterCategoryId === rosterCategoryId);
   const max = rule?.maxCount ?? 0;
   if ((counts[rosterCategoryId] ?? 0) >= max) {
-    throw new DraftServiceError(
-      "Squad rule violation: category quota reached for this team.",
-    );
+    throw new DraftServiceError("Squad rule violation: category quota reached for this team.");
   }
 }
 
-export async function randomizeDraftOrder(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function randomizeDraftOrder(params: { tournamentSlug: string; actorUserId: string }) {
   await prisma.$transaction(async (tx) => {
     const tournament = await tx.tournament.findFirst({
       where: { slug: params.tournamentSlug, deletedAt: null },
@@ -524,10 +499,7 @@ export async function randomizeDraftOrder(params: {
     if (tournament.createdById !== params.actorUserId) {
       throw new DraftServiceError("Only the tournament admin can randomize order.");
     }
-    assertPhase(tournament.draftPhase, [
-      DraftPhase.SETUP,
-      DraftPhase.READY,
-    ]);
+    assertPhase(tournament.draftPhase, [DraftPhase.SETUP, DraftPhase.READY]);
     if (tournament.draftOrderLocked) {
       throw new DraftServiceError("Draft order is locked.");
     }
@@ -536,10 +508,7 @@ export async function randomizeDraftOrder(params: {
     }
 
     const shuffled = shuffleTeamIds(tournament.teams.map((team) => team.id));
-    const sequence = buildSnakeDraftTeamSequence(
-      shuffled,
-      tournament.picksPerTeam,
-    );
+    const sequence = buildSnakeDraftTeamSequence(shuffled, tournament.picksPerTeam);
 
     await tx.draftOrderSlot.deleteMany({
       where: { tournamentId: tournament.id },
@@ -571,10 +540,7 @@ export async function randomizeDraftOrder(params: {
   });
 }
 
-export async function startDraft(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function startDraft(params: { tournamentSlug: string; actorUserId: string }) {
   const tournamentPreview = await prisma.tournament.findFirst({
     where: { slug: params.tournamentSlug, deletedAt: null },
     select: { id: true },
@@ -597,8 +563,7 @@ export async function startDraft(params: {
         "This tournament uses random assignment. Run it from the admin desk instead of starting a live draft.",
       );
     }
-    const isAuction =
-      tournament.allocationMethod === AllocationMethod.LIVE_AUCTION;
+    const isAuction = tournament.allocationMethod === AllocationMethod.LIVE_AUCTION;
     if (!isAuction && tournament.draftSlots.length === 0) {
       throw new DraftServiceError("Generate draft order before starting.");
     }
@@ -609,10 +574,7 @@ export async function startDraft(params: {
         draftStartedAt: tournament.draftStartedAt ?? new Date(),
         currentSlotIndex: isAuction
           ? tournament.currentSlotIndex
-          : Math.min(
-              tournament.currentSlotIndex,
-              tournament.draftSlots.length - 1,
-            ),
+          : Math.min(tournament.currentSlotIndex, tournament.draftSlots.length - 1),
       },
     });
     await tx.draftLog.create({
@@ -625,10 +587,7 @@ export async function startDraft(params: {
   });
 }
 
-export async function pauseDraft(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function pauseDraft(params: { tournamentSlug: string; actorUserId: string }) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: params.tournamentSlug, deletedAt: null },
   });
@@ -646,10 +605,7 @@ export async function pauseDraft(params: {
   });
 }
 
-export async function resumeDraft(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function resumeDraft(params: { tournamentSlug: string; actorUserId: string }) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: params.tournamentSlug, deletedAt: null },
   });
@@ -677,9 +633,7 @@ export async function setAuctionSpotlightCategory(params: {
   });
   if (!tournament) throw new DraftServiceError("Tournament not found.");
   if (tournament.createdById !== params.actorUserId) {
-    throw new DraftServiceError(
-      "Only tournament admin can set the LIVE roster spotlight.",
-    );
+    throw new DraftServiceError("Only tournament admin can set the LIVE roster spotlight.");
   }
   assertPhase(tournament.draftPhase, [
     DraftPhase.SETUP,
@@ -731,25 +685,19 @@ export async function setAuctionSpotlightCategory(params: {
             : `Spotlight locked to roster group "${categoryLabel ?? "Unknown"}". Owners only see nominees in this group.`,
         actorUserId: params.actorUserId,
         payload:
-          nextId === null ? undefined : { rosterCategoryId: nextId } as Prisma.InputJsonValue,
+          nextId === null ? undefined : ({ rosterCategoryId: nextId } as Prisma.InputJsonValue),
       },
     });
   });
 }
 
-export async function freezeDraft(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function freezeDraft(params: { tournamentSlug: string; actorUserId: string }) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: params.tournamentSlug, deletedAt: null },
   });
   if (!tournament) throw new DraftServiceError("Tournament not found.");
   await assertTournamentAdmin(tournament.id, params.actorUserId);
-  assertPhase(tournament.draftPhase, [
-    DraftPhase.LIVE,
-    DraftPhase.PAUSED,
-  ]);
+  assertPhase(tournament.draftPhase, [DraftPhase.LIVE, DraftPhase.PAUSED]);
   await prisma.tournament.update({
     where: { id: tournament.id },
     data: { draftPhase: DraftPhase.FROZEN },
@@ -761,10 +709,7 @@ export async function freezeDraft(params: {
   });
 }
 
-export async function unlockDraft(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function unlockDraft(params: { tournamentSlug: string; actorUserId: string }) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: params.tournamentSlug, deletedAt: null },
   });
@@ -782,20 +727,13 @@ export async function unlockDraft(params: {
   });
 }
 
-export async function lockDraft(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function lockDraft(params: { tournamentSlug: string; actorUserId: string }) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: params.tournamentSlug, deletedAt: null },
   });
   if (!tournament) throw new DraftServiceError("Tournament not found.");
   await assertTournamentAdmin(tournament.id, params.actorUserId);
-  assertPhase(tournament.draftPhase, [
-    DraftPhase.LIVE,
-    DraftPhase.PAUSED,
-    DraftPhase.FROZEN,
-  ]);
+  assertPhase(tournament.draftPhase, [DraftPhase.LIVE, DraftPhase.PAUSED, DraftPhase.FROZEN]);
   await prisma.tournament.update({
     where: { id: tournament.id },
     data: { draftPhase: DraftPhase.LOCKED },
@@ -807,10 +745,7 @@ export async function lockDraft(params: {
   });
 }
 
-export async function endDraft(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function endDraft(params: { tournamentSlug: string; actorUserId: string }) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: params.tournamentSlug, deletedAt: null },
   });
@@ -834,10 +769,7 @@ export async function endDraft(params: {
   });
 }
 
-export async function nextTurn(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function nextTurn(params: { tournamentSlug: string; actorUserId: string }) {
   await prisma.$transaction(async (tx) => {
     const tournament = await tx.tournament.findFirst({
       where: { slug: params.tournamentSlug, deletedAt: null },
@@ -876,10 +808,7 @@ export async function nextTurn(params: {
   });
 }
 
-export async function skipTurn(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function skipTurn(params: { tournamentSlug: string; actorUserId: string }) {
   await prisma.$transaction(async (tx) => {
     const tournament = await tx.tournament.findFirst({
       where: { slug: params.tournamentSlug, deletedAt: null },
@@ -918,10 +847,7 @@ export async function skipTurn(params: {
   });
 }
 
-export async function previousTurn(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function previousTurn(params: { tournamentSlug: string; actorUserId: string }) {
   await prisma.$transaction(async (tx) => {
     const tournament = await tx.tournament.findFirst({
       where: { slug: params.tournamentSlug, deletedAt: null },
@@ -970,7 +896,9 @@ export async function requestPick(params: {
       : null;
     const isOwner = team?.ownerUserId === params.actorUserId;
     if (!isAdmin && !isOwner) {
-      throw new DraftServiceError("Only the active franchise owner (or admin) can nominate a pick.");
+      throw new DraftServiceError(
+        "Only the active franchise owner (or admin) can nominate a pick.",
+      );
     }
 
     if (
@@ -1023,10 +951,7 @@ export async function requestPick(params: {
   });
 }
 
-export async function confirmPick(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function confirmPick(params: { tournamentSlug: string; actorUserId: string }) {
   await prisma.$transaction(async (tx) => {
     const tournament = await tx.tournament.findFirst({
       where: { slug: params.tournamentSlug, deletedAt: null },
@@ -1037,10 +962,7 @@ export async function confirmPick(params: {
       throw new DraftServiceError("Only admin can confirm picks.");
     }
     assertPhase(tournament.draftPhase, [DraftPhase.LIVE]);
-    if (
-      !tournament.pendingPickPlayerId ||
-      !tournament.pendingPickTeamId
-    ) {
+    if (!tournament.pendingPickPlayerId || !tournament.pendingPickTeamId) {
       throw new DraftServiceError("No pending pick to confirm.");
     }
 
@@ -1093,9 +1015,7 @@ export async function confirmPick(params: {
         pendingPickPlayerId: null,
         pendingPickTeamId: null,
         pendingIdempotencyKey: null,
-        currentSlotIndex: completed
-          ? tournament.currentSlotIndex
-          : nextIndex,
+        currentSlotIndex: completed ? tournament.currentSlotIndex : nextIndex,
         draftPhase: completed ? DraftPhase.COMPLETED : DraftPhase.LIVE,
         draftEndedAt: completed ? new Date() : tournament.draftEndedAt,
       },
@@ -1111,10 +1031,7 @@ export async function confirmPick(params: {
   });
 }
 
-export async function undoLastPick(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function undoLastPick(params: { tournamentSlug: string; actorUserId: string }) {
   await prisma.$transaction(async (tx) => {
     const tournament = await tx.tournament.findFirst({
       where: { slug: params.tournamentSlug, deletedAt: null },
@@ -1194,10 +1111,7 @@ export async function toggleOverrideValidation(params: {
   });
 }
 
-export async function forceSyncLog(params: {
-  tournamentSlug: string;
-  actorUserId: string;
-}) {
+export async function forceSyncLog(params: { tournamentSlug: string; actorUserId: string }) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: params.tournamentSlug, deletedAt: null },
   });
@@ -1226,11 +1140,7 @@ export async function assignManualPick(params: {
     if (tournament.createdById !== params.actorUserId) {
       throw new DraftServiceError("Only admin can manually assign.");
     }
-    assertPhase(tournament.draftPhase, [
-      DraftPhase.LIVE,
-      DraftPhase.PAUSED,
-      DraftPhase.FROZEN,
-    ]);
+    assertPhase(tournament.draftPhase, [DraftPhase.LIVE, DraftPhase.PAUSED, DraftPhase.FROZEN]);
 
     const existingKey = await tx.pick.findFirst({
       where: { idempotencyKey: params.idempotencyKey },
@@ -1246,10 +1156,7 @@ export async function assignManualPick(params: {
 
     const slotIndex =
       tournament.draftSlots.length > 0
-        ? Math.min(
-            tournament.currentSlotIndex,
-            tournament.draftSlots.length - 1,
-          )
+        ? Math.min(tournament.currentSlotIndex, tournament.draftSlots.length - 1)
         : 0;
 
     await tx.pick.create({
@@ -1276,8 +1183,7 @@ export async function assignManualPick(params: {
     const occupiedSlotsAfterUpdate = ownerOccupiedSlots + confirmedPicksAfterUpdate;
     const nextIndex = tournament.currentSlotIndex + 1;
     const completed =
-      tournament.draftSlots.length > 0 &&
-      occupiedSlotsAfterUpdate >= tournament.draftSlots.length;
+      tournament.draftSlots.length > 0 && occupiedSlotsAfterUpdate >= tournament.draftSlots.length;
 
     await tx.tournament.update({
       where: { id: tournament.id },
@@ -1285,9 +1191,7 @@ export async function assignManualPick(params: {
         pendingPickPlayerId: null,
         pendingPickTeamId: null,
         pendingIdempotencyKey: null,
-        currentSlotIndex: completed
-          ? tournament.currentSlotIndex
-          : nextIndex,
+        currentSlotIndex: completed ? tournament.currentSlotIndex : nextIndex,
         draftPhase: completed ? DraftPhase.COMPLETED : tournament.draftPhase,
         draftEndedAt: completed ? new Date() : tournament.draftEndedAt,
       },

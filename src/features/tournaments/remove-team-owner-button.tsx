@@ -70,7 +70,7 @@ export function RemoveTeamOwnerButton({
         type="button"
         variant="outline"
         className={cn(
-          "h-8 min-h-8 w-full px-3 text-xs touch-manipulation border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive sm:w-auto sm:min-w-[5.5rem] sm:px-3",
+          "h-8 min-h-8 w-full touch-manipulation border-destructive/40 px-3 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive sm:w-auto sm:min-w-[5.5rem] sm:px-3",
           className,
         )}
         onClick={() => {
@@ -85,10 +85,11 @@ export function RemoveTeamOwnerButton({
           <AlertDialogHeader>
             <AlertDialogTitle>Remove franchise owner?</AlertDialogTitle>
             <AlertDialogDescription className="text-left">
-              <span className="font-medium text-foreground">{team.name}</span> will have no owner login until
-              you assign someone again. Sync clears auto-created roster stubs when needed. If someone only had
-              login access through their roster stub here (and no other franchises rely on them), their sign-in
-              credentials are cleared automatically when it is safe to do so.
+              <span className="font-medium text-foreground">{team.name}</span> will have no owner
+              login until you assign someone again. Sync clears auto-created roster stubs when
+              needed. If someone only had login access through their roster stub here (and no other
+              franchises rely on them), their sign-in credentials are cleared automatically when it
+              is safe to do so.
             </AlertDialogDescription>
           </AlertDialogHeader>
           {error ? (

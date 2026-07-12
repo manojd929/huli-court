@@ -63,14 +63,11 @@ export function PlayersTableClient({
   const router = useRouter();
   const [selectedPlayerIds, setSelectedPlayerIds] = useState<string[]>([]);
   const [bulkRosterCategoryId, setBulkRosterCategoryId] = useState("");
-  const [bulkPaymentStatus, setBulkPaymentStatus] =
-    useState<BulkPaymentStatus>("UNCHANGED");
+  const [bulkPaymentStatus, setBulkPaymentStatus] = useState<BulkPaymentStatus>("UNCHANGED");
   const [isApplying, setIsApplying] = useState(false);
 
-  const allVisibleSelected =
-    players.length > 0 && selectedPlayerIds.length === players.length;
-  const bulkHasChanges =
-    bulkRosterCategoryId !== "" || bulkPaymentStatus !== "UNCHANGED";
+  const allVisibleSelected = players.length > 0 && selectedPlayerIds.length === players.length;
+  const bulkHasChanges = bulkRosterCategoryId !== "" || bulkPaymentStatus !== "UNCHANGED";
 
   const selectedCountLabel = useMemo(() => {
     if (selectedPlayerIds.length === 0) return "No players selected";
@@ -80,9 +77,7 @@ export function PlayersTableClient({
 
   function togglePlayer(playerId: string): void {
     setSelectedPlayerIds((current) =>
-      current.includes(playerId)
-        ? current.filter((id) => id !== playerId)
-        : [...current, playerId],
+      current.includes(playerId) ? current.filter((id) => id !== playerId) : [...current, playerId],
     );
   }
 

@@ -5,13 +5,7 @@ import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { placeAuctionBidAction } from "@/features/draft/actions";
 import { useDraftLiveSync } from "@/hooks/use-draft-live-sync";
@@ -24,17 +18,12 @@ interface AuctionRoomClientProps {
   viewerUserId: string;
 }
 
-export function AuctionRoomClient({
-  slug,
-  initialSnapshot,
-  viewerUserId,
-}: AuctionRoomClientProps) {
+export function AuctionRoomClient({ slug, initialSnapshot, viewerUserId }: AuctionRoomClientProps) {
   const [snapshot, setSnapshot] = useState<DraftSnapshotDto>(initialSnapshot);
   const [busy, setBusy] = useState(false);
   const [customBid, setCustomBid] = useState("");
 
-  const accelerated =
-    snapshot.draftPhase === "LIVE" || snapshot.draftPhase === "PAUSED";
+  const accelerated = snapshot.draftPhase === "LIVE" || snapshot.draftPhase === "PAUSED";
   const { refresh } = useDraftLiveSync(slug, snapshot.tournamentId, setSnapshot, {
     accelerated,
   });
@@ -42,14 +31,12 @@ export function AuctionRoomClient({
   const auction = snapshot.auction;
   const currentLot = auction?.currentLot ?? null;
   const lotPlayer = currentLot
-    ? snapshot.players.find((p) => p.id === currentLot.playerId) ?? null
+    ? (snapshot.players.find((p) => p.id === currentLot.playerId) ?? null)
     : null;
   const myTeam = snapshot.teams.find((t) => t.ownerUserId === viewerUserId) ?? null;
-  const myPurse = myTeam
-    ? auction?.purses.find((p) => p.teamId === myTeam.id) ?? null
-    : null;
+  const myPurse = myTeam ? (auction?.purses.find((p) => p.teamId === myTeam.id) ?? null) : null;
   const leadingTeam = currentLot?.currentBidTeamId
-    ? snapshot.teams.find((t) => t.id === currentLot.currentBidTeamId) ?? null
+    ? (snapshot.teams.find((t) => t.id === currentLot.currentBidTeamId) ?? null)
     : null;
   const iAmLeading = Boolean(myTeam && currentLot?.currentBidTeamId === myTeam.id);
 
@@ -60,10 +47,7 @@ export function AuctionRoomClient({
     : null;
 
   const myRoster = useMemo(
-    () =>
-      myTeam
-        ? snapshot.players.filter((p) => p.assignedTeamId === myTeam.id)
-        : [],
+    () => (myTeam ? snapshot.players.filter((p) => p.assignedTeamId === myTeam.id) : []),
     [snapshot.players, myTeam],
   );
 
@@ -98,8 +82,7 @@ export function AuctionRoomClient({
         <CardHeader>
           <CardTitle>Spectating</CardTitle>
           <CardDescription>
-            You are not a franchise owner in this tournament. Enjoy the show on
-            the live board.
+            You are not a franchise owner in this tournament. Enjoy the show on the live board.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -117,12 +100,8 @@ export function AuctionRoomClient({
             <CardDescription>Your franchise</CardDescription>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold tabular-nums">
-              {myPurse?.remaining ?? "—"}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              purse left of {myPurse?.purse ?? "—"}
-            </p>
+            <p className="text-2xl font-bold tabular-nums">{myPurse?.remaining ?? "—"}</p>
+            <p className="text-xs text-muted-foreground">purse left of {myPurse?.purse ?? "—"}</p>
           </div>
         </CardHeader>
       </Card>
@@ -145,7 +124,7 @@ export function AuctionRoomClient({
         {currentLot && (
           <CardContent className="space-y-4">
             <div className="flex items-baseline gap-3">
-              <span className="text-5xl font-bold tabular-nums text-brand-accent">
+              <span className="text-5xl font-bold text-brand-accent tabular-nums">
                 {currentLot.currentBid ?? currentLot.basePrice}
               </span>
               <span className="text-sm text-muted-foreground">
@@ -158,7 +137,10 @@ export function AuctionRoomClient({
             </div>
 
             {iAmLeading ? (
-              <Badge className="border-brand/40 bg-brand/15 text-sm text-brand-accent" variant="secondary">
+              <Badge
+                className="border-brand/40 bg-brand/15 text-sm text-brand-accent"
+                variant="secondary"
+              >
                 Highest bidder, hold tight
               </Badge>
             ) : (
@@ -182,10 +164,7 @@ export function AuctionRoomClient({
                   <Button
                     variant="outline"
                     disabled={
-                      busy ||
-                      !isLive ||
-                      customBid.trim() === "" ||
-                      Number.isNaN(Number(customBid))
+                      busy || !isLive || customBid.trim() === "" || Number.isNaN(Number(customBid))
                     }
                     onClick={() => placeBid(Number(customBid))}
                   >
@@ -216,9 +195,7 @@ export function AuctionRoomClient({
                   </span>
                 </span>
                 {player.soldPrice !== null && (
-                  <span className="text-sm font-medium tabular-nums">
-                    {player.soldPrice}
-                  </span>
+                  <span className="text-sm font-medium tabular-nums">{player.soldPrice}</span>
                 )}
               </li>
             ))}

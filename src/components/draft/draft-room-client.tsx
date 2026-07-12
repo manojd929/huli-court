@@ -92,15 +92,10 @@ export function DraftRoomClient({
     refreshedSnapshot.draftPhase === DraftPhase.LIVE ||
     refreshedSnapshot.draftPhase === DraftPhase.PAUSED;
 
-  useDraftLiveSync(
-    slug,
-    liveBoardSync ? refreshedSnapshot.tournamentId : undefined,
-    setSnapshot,
-    {
-      enabled: liveBoardSync,
-      accelerated: acceleratedSync,
-    },
-  );
+  useDraftLiveSync(slug, liveBoardSync ? refreshedSnapshot.tournamentId : undefined, setSnapshot, {
+    enabled: liveBoardSync,
+    accelerated: acceleratedSync,
+  });
 
   const effectiveSnapshot = controlledSnapshot ?? snapshot;
 
@@ -113,9 +108,7 @@ export function DraftRoomClient({
   const setCategoryFilter = useDraftBoardUiStore((s) => s.setCategoryFilter);
   const setGenderFilter = useDraftBoardUiStore((s) => s.setGenderFilter);
   const setSortMode = useDraftBoardUiStore((s) => s.setSortMode);
-  const togglePlayerBoardDensity = useDraftBoardUiStore(
-    (s) => s.togglePlayerBoardDensity,
-  );
+  const togglePlayerBoardDensity = useDraftBoardUiStore((s) => s.togglePlayerBoardDensity);
 
   const teamsById = useMemo(() => {
     const map: Record<string, (typeof effectiveSnapshot.teams)[0]> = {};
@@ -180,9 +173,7 @@ export function DraftRoomClient({
   const draftLive = effectiveSnapshot.draftPhase === DraftPhase.LIVE;
   const spotlightId = effectiveSnapshot.auctionSpotlightRosterCategoryId;
   const applyBoardSpotlight =
-    (applyLiveAuctionSpotlightBoardFilter ?? true) &&
-    draftLive &&
-    spotlightId !== null;
+    (applyLiveAuctionSpotlightBoardFilter ?? true) && draftLive && spotlightId !== null;
 
   useEffect(() => {
     if (!draftLive || !spotlightId) return;
@@ -190,13 +181,7 @@ export function DraftRoomClient({
     if (categoryFilter !== spotlightId) {
       setCategoryFilter(spotlightId);
     }
-  }, [
-    draftLive,
-    spotlightId,
-    applyBoardSpotlight,
-    categoryFilter,
-    setCategoryFilter,
-  ]);
+  }, [draftLive, spotlightId, applyBoardSpotlight, categoryFilter, setCategoryFilter]);
 
   const liveSpotlightLocksRound = draftLive && spotlightId !== null;
 
@@ -232,11 +217,9 @@ export function DraftRoomClient({
     } else {
       sorted.sort((a, b) => {
         const av =
-          Number(a.hasConfirmedPick) +
-          Number(Boolean(a.assignedTeamId && !a.hasConfirmedPick));
+          Number(a.hasConfirmedPick) + Number(Boolean(a.assignedTeamId && !a.hasConfirmedPick));
         const bv =
-          Number(b.hasConfirmedPick) +
-          Number(Boolean(b.assignedTeamId && !b.hasConfirmedPick));
+          Number(b.hasConfirmedPick) + Number(Boolean(b.assignedTeamId && !b.hasConfirmedPick));
         if (av !== bv) {
           return av - bv;
         }
@@ -255,11 +238,9 @@ export function DraftRoomClient({
     sortMode,
   ]);
 
-  const hideFranchiseOwnerNominate =
-    franchiseOwnerPhoneMode && (!draftLive || !viewerOwnsClock);
+  const hideFranchiseOwnerNominate = franchiseOwnerPhoneMode && (!draftLive || !viewerOwnsClock);
 
-  const nominateActionsAllowed =
-    !franchiseOwnerPhoneMode || viewerOwnsClock;
+  const nominateActionsAllowed = !franchiseOwnerPhoneMode || viewerOwnsClock;
 
   const genderKeys = Object.keys(GENDER_LABEL) as Gender[];
 
@@ -277,8 +258,7 @@ export function DraftRoomClient({
     return sample?.rosterCategoryName ?? "Roster group";
   }, [categoryFilter, effectiveSnapshot.players, effectiveSnapshot.squadRules]);
 
-  const genderTriggerLabel =
-    genderFilter === "ALL" ? "All" : GENDER_LABEL[genderFilter];
+  const genderTriggerLabel = genderFilter === "ALL" ? "All" : GENDER_LABEL[genderFilter];
 
   const sortTriggerLabel =
     sortMode === "availability"
@@ -293,11 +273,9 @@ export function DraftRoomClient({
   const sidebarNowCard = (
     <div className="rounded-xl border border-border/80 bg-card/40 p-3 backdrop-blur-md sm:p-4">
       <p className="text-xs font-medium text-muted-foreground">Now</p>
-      <h2 className="mt-1 font-semibold leading-tight">{effectiveSnapshot.name}</h2>
+      <h2 className="mt-1 leading-tight font-semibold">{effectiveSnapshot.name}</h2>
       <div className="mt-3 flex flex-wrap gap-2">
-        <Badge variant="outline">
-          {DRAFT_PHASE_LABEL[effectiveSnapshot.draftPhase]}
-        </Badge>
+        <Badge variant="outline">{DRAFT_PHASE_LABEL[effectiveSnapshot.draftPhase]}</Badge>
         <Badge variant="secondary">
           Pick {draftProgress.displayPickCount} / {effectiveSnapshot.draftSlotsTotal || "-"}
         </Badge>
@@ -324,7 +302,7 @@ export function DraftRoomClient({
         spotlightId &&
         effectiveSnapshot.auctionSpotlightRosterCategoryName ? (
           <div className="flex flex-wrap items-center gap-2 rounded-md border border-sky-500/25 bg-sky-500/5 px-2 py-2">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            <span className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               Live round
             </span>
             <RosterCategoryPill
@@ -394,7 +372,9 @@ export function DraftRoomClient({
           display shows everyone&apos;s order.
         </p>
       ) : (
-        <ScrollArea className={cn("mt-3 pr-3", auctionDeskLayout ? "h-32 sm:h-40" : "h-44 sm:h-64")}>
+        <ScrollArea
+          className={cn("mt-3 pr-3", auctionDeskLayout ? "h-32 sm:h-40" : "h-44 sm:h-64")}
+        >
           <ol className="space-y-2 text-sm">
             {effectiveSnapshot.draftSlots.map((slot) => {
               const team = teamsById[slot.teamId];
@@ -525,8 +505,7 @@ export function DraftRoomClient({
           ? "lg:grid-cols-[minmax(10rem,1.25fr)_minmax(9rem,1fr)_minmax(8rem,0.95fr)_minmax(8rem,0.95fr)_minmax(8rem,0.95fr)]"
           : "lg:grid-cols-[minmax(10rem,1.35fr)_minmax(9rem,1fr)_minmax(8rem,1fr)_minmax(9rem,1fr)]",
         "lg:items-start lg:gap-x-4",
-        presentBoard &&
-          "gap-3 border-border/60 bg-card/10 p-2.5 sm:gap-3 sm:p-3 lg:gap-x-3",
+        presentBoard && "gap-3 border-border/60 bg-card/10 p-2.5 sm:gap-3 sm:p-3 lg:gap-x-3",
       )}
     >
       <div className="flex min-h-0 min-w-0 flex-col gap-1.5">
@@ -547,7 +526,9 @@ export function DraftRoomClient({
       </div>
 
       <div className="flex min-h-0 min-w-0 flex-col gap-1.5">
-        {applyBoardSpotlight && spotlightId && effectiveSnapshot.auctionSpotlightRosterCategoryName ? (
+        {applyBoardSpotlight &&
+        spotlightId &&
+        effectiveSnapshot.auctionSpotlightRosterCategoryName ? (
           <span className="text-xs font-medium text-muted-foreground sm:text-sm">Roster group</span>
         ) : (
           <label
@@ -569,9 +550,7 @@ export function DraftRoomClient({
         </label>
         <Select
           value={genderFilter}
-          onValueChange={(value) =>
-            setGenderFilter(value as Gender | "ALL")
-          }
+          onValueChange={(value) => setGenderFilter(value as Gender | "ALL")}
         >
           <SelectTrigger id={filterFieldIds.gender} className="h-8 w-full min-w-0 bg-background/60">
             <SelectValue placeholder="All">{genderTriggerLabel}</SelectValue>
@@ -594,10 +573,7 @@ export function DraftRoomClient({
         >
           Sort
         </label>
-        <Select
-          value={sortMode}
-          onValueChange={(value) => setSortMode(value as typeof sortMode)}
-        >
+        <Select value={sortMode} onValueChange={(value) => setSortMode(value as typeof sortMode)}>
           <SelectTrigger id={filterFieldIds.sort} className="h-8 w-full min-w-0 bg-background/60">
             <SelectValue placeholder="Sort">{sortTriggerLabel}</SelectValue>
           </SelectTrigger>
@@ -624,7 +600,7 @@ export function DraftRoomClient({
             ) : (
               <Rows3Icon className="size-4 shrink-0 opacity-70" aria-hidden />
             )}
-            <span className="truncate text-xs font-medium uppercase tracking-wide">
+            <span className="truncate text-xs font-medium tracking-wide uppercase">
               {playerBoardDensity === "compact" ? "Compact" : "Comfortable"}
             </span>
           </Button>
@@ -649,9 +625,7 @@ export function DraftRoomClient({
   const playerBoard = (
     <div className={playerGridClasses}>
       {filteredPlayers.map((player) => {
-        const team = player.assignedTeamId
-          ? teamsById[player.assignedTeamId]
-          : undefined;
+        const team = player.assignedTeamId ? teamsById[player.assignedTeamId] : undefined;
         const canNominateThisCard =
           nominateActionsAllowed &&
           draftLive &&
@@ -673,14 +647,8 @@ export function DraftRoomClient({
             emphasize={Boolean(canNominateThisCard)}
             hideNominateControl={hideFranchiseOwnerNominate}
             presentationHighlight={presentBoard}
-            compact={
-              auctionDeskLayout ? playerBoardDensity === "compact" : false
-            }
-            onNominate={
-              canNominateThisCard
-                ? () => void handleNominate(player.id)
-                : undefined
-            }
+            compact={auctionDeskLayout ? playerBoardDensity === "compact" : false}
+            onNominate={canNominateThisCard ? () => void handleNominate(player.id) : undefined}
             nominateDisabled={nominateDisabled}
             nominateLoading={nominateLoading}
           />

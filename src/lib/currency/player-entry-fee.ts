@@ -14,7 +14,10 @@ export function inrMinorUnitsToWholeRupeeLabel(minorUnits: number | null | undef
   });
 }
 
-export function formatMinorUnitsForDisplay(minorUnits: number | null, currencyCode: string): string {
+export function formatMinorUnitsForDisplay(
+  minorUnits: number | null,
+  currencyCode: string,
+): string {
   if (minorUnits === null) return "";
   if (currencyCode === "INR") {
     return `₹${inrMinorUnitsToWholeRupeeLabel(minorUnits)}`;

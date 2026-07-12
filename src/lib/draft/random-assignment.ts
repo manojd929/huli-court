@@ -46,9 +46,7 @@ function shuffle<T>(items: T[], rng: () => number): T[] {
   return copy;
 }
 
-export function buildRandomAssignmentPlan(
-  input: RandomAssignmentInput,
-): RandomAssignmentPlan {
+export function buildRandomAssignmentPlan(input: RandomAssignmentInput): RandomAssignmentPlan {
   const rng = input.rng ?? Math.random;
   const totals = new Map<string, number>();
   const byCategory = new Map<string, Map<string, number>>();
@@ -80,10 +78,7 @@ export function buildRandomAssignmentPlan(
     assignments.push({ playerId: player.id, teamId: chosen.id });
     totals.set(chosen.id, (totals.get(chosen.id) ?? 0) + 1);
     const catMap = byCategory.get(chosen.id)!;
-    catMap.set(
-      player.rosterCategoryId,
-      (catMap.get(player.rosterCategoryId) ?? 0) + 1,
-    );
+    catMap.set(player.rosterCategoryId, (catMap.get(player.rosterCategoryId) ?? 0) + 1);
   }
 
   return { assignments, unassignedPlayerIds };

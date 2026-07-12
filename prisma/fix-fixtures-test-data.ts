@@ -120,10 +120,30 @@ async function run() {
       await prisma.fixtureMatchParticipant.deleteMany({ where: { matchId: match.id } });
       await prisma.fixtureMatchParticipant.createMany({
         data: [
-          { matchId: match.id, playerId: sideOne[0].id, side: FixtureSide.SIDE_ONE, teamId: tie.teamOne.id },
-          { matchId: match.id, playerId: sideOne[1].id, side: FixtureSide.SIDE_ONE, teamId: tie.teamOne.id },
-          { matchId: match.id, playerId: sideTwo[0].id, side: FixtureSide.SIDE_TWO, teamId: tie.teamTwo.id },
-          { matchId: match.id, playerId: sideTwo[1].id, side: FixtureSide.SIDE_TWO, teamId: tie.teamTwo.id },
+          {
+            matchId: match.id,
+            playerId: sideOne[0].id,
+            side: FixtureSide.SIDE_ONE,
+            teamId: tie.teamOne.id,
+          },
+          {
+            matchId: match.id,
+            playerId: sideOne[1].id,
+            side: FixtureSide.SIDE_ONE,
+            teamId: tie.teamOne.id,
+          },
+          {
+            matchId: match.id,
+            playerId: sideTwo[0].id,
+            side: FixtureSide.SIDE_TWO,
+            teamId: tie.teamTwo.id,
+          },
+          {
+            matchId: match.id,
+            playerId: sideTwo[1].id,
+            side: FixtureSide.SIDE_TWO,
+            teamId: tie.teamTwo.id,
+          },
         ],
       });
     }

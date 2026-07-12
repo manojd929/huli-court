@@ -44,9 +44,7 @@ async function findAuthUserByEmail(email: string): Promise<string | null> {
   for (let page = 1; ; page += 1) {
     const { data, error } = await supabase.auth.admin.listUsers({ page, perPage });
     if (error) throw new Error(`listUsers failed: ${error.message}`);
-    const match = data.users.find(
-      (u) => (u.email ?? "").toLowerCase() === email.toLowerCase(),
-    );
+    const match = data.users.find((u) => (u.email ?? "").toLowerCase() === email.toLowerCase());
     if (match) return match.id;
     if (data.users.length < perPage) return null;
   }
@@ -78,11 +76,17 @@ async function main(): Promise<void> {
       : null;
 
     console.log(`\n${apply ? "APPLYING" : "DRY RUN"} — QA test-data cleanup\n`);
-    console.log("Tournament:", tournament
-      ? `${tournament.name} (${TOURNAMENT_SLUG}) — teams:${tournament._count.teams} players:${tournament._count.players} picks:${tournament._count.picks} lots:${tournament._count.auctionLots} [will cascade]`
-      : `not found (already gone)`);
+    console.log(
+      "Tournament:",
+      tournament
+        ? `${tournament.name} (${TOURNAMENT_SLUG}) — teams:${tournament._count.teams} players:${tournament._count.players} picks:${tournament._count.picks} lots:${tournament._count.auctionLots} [will cascade]`
+        : `not found (already gone)`,
+    );
     console.log("Owner auth user:", ownerAuthId ? `${OWNER_EMAIL} (${ownerAuthId})` : "not found");
-    console.log("Owner UserProfile:", ownerProfile ? `${ownerProfile.email} role=${ownerProfile.role}` : "not found");
+    console.log(
+      "Owner UserProfile:",
+      ownerProfile ? `${ownerProfile.email} role=${ownerProfile.role}` : "not found",
+    );
 
     if (!apply) {
       console.log("\nRe-run with --apply to execute.\n");

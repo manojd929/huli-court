@@ -12,9 +12,7 @@ interface AdminRosterGroupsBriefProps {
 /**
  * Organizer-only panel on the auction control room highlighting roster-structure management.
  */
-export async function AdminRosterGroupsBrief({
-  tournamentSlug,
-}: AdminRosterGroupsBriefProps) {
+export async function AdminRosterGroupsBrief({ tournamentSlug }: AdminRosterGroupsBriefProps) {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: tournamentSlug, deletedAt: null },
     select: { id: true, draftPhase: true },
@@ -37,8 +35,7 @@ export async function AdminRosterGroupsBrief({
   });
 
   const locked =
-    tournament.draftPhase !== DraftPhase.SETUP &&
-    tournament.draftPhase !== DraftPhase.READY;
+    tournament.draftPhase !== DraftPhase.SETUP && tournament.draftPhase !== DraftPhase.READY;
 
   return (
     <section className="rounded-2xl border border-border/70 bg-card/40 p-4 shadow-sm backdrop-blur-md sm:p-5">
@@ -48,12 +45,13 @@ export async function AdminRosterGroupsBrief({
             Roster groups
           </h3>
           <p className="max-w-xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
-            Athlete badges, commissioner filters, squad limits, and the auction lobby all pull from these
-            groups. Edit names, palette, ordering, and archives, no redeploy needed.
+            Athlete badges, commissioner filters, squad limits, and the auction lobby all pull from
+            these groups. Edit names, palette, ordering, and archives, no redeploy needed.
           </p>
           {archivedCount > 0 ? (
             <p className="text-xs text-muted-foreground">
-              <span className="font-medium tabular-nums text-foreground">{archivedCount}</span> archived
+              <span className="font-medium text-foreground tabular-nums">{archivedCount}</span>{" "}
+              archived
               {archivedCount === 1 ? " group " : " groups "}
               (restore from setup when the draft stays in configuration mode).
             </p>

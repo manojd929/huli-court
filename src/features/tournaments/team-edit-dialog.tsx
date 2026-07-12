@@ -33,11 +33,7 @@ interface TeamEditDialogProps {
   uploadsEnabled: boolean;
 }
 
-export function TeamEditDialog({
-  tournamentSlug,
-  team,
-  uploadsEnabled,
-}: TeamEditDialogProps) {
+export function TeamEditDialog({ tournamentSlug, team, uploadsEnabled }: TeamEditDialogProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(team.name);
@@ -85,7 +81,7 @@ export function TeamEditDialog({
       <Button
         variant="outline"
         type="button"
-        className="h-8 min-h-8 px-3 text-xs touch-manipulation sm:h-8 sm:min-h-8"
+        className="h-8 min-h-8 touch-manipulation px-3 text-xs sm:h-8 sm:min-h-8"
         onClick={openDialog}
       >
         Edit franchise
@@ -148,7 +144,12 @@ export function TeamEditDialog({
           <DialogClose render={<Button type="button" variant="outline" disabled={isSubmitting} />}>
             Cancel
           </DialogClose>
-          <Button type="button" pending={isSubmitting} pendingLabel="Saving…" onClick={() => void handleSave()}>
+          <Button
+            type="button"
+            pending={isSubmitting}
+            pendingLabel="Saving…"
+            onClick={() => void handleSave()}
+          >
             Save
           </Button>
         </DialogFooter>

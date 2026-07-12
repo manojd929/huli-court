@@ -35,7 +35,11 @@ export default async function RunTournamentPage({ params }: PageProps) {
 
   const isAdmin = summary.tournament.createdById === user.id;
   if (!isAdmin) {
-    return <p className="text-sm text-muted-foreground">Only tournament admin can manage live match operations.</p>;
+    return (
+      <p className="text-sm text-muted-foreground">
+        Only tournament admin can manage live match operations.
+      </p>
+    );
   }
   const untiedMatches = summary.matches.filter((match) => match.tieId === null);
 
@@ -44,7 +48,8 @@ export default async function RunTournamentPage({ params }: PageProps) {
       <header className="space-y-2">
         <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Run Tournament</h2>
         <p className="max-w-3xl text-sm text-muted-foreground">
-          Enter final scores and the match is completed automatically. Use quick controls only for exceptions like starting a match early, resetting it, or cancelling it.
+          Enter final scores and the match is completed automatically. Use quick controls only for
+          exceptions like starting a match early, resetting it, or cancelling it.
         </p>
       </header>
 
@@ -54,7 +59,8 @@ export default async function RunTournamentPage({ params }: PageProps) {
             <div>
               <h3 className="font-medium text-foreground">Match operations</h3>
               <p className="text-sm text-muted-foreground">
-                {summary.matches.filter((match) => match.status === "COMPLETED").length} of {summary.matches.length} matches completed
+                {summary.matches.filter((match) => match.status === "COMPLETED").length} of{" "}
+                {summary.matches.length} matches completed
               </p>
             </div>
             <Link href={ROUTES.leaderboard(slug)}>
@@ -68,7 +74,8 @@ export default async function RunTournamentPage({ params }: PageProps) {
         <div className="rounded-2xl border border-border/70 bg-card/50 p-5 shadow-sm backdrop-blur-sm">
           <h3 className="font-medium text-foreground">Elimination controls</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Mark a {summary.tournament.format === TournamentFormat.DOUBLES_ONLY ? "team" : "player"} eliminated only if your format needs bracket-style knockouts.
+            Mark a {summary.tournament.format === TournamentFormat.DOUBLES_ONLY ? "team" : "player"}{" "}
+            eliminated only if your format needs bracket-style knockouts.
           </p>
           <div className="mt-4 space-y-2">
             {summary.standings.map((row) => (
@@ -140,7 +147,8 @@ export default async function RunTournamentPage({ params }: PageProps) {
                       </p>
                     </div>
                     <Badge variant="outline" className="rounded-full px-3 py-1">
-                      {tieMatches.filter((match) => match.status === "COMPLETED").length}/{tieMatches.length} completed
+                      {tieMatches.filter((match) => match.status === "COMPLETED").length}/
+                      {tieMatches.length} completed
                     </Badge>
                   </div>
                 </div>
@@ -158,7 +166,9 @@ export default async function RunTournamentPage({ params }: PageProps) {
                           </div>
                           <div className="space-y-1 text-sm text-muted-foreground">
                             <p>
-                              <span className="font-medium text-foreground">{tie.teamOne.name}:</span>{" "}
+                              <span className="font-medium text-foreground">
+                                {tie.teamOne.name}:
+                              </span>{" "}
                               {getFixtureSideLabel({
                                 match,
                                 side: "SIDE_ONE",
@@ -166,7 +176,9 @@ export default async function RunTournamentPage({ params }: PageProps) {
                               })}
                             </p>
                             <p>
-                              <span className="font-medium text-foreground">{tie.teamTwo.name}:</span>{" "}
+                              <span className="font-medium text-foreground">
+                                {tie.teamTwo.name}:
+                              </span>{" "}
                               {getFixtureSideLabel({
                                 match,
                                 side: "SIDE_TWO",
@@ -180,13 +192,19 @@ export default async function RunTournamentPage({ params }: PageProps) {
                           <form
                             action={async (formData) => {
                               "use server";
-                              const sideOneScoreRaw = String(formData.get("sideOneScore") ?? "").trim();
-                              const sideTwoScoreRaw = String(formData.get("sideTwoScore") ?? "").trim();
+                              const sideOneScoreRaw = String(
+                                formData.get("sideOneScore") ?? "",
+                              ).trim();
+                              const sideTwoScoreRaw = String(
+                                formData.get("sideTwoScore") ?? "",
+                              ).trim();
                               await updateMatchStateAction({
                                 tournamentSlug: slug,
                                 matchId: match.id,
-                                sideOneScore: sideOneScoreRaw === "" ? null : Number(sideOneScoreRaw),
-                                sideTwoScore: sideTwoScoreRaw === "" ? null : Number(sideTwoScoreRaw),
+                                sideOneScore:
+                                  sideOneScoreRaw === "" ? null : Number(sideOneScoreRaw),
+                                sideTwoScore:
+                                  sideTwoScoreRaw === "" ? null : Number(sideTwoScoreRaw),
                               });
                             }}
                             className="grid gap-2 sm:grid-cols-2"
@@ -206,7 +224,7 @@ export default async function RunTournamentPage({ params }: PageProps) {
                               placeholder={`${tie.teamTwo.name} score`}
                             />
                             <PendingSubmitButton
-                              className="sm:col-span-2 min-h-10"
+                              className="min-h-10 sm:col-span-2"
                               pendingLabel="Saving score…"
                             >
                               Submit final score
@@ -333,7 +351,7 @@ export default async function RunTournamentPage({ params }: PageProps) {
                         placeholder="Side 2 score"
                       />
                       <PendingSubmitButton
-                        className="sm:col-span-2 min-h-10"
+                        className="min-h-10 sm:col-span-2"
                         pendingLabel="Saving score…"
                       >
                         Submit final score

@@ -16,9 +16,7 @@ const signUpSchema = z.object({
   password: z.string().min(8).max(128),
 });
 
-export type SignUpResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type SignUpResult = { ok: true } | { ok: false; error: string };
 
 /**
  * Self-serve organizer signup: creates a confirmed auth user (service role),
@@ -31,8 +29,7 @@ export async function signUpAction(input: unknown): Promise<SignUpResult> {
   if (!parsed.success) {
     return {
       ok: false,
-      error:
-        "Check your details: your name needs 2+ characters and a password of 8+.",
+      error: "Check your details: your name needs 2+ characters and a password of 8+.",
     };
   }
 

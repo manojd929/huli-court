@@ -85,9 +85,7 @@ function revalidateRosterGroupDependentPaths(slug: string): void {
   revalidatePath(`/tournament/${slug}/teams`);
 }
 
-export async function updateTournamentAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function updateTournamentAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = updateTournamentSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid tournament details." };
@@ -105,9 +103,7 @@ export async function updateTournamentAction(
   }
 }
 
-export async function createTournamentAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function createTournamentAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = createTournamentSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid tournament details." };
@@ -166,9 +162,7 @@ export async function updateTeamAction(input: unknown): Promise<TournamentAction
   }
 }
 
-export async function deleteTournamentAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function deleteTournamentAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = deleteTournamentSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid tournament." };
@@ -204,9 +198,7 @@ export async function deletePlayerAction(input: unknown): Promise<TournamentActi
   }
 }
 
-export async function createPlayerAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function createPlayerAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = createPlayerSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid player details." };
@@ -225,9 +217,7 @@ export async function createPlayerAction(
   }
 }
 
-export async function updatePlayerAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function updatePlayerAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = updatePlayerSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid player details." };
@@ -248,9 +238,7 @@ export async function updatePlayerAction(
   }
 }
 
-export async function bulkUpdatePlayersAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function bulkUpdatePlayersAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = bulkUpdatePlayersSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid bulk player update." };
@@ -277,10 +265,7 @@ export async function syncSquadRulesToRosterAction(
     const parsed = draftActionSlugSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid tournament." };
     const user = await requireSessionUser();
-    const tournamentId = await assertTournamentOwnership(
-      parsed.data.tournamentSlug,
-      user.id,
-    );
+    const tournamentId = await assertTournamentOwnership(parsed.data.tournamentSlug, user.id);
     await reconcileSquadRulesForTournament(tournamentId);
     const slug = parsed.data.tournamentSlug;
     revalidatePath(`/tournament/${slug}`, "layout");
@@ -294,9 +279,7 @@ export async function syncSquadRulesToRosterAction(
   }
 }
 
-export async function saveSquadRulesAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function saveSquadRulesAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = squadRulesSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid squad rules." };
@@ -312,9 +295,7 @@ export async function saveSquadRulesAction(
   }
 }
 
-export async function createLeagueOwnerAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function createLeagueOwnerAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = createLeagueOwnerSchema.safeParse(input);
     if (!parsed.success) {
@@ -347,10 +328,7 @@ export async function createLeagueOwnerForPlayerAction(
       };
     }
     const user = await requireSessionUser();
-    const { email, linkedExisting } = await createLeagueOwnerForPlayerAccount(
-      user.id,
-      parsed.data,
-    );
+    const { email, linkedExisting } = await createLeagueOwnerForPlayerAccount(user.id, parsed.data);
     const slug = parsed.data.tournamentSlug;
     revalidatePath(`/tournament/${slug}`, "layout");
     revalidatePath(`/tournament/${slug}/teams`);
@@ -364,9 +342,7 @@ export async function createLeagueOwnerForPlayerAction(
   }
 }
 
-export async function deleteFranchiseOwnerAction(
-  input: unknown,
-): Promise<TournamentActionResult> {
+export async function deleteFranchiseOwnerAction(input: unknown): Promise<TournamentActionResult> {
   try {
     const parsed = deleteFranchiseOwnerSchema.safeParse(input);
     if (!parsed.success) {
@@ -400,11 +376,7 @@ export async function revokeFranchiseLoginFromPlayerAction(
       return { ok: false, error: "Invalid player." };
     }
     const user = await requireSessionUser();
-    await revokeFranchiseLoginFromPlayer(
-      user.id,
-      parsed.data.tournamentSlug,
-      parsed.data.playerId,
-    );
+    await revokeFranchiseLoginFromPlayer(user.id, parsed.data.tournamentSlug, parsed.data.playerId);
     const slug = parsed.data.tournamentSlug;
     revalidatePath(`/tournament/${slug}`, "layout");
     revalidatePath(`/tournament/${slug}/teams`);
@@ -494,7 +466,9 @@ export async function restoreRosterCategoryAction(input: unknown): Promise<Tourn
   }
 }
 
-export async function moveRosterCategoryOrderAction(input: unknown): Promise<TournamentActionResult> {
+export async function moveRosterCategoryOrderAction(
+  input: unknown,
+): Promise<TournamentActionResult> {
   try {
     const parsed = moveRosterCategoryOrderSchema.safeParse(input);
     if (!parsed.success) {

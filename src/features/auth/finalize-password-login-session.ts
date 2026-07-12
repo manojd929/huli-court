@@ -3,9 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { syncUserProfile } from "@/lib/auth/profile";
 import { authSessionFinalizeUserMessage } from "@/lib/errors/safe-user-feedback";
 
-export type FinalizePasswordSessionResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type FinalizePasswordSessionResult = { ok: true } | { ok: false; error: string };
 
 export async function finalizePasswordLoginSessionWithClient(
   supabase: SupabaseClient,

@@ -8,10 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { createTeamAction } from "@/features/tournaments/actions";
-import {
-  OwnerPicker,
-  type AssignablePerson,
-} from "@/features/tournaments/owner-picker";
+import { OwnerPicker, type AssignablePerson } from "@/features/tournaments/owner-picker";
 import { ImageUploadOrUrlField } from "@/features/uploads/image-upload-or-url-field";
 
 interface TeamsQuickAddProps {
@@ -68,8 +65,7 @@ export function TeamsQuickAdd({
     <form
       className={cn(
         "grid gap-5",
-        variant === "card" &&
-          "rounded-xl border border-border/70 bg-card/40 p-6 backdrop-blur-md",
+        variant === "card" && "rounded-xl border border-border/70 bg-card/40 p-6 backdrop-blur-md",
       )}
       onSubmit={(event) => void handleSubmit(event)}
     >
@@ -91,13 +87,7 @@ export function TeamsQuickAdd({
 
         <div className="space-y-2">
           <Label htmlFor="short">Ticker</Label>
-          <Input
-            id="short"
-            name="shortName"
-            maxLength={8}
-            placeholder="CCR"
-            className="min-h-11"
-          />
+          <Input id="short" name="shortName" maxLength={8} placeholder="CCR" className="min-h-11" />
           <p className="text-xs text-muted-foreground">
             Short broadcast code for compact tables and live score views.
           </p>

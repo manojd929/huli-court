@@ -85,14 +85,14 @@ export function LoginForm({ nextPath }: LoginFormProps) {
   };
 
   return (
-    <div className="flex w-full flex-col gap-5 rounded-2xl border border-border/70 bg-card/95 px-6 py-6 text-card-foreground shadow-lg backdrop-blur-xl dark:border-white/12 dark:bg-neutral-900/95 sm:px-7 sm:py-7">
+    <div className="flex w-full flex-col gap-5 rounded-2xl border border-border/70 bg-card/95 px-6 py-6 text-card-foreground shadow-lg backdrop-blur-xl sm:px-7 sm:py-7 dark:border-white/12 dark:bg-neutral-900/95">
       <div className="flex flex-col gap-2">
-        <h1 className="text-balance text-3xl font-semibold tracking-tight">Sign in</h1>
-        <p className="text-sm leading-relaxed text-foreground/72 dark:text-foreground/80 sm:text-base">
+        <h1 className="text-3xl font-semibold tracking-tight text-balance">Sign in</h1>
+        <p className="text-sm leading-relaxed text-foreground/72 sm:text-base dark:text-foreground/80">
           League organizers and franchise owners use the email and password the commissioner gave
           you. During the auction, franchise owners should open the{" "}
-          <span className="font-medium text-foreground">Owner</span> screen after signing in. The same
-          login works every week.
+          <span className="font-medium text-foreground">Owner</span> screen after signing in. The
+          same login works every week.
         </p>
       </div>
 
@@ -128,27 +128,27 @@ export function LoginForm({ nextPath }: LoginFormProps) {
           />
         </div>
         <div className="flex flex-col gap-3">
-        {message ? (
-          <p className="text-sm leading-snug text-destructive" role="alert">
-            {message}
-          </p>
-        ) : null}
-        <Button
-          type="submit"
-          data-testid="login-submit"
-          pending={isSubmitting}
-          pendingLabel="Signing in…"
-          className="min-h-12 w-full text-base"
-        >
-          Sign in
-        </Button>
-      </div>
+          {message ? (
+            <p className="text-sm leading-snug text-destructive" role="alert">
+              {message}
+            </p>
+          ) : null}
+          <Button
+            type="submit"
+            data-testid="login-submit"
+            pending={isSubmitting}
+            pendingLabel="Signing in…"
+            className="min-h-12 w-full text-base"
+          >
+            Sign in
+          </Button>
+        </div>
       </form>
 
-      <p className="border-t border-border/50 pt-4 text-center text-sm leading-snug text-foreground/72 dark:text-foreground/78 md:leading-relaxed">
+      <p className="border-t border-border/50 pt-4 text-center text-sm leading-snug text-foreground/72 md:leading-relaxed dark:text-foreground/78">
         New franchise owner? Your commissioner creates your login from{" "}
-        <span className="font-medium text-foreground">Teams</span>. Forgot password? Ask them to reset
-        or re-invite you. Starting your own league?{" "}
+        <span className="font-medium text-foreground">Teams</span>. Forgot password? Ask them to
+        reset or re-invite you. Starting your own league?{" "}
         <a className="font-medium text-foreground underline" href="/signup">
           Create an organizer account
         </a>

@@ -51,10 +51,7 @@ export function DashboardFloorThemePicker({
         </span>
         <ChevronDownIcon className="size-4 shrink-0 opacity-60" aria-hidden />
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="min-w-[min(22rem,calc(100vw-2rem))] p-2"
-      >
+      <DropdownMenuContent align="end" className="min-w-[min(22rem,calc(100vw-2rem))] p-2">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
             Dashboard floor backdrop

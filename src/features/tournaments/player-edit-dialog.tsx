@@ -91,8 +91,7 @@ export function PlayerEditDialog({
         gender,
         notes: notes.trim() || undefined,
         hasPaidEntryFee,
-        basePrice:
-          basePriceInput.trim() === "" ? null : Number(basePriceInput.trim()),
+        basePrice: basePriceInput.trim() === "" ? null : Number(basePriceInput.trim()),
       });
       if (!result.ok) {
         setError(result.error);
@@ -117,7 +116,7 @@ export function PlayerEditDialog({
         className={
           compactTrigger
             ? className
-            : `h-8 min-h-8 px-3 text-xs touch-manipulation sm:h-8 sm:min-h-8 ${className ?? ""}`
+            : `h-8 min-h-8 touch-manipulation px-3 text-xs sm:h-8 sm:min-h-8 ${className ?? ""}`
         }
         aria-label={compactTrigger ? `Edit ${player.name}` : undefined}
         title={compactTrigger ? `Edit ${player.name}` : undefined}
@@ -226,9 +225,7 @@ export function PlayerEditDialog({
               <div className="space-y-2">
                 <Label htmlFor={`player-base-price-${player.id}`}>
                   Auction base price{" "}
-                  <span className="font-normal text-muted-foreground">
-                    (points, optional)
-                  </span>
+                  <span className="font-normal text-muted-foreground">(points, optional)</span>
                 </Label>
                 <Input
                   id={`player-base-price-${player.id}`}
@@ -241,8 +238,8 @@ export function PlayerEditDialog({
                   placeholder="Tournament default"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Only used in live-auction tournaments. Blank falls back to the
-                  tournament&apos;s default base price.
+                  Only used in live-auction tournaments. Blank falls back to the tournament&apos;s
+                  default base price.
                 </p>
               </div>
               <label className="flex items-start gap-3 rounded-xl border border-border/70 bg-card/20 px-4 py-3">
@@ -253,9 +250,7 @@ export function PlayerEditDialog({
                   className="mt-1 size-4 cursor-pointer rounded border-input"
                 />
                 <span className="space-y-1">
-                  <span className="block text-sm font-medium text-foreground">
-                    Entry fee paid
-                  </span>
+                  <span className="block text-sm font-medium text-foreground">Entry fee paid</span>
                   <span className="block text-sm text-muted-foreground">
                     Keep this on for payment tracking only. Players can still exist before payment.
                   </span>
@@ -265,7 +260,7 @@ export function PlayerEditDialog({
           </details>
         </div>
         {error ? (
-          <p className="whitespace-pre-wrap text-sm text-destructive" role="alert">
+          <p className="text-sm whitespace-pre-wrap text-destructive" role="alert">
             {error}
           </p>
         ) : null}

@@ -46,10 +46,7 @@ async function assertCategoryEditorAccess(slug: string, userId: string): Promise
   if (tournament.createdById !== userId) {
     throw new TournamentServiceError("You do not have access to this tournament.");
   }
-  if (
-    tournament.draftPhase !== DraftPhase.SETUP &&
-    tournament.draftPhase !== DraftPhase.READY
-  ) {
+  if (tournament.draftPhase !== DraftPhase.SETUP && tournament.draftPhase !== DraftPhase.READY) {
     throw new TournamentServiceError(
       "Cannot change roster groups after the draft configuration is sealed.",
     );

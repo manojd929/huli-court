@@ -4,12 +4,7 @@ import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ROUTES } from "@/constants/app";
 import { DRAFT_PHASE_LABEL } from "@/constants/draft-phase-labels";
 import { SPORT_META } from "@/constants/sport-meta";
@@ -67,10 +62,10 @@ export default async function LeaguePage({ params }: PageProps) {
               </div>
             )}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-accent">
+              <p className="text-xs font-semibold tracking-[0.2em] text-brand-accent uppercase">
                 League
               </p>
-              <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+              <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
                 {league.name}
               </h1>
             </div>
@@ -132,9 +127,7 @@ export default async function LeaguePage({ params }: PageProps) {
                         {t.name}
                       </p>
                       {t.season ? (
-                        <p className="text-xs font-medium text-muted-foreground">
-                          {t.season}
-                        </p>
+                        <p className="text-xs font-medium text-muted-foreground">{t.season}</p>
                       ) : null}
                     </div>
                     <Badge

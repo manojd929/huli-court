@@ -49,9 +49,7 @@ export function SignupForm() {
         password,
       });
       if (error || !data.session?.access_token || !data.session.refresh_token) {
-        setMessage(
-          "Your league was created. Sign in with your new credentials.",
-        );
+        setMessage("Your league was created. Sign in with your new credentials.");
         return;
       }
 
@@ -84,15 +82,12 @@ export function SignupForm() {
   };
 
   return (
-    <div className="flex w-full flex-col gap-5 rounded-2xl border border-border/70 bg-card/95 px-6 py-6 text-card-foreground shadow-lg backdrop-blur-xl dark:border-white/12 dark:bg-neutral-900/95 sm:px-7 sm:py-7">
+    <div className="flex w-full flex-col gap-5 rounded-2xl border border-border/70 bg-card/95 px-6 py-6 text-card-foreground shadow-lg backdrop-blur-xl sm:px-7 sm:py-7 dark:border-white/12 dark:bg-neutral-900/95">
       <div className="flex flex-col gap-2">
-        <h1 className="text-balance text-3xl font-semibold tracking-tight">
-          Start your league
-        </h1>
-        <p className="text-sm leading-relaxed text-foreground/72 dark:text-foreground/80 sm:text-base">
-          Free snake drafts and random team assignment, live boards for the
-          projector, and fixtures through to the final. Create your organizer
-          account to run your first tournament.
+        <h1 className="text-3xl font-semibold tracking-tight text-balance">Start your league</h1>
+        <p className="text-sm leading-relaxed text-foreground/72 sm:text-base dark:text-foreground/80">
+          Free snake drafts and random team assignment, live boards for the projector, and fixtures
+          through to the final. Create your organizer account to run your first tournament.
         </p>
       </div>
 

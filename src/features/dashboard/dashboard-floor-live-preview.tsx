@@ -41,7 +41,7 @@ export function DashboardFloorLivePreviewPanel({
         >
           <div className="relative z-10 flex h-full flex-col rounded-[inherit]">
             <div className="flex items-center gap-3 border-b border-border/35 bg-background/50 px-3 py-2 backdrop-blur-sm">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="text-[10px] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
                 Commissioner hub
               </span>
               <div className="ml-auto hidden h-1.5 w-16 rounded-full bg-muted sm:block" />

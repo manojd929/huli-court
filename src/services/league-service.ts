@@ -45,10 +45,7 @@ export interface CreateLeagueInput {
 
 function isUniqueViolation(e: unknown): boolean {
   return (
-    typeof e === "object" &&
-    e !== null &&
-    "code" in e &&
-    (e as { code?: string }).code === "P2002"
+    typeof e === "object" && e !== null && "code" in e && (e as { code?: string }).code === "P2002"
   );
 }
 
@@ -168,10 +165,7 @@ export interface UpdateLeagueInput {
   colorHex?: string | null;
 }
 
-export async function updateLeague(
-  userId: string,
-  input: UpdateLeagueInput,
-): Promise<void> {
+export async function updateLeague(userId: string, input: UpdateLeagueInput): Promise<void> {
   const league = await prisma.league.findFirst({
     where: { slug: input.slug, deletedAt: null },
     select: { id: true, organizationId: true },
@@ -208,10 +202,7 @@ export async function updateLeague(
  * Validates that a league the user is attaching a tournament to exists and is
  * theirs to manage. Returns the leagueId or throws.
  */
-export async function assertLeagueManageable(
-  userId: string,
-  leagueId: string,
-): Promise<string> {
+export async function assertLeagueManageable(userId: string, leagueId: string): Promise<string> {
   const league = await prisma.league.findFirst({
     where: { id: leagueId, deletedAt: null },
     select: { id: true, organizationId: true },

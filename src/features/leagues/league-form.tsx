@@ -9,10 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ROUTES } from "@/constants/app";
-import {
-  createLeagueAction,
-  updateLeagueAction,
-} from "@/features/leagues/actions";
+import { createLeagueAction, updateLeagueAction } from "@/features/leagues/actions";
 import { cn } from "@/lib/utils";
 
 interface LeagueFormProps {
@@ -69,8 +66,7 @@ export function LeagueForm({ existing }: LeagueFormProps) {
           placeholder="Indiranagar Smashers League"
         />
         <p className="text-xs text-muted-foreground">
-          The recurring banner your tournaments live under. Gets its own public
-          page you can share.
+          The recurring banner your tournaments live under. Gets its own public page you can share.
         </p>
       </div>
       <div className="space-y-2">

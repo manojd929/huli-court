@@ -122,9 +122,7 @@ export function AppThemeProvider({
 
   const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
 
-  return (
-    <AppThemeContext.Provider value={value}>{children}</AppThemeContext.Provider>
-  );
+  return <AppThemeContext.Provider value={value}>{children}</AppThemeContext.Provider>;
 }
 
 export function useAppTheme(): AppThemeContextValue {

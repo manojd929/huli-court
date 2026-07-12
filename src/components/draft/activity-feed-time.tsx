@@ -25,7 +25,7 @@ export function ActivityFeedTime({ iso }: ActivityFeedTimeProps) {
   }, [iso]);
 
   return (
-    <time dateTime={iso} className="text-[10px] opacity-70 tabular-nums">
+    <time dateTime={iso} className="text-[10px] tabular-nums opacity-70">
       {label}
     </time>
   );

@@ -70,9 +70,7 @@ function parseArgs(argv: string[]): CloneTournamentOptions {
   const targetName = argv[1]?.trim();
 
   if (!sourceSlug || !targetName) {
-    throw new Error(
-      "Usage: npm run tournament:clone -- <source-slug> <target-name>",
-    );
+    throw new Error("Usage: npm run tournament:clone -- <source-slug> <target-name>");
   }
 
   return {
@@ -81,9 +79,7 @@ function parseArgs(argv: string[]): CloneTournamentOptions {
   };
 }
 
-async function loadSourceTournament(
-  sourceSlug: string,
-): Promise<SourceTournamentSnapshot> {
+async function loadSourceTournament(sourceSlug: string): Promise<SourceTournamentSnapshot> {
   const tournament = await prisma.tournament.findFirst({
     where: { slug: sourceSlug, deletedAt: null },
     select: {
@@ -169,9 +165,7 @@ async function assertProfilesExist(userIds: string[]): Promise<void> {
   const foundIds = new Set(profiles.map((profile) => profile.id));
   const missingIds = userIds.filter((userId) => !foundIds.has(userId));
   if (missingIds.length > 0) {
-    throw new Error(
-      `Missing active user profiles for: ${missingIds.join(", ")}`,
-    );
+    throw new Error(`Missing active user profiles for: ${missingIds.join(", ")}`);
   }
 }
 
@@ -300,7 +294,7 @@ async function cloneTournament(options: CloneTournamentOptions): Promise<{
     }
 
     const activeAuctionRosterCategoryId = source.activeAuctionRosterCategoryId
-      ? categoryIdMap.get(source.activeAuctionRosterCategoryId) ?? null
+      ? (categoryIdMap.get(source.activeAuctionRosterCategoryId) ?? null)
       : null;
 
     await tx.tournament.update({

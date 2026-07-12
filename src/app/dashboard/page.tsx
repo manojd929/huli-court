@@ -45,9 +45,7 @@ export default async function DashboardPage() {
       select: { role: true },
     });
     userRole =
-      profile?.role === UserRole.ADMIN || profile?.role === UserRole.OWNER
-        ? profile.role
-        : null;
+      profile?.role === UserRole.ADMIN || profile?.role === UserRole.OWNER ? profile.role : null;
 
     if (userRole === UserRole.ADMIN) {
       leagues = await listLeaguesForUser(user.id);
@@ -57,9 +55,7 @@ export default async function DashboardPage() {
           deletedAt: null,
           OR: [
             { createdById: user.id },
-            ...(managedOrgIds.length > 0
-              ? [{ organizationId: { in: managedOrgIds } }]
-              : []),
+            ...(managedOrgIds.length > 0 ? [{ organizationId: { in: managedOrgIds } }] : []),
           ],
         },
         orderBy: { updatedAt: "desc" },
@@ -89,10 +85,15 @@ export default async function DashboardPage() {
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 pb-14 sm:gap-10 sm:px-6 sm:py-12">
       <header className="flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
         <div className="max-w-xl">
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl" data-testid="dashboard-title">Your tournaments</h1>
+          <h1
+            className="text-3xl font-semibold tracking-tight sm:text-4xl"
+            data-testid="dashboard-title"
+          >
+            Your tournaments
+          </h1>
           <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-            Set up teams and players, pick how squads are formed (draft, random, or a
-            live auction), then run it on the shared board.
+            Set up teams and players, pick how squads are formed (draft, random, or a live auction),
+            then run it on the shared board.
           </p>
         </div>
         {userRole === UserRole.ADMIN ? (
@@ -108,10 +109,7 @@ export default async function DashboardPage() {
             </Link>
             <Link
               href={ROUTES.tournamentNew}
-              className={cn(
-                buttonVariants(),
-                "min-h-11 touch-manipulation justify-center",
-              )}
+              className={cn(buttonVariants(), "min-h-11 touch-manipulation justify-center")}
             >
               New tournament
             </Link>
@@ -121,7 +119,7 @@ export default async function DashboardPage() {
 
       {userRole === UserRole.ADMIN && leagues.length > 0 ? (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
             Your leagues
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -202,14 +200,15 @@ export default async function DashboardPage() {
                     <Badge
                       variant="secondary"
                       className={cn(
-                        (tournament.draftPhase === "LIVE" ||
-                          tournament.draftPhase === "PAUSED") &&
+                        (tournament.draftPhase === "LIVE" || tournament.draftPhase === "PAUSED") &&
                           "border-brand/40 bg-brand/15 text-brand-accent",
                       )}
                     >
-                      {(tournament.draftPhase === "LIVE" ||
-                        tournament.draftPhase === "PAUSED") && (
-                        <span className="mr-1.5 inline-block size-1.5 animate-pulse rounded-full bg-brand align-middle" aria-hidden />
+                      {(tournament.draftPhase === "LIVE" || tournament.draftPhase === "PAUSED") && (
+                        <span
+                          className="mr-1.5 inline-block size-1.5 animate-pulse rounded-full bg-brand align-middle"
+                          aria-hidden
+                        />
                       )}
                       {DRAFT_PHASE_LABEL[tournament.draftPhase]}
                     </Badge>
@@ -218,8 +217,7 @@ export default async function DashboardPage() {
                 <CardContent className="flex flex-col gap-4">
                   <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                     <span>
-                      {SPORT_META[tournament.sport].emoji}{" "}
-                      {SPORT_META[tournament.sport].label}
+                      {SPORT_META[tournament.sport].emoji} {SPORT_META[tournament.sport].label}
                     </span>
                     <span>{tournament._count.teams} teams</span>
                     <span>{tournament._count.players} players</span>

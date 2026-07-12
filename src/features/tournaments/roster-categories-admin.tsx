@@ -61,7 +61,6 @@ interface RosterCategoriesAdminProps {
   categories: RosterCategoryAdminRow[];
 }
 
-
 export function RosterCategoriesAdmin({
   tournamentSlug,
   canManageCategories,
@@ -81,8 +80,8 @@ export function RosterCategoriesAdmin({
     <div className="space-y-4">
       {!canManageCategories ? (
         <p className="rounded-lg border border-border/70 bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
-          Roster groups are read-only once the auction configuration is sealed. Player categories and pills
-          on the auction board stay as they were at go-live.
+          Roster groups are read-only once the auction configuration is sealed. Player categories
+          and pills on the auction board stay as they were at go-live.
         </p>
       ) : (
         <div className="flex flex-wrap items-center justify-end gap-3">
@@ -103,8 +102,8 @@ export function RosterCategoriesAdmin({
               <SheetHeader className="border-b border-border/60 pb-4">
                 <SheetTitle>New roster group</SheetTitle>
                 <SheetDescription>
-                  Player creation and squad rules reference these labels. Tune display order so filters and
-                  admin tables stay consistent everywhere.
+                  Player creation and squad rules reference these labels. Tune display order so
+                  filters and admin tables stay consistent everywhere.
                 </SheetDescription>
               </SheetHeader>
               <CategoryCreateForm
@@ -147,7 +146,7 @@ export function RosterCategoriesAdmin({
                     <RosterCategoryPill name={row.name} colorHex={row.colorHex} />
                   </td>
                   <td className="px-4 py-3 align-middle">
-                    <div className="flex flex-wrap items-center gap-2 tabular-nums text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-2 text-muted-foreground tabular-nums">
                       <span>{row.displayOrder}</span>
                       {canManageCategories ? (
                         <div className="flex gap-1">
@@ -156,10 +155,7 @@ export function RosterCategoriesAdmin({
                             variant="outline"
                             size="icon"
                             className="size-8 touch-manipulation"
-                            disabled={
-                              reorderBusyId === row.id ||
-                              index <= 0
-                            }
+                            disabled={reorderBusyId === row.id || index <= 0}
                             aria-label={`Move ${row.name} up in filters and tables`}
                             onClick={() =>
                               void (async (): Promise<void> => {
@@ -189,8 +185,7 @@ export function RosterCategoriesAdmin({
                             size="icon"
                             className="size-8 touch-manipulation"
                             disabled={
-                              reorderBusyId === row.id ||
-                              index >= activeCategories.length - 1
+                              reorderBusyId === row.id || index >= activeCategories.length - 1
                             }
                             aria-label={`Move ${row.name} down in filters and tables`}
                             onClick={() =>
@@ -254,8 +249,8 @@ export function RosterCategoriesAdmin({
         <section className="rounded-xl border border-border/60 bg-muted/15 p-4 sm:p-5">
           <h3 className="text-sm font-semibold tracking-tight">Archived</h3>
           <p className="mt-1 text-xs text-muted-foreground">
-            Archived groups are hidden from player pickers until you restore them. Pick limits on the Squad
-            rules page still reflect each group&apos;s last saved cap once restored.
+            Archived groups are hidden from player pickers until you restore them. Pick limits on
+            the Squad rules page still reflect each group&apos;s last saved cap once restored.
           </p>
           <ul className="mt-4 flex flex-col gap-3">
             {archivedCategories.map((row) => (
@@ -264,8 +259,12 @@ export function RosterCategoriesAdmin({
                 className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/50 bg-background/35 px-3 py-2"
               >
                 <div className="flex flex-wrap items-center gap-2 text-sm">
-                  <RosterCategoryPill name={row.name} colorHex={row.colorHex} className="opacity-80" />
-                  <span className="tabular-nums text-muted-foreground">
+                  <RosterCategoryPill
+                    name={row.name}
+                    colorHex={row.colorHex}
+                    className="opacity-80"
+                  />
+                  <span className="text-muted-foreground tabular-nums">
                     Saved order · {String(row.displayOrder)}
                   </span>
                 </div>
@@ -360,9 +359,7 @@ function CategoryCreateForm({
       const result = await createRosterCategoryAction({
         tournamentSlug,
         name: name.trim(),
-        ...(displayOrder.trim() !== ""
-          ? { displayOrder: Number(displayOrder) }
-          : {}),
+        ...(displayOrder.trim() !== "" ? { displayOrder: Number(displayOrder) } : {}),
         colorHex: colorHex.trim() || undefined,
       });
       if (!result.ok) {
@@ -496,7 +493,9 @@ function CategoryEditDialog({
       <DialogContent className="sm:max-w-md" showCloseButton>
         <DialogHeader>
           <DialogTitle>Edit roster group</DialogTitle>
-          <DialogDescription>Names and colors show as pills wherever players surface.</DialogDescription>
+          <DialogDescription>
+            Names and colors show as pills wherever players surface.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-3 py-1">
           <div className="space-y-2">
@@ -540,7 +539,12 @@ function CategoryEditDialog({
           <DialogClose render={<Button type="button" variant="outline" disabled={pending} />}>
             Cancel
           </DialogClose>
-          <Button type="button" pending={pending} pendingLabel="Saving…" onClick={() => void handleSave()}>
+          <Button
+            type="button"
+            pending={pending}
+            pendingLabel="Saving…"
+            onClick={() => void handleSave()}
+          >
             Save
           </Button>
         </DialogFooter>
@@ -589,8 +593,9 @@ function ArchiveCategoryDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Archive this roster group?</AlertDialogTitle>
           <AlertDialogDescription className="text-left">
-            <span className="font-semibold text-foreground">{row.name}</span> will disappear from assignment
-            pickers. Archive only after moving every player elsewhere and keeping another active group.
+            <span className="font-semibold text-foreground">{row.name}</span> will disappear from
+            assignment pickers. Archive only after moving every player elsewhere and keeping another
+            active group.
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error ? (

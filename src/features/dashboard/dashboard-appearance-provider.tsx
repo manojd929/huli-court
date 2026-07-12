@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import {
   DASHBOARD_THEME_STORAGE_KEY,
@@ -21,12 +14,9 @@ type DashboardAppearanceContextValue = {
   setFloorTheme: (theme: DashboardFloorTheme) => void;
 };
 
-const DashboardAppearanceContext =
-  createContext<DashboardAppearanceContextValue | null>(null);
+const DashboardAppearanceContext = createContext<DashboardAppearanceContextValue | null>(null);
 
-export function DashboardAppearanceProvider({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function DashboardAppearanceProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [floorTheme, setFloorThemeState] = useState<DashboardFloorTheme>("broadcast");
   const [hydrated, setHydrated] = useState(false);
 
@@ -73,9 +63,7 @@ export function DashboardAppearanceProvider({
 export function useDashboardAppearance(): DashboardAppearanceContextValue {
   const ctx = useContext(DashboardAppearanceContext);
   if (!ctx) {
-    throw new Error(
-      "useDashboardAppearance must be used within DashboardAppearanceProvider",
-    );
+    throw new Error("useDashboardAppearance must be used within DashboardAppearanceProvider");
   }
   return ctx;
 }

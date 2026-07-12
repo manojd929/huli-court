@@ -56,8 +56,7 @@ export function RevokeFranchiseLoginButton({
     }
   }
 
-  const lockedTitle =
-    "Owner logins cannot be changed after the draft configuration is sealed.";
+  const lockedTitle = "Owner logins cannot be changed after the draft configuration is sealed.";
 
   return (
     <>
@@ -86,8 +85,9 @@ export function RevokeFranchiseLoginButton({
             <AlertDialogTitle>Revoke franchise login?</AlertDialogTitle>
             <AlertDialogDescription className="text-left">
               Removes sign-in credentials for{" "}
-              <span className="font-medium text-foreground">{playerName}</span> when they are not assigned to a
-              franchise on Teams. If they still control a team, remove them there first.
+              <span className="font-medium text-foreground">{playerName}</span> when they are not
+              assigned to a franchise on Teams. If they still control a team, remove them there
+              first.
             </AlertDialogDescription>
           </AlertDialogHeader>
           {error ? (

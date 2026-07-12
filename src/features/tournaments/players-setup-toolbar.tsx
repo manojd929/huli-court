@@ -55,8 +55,8 @@ export function PlayersSetupToolbar({
             <SheetHeader className="border-b border-border/60 pb-4">
               <SheetTitle>Add player</SheetTitle>
               <SheetDescription>
-                Capture roster details privately on this desk; share credentials outside HuliCourt when
-                you invite franchise owners.
+                Capture roster details privately on this desk; share credentials outside HuliCourt
+                when you invite franchise owners.
               </SheetDescription>
             </SheetHeader>
             <div className="flex-1 overflow-y-auto px-6 py-6">

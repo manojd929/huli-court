@@ -10,7 +10,9 @@ export interface BidContext {
   purseRemaining: number;
 }
 
-export function minAcceptableBid(ctx: Pick<BidContext, "currentBid" | "basePrice" | "minIncrement">): number {
+export function minAcceptableBid(
+  ctx: Pick<BidContext, "currentBid" | "basePrice" | "minIncrement">,
+): number {
   return ctx.currentBid !== null ? ctx.currentBid + ctx.minIncrement : ctx.basePrice;
 }
 
@@ -18,10 +20,7 @@ export type BidRejection =
   | { reason: "TOO_LOW"; minAcceptable: number }
   | { reason: "INSUFFICIENT_PURSE"; purseRemaining: number };
 
-export function validateBidAmount(
-  amount: number,
-  ctx: BidContext,
-): BidRejection | null {
+export function validateBidAmount(amount: number, ctx: BidContext): BidRejection | null {
   const floor = minAcceptableBid(ctx);
   if (amount < floor) {
     return { reason: "TOO_LOW", minAcceptable: floor };

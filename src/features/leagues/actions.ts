@@ -5,16 +5,10 @@ import { revalidatePath } from "next/cache";
 import { requireSessionUser } from "@/lib/auth/session";
 import { UserRole } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
-import {
-  createLeague,
-  LeagueServiceError,
-  updateLeague,
-} from "@/services/league-service";
+import { createLeague, LeagueServiceError, updateLeague } from "@/services/league-service";
 import { createLeagueSchema, updateLeagueSchema } from "@/validations/league";
 
-export type LeagueActionResult =
-  | { ok: true; slug?: string }
-  | { ok: false; error: string };
+export type LeagueActionResult = { ok: true; slug?: string } | { ok: false; error: string };
 
 function handle(err: unknown): LeagueActionResult {
   if (err instanceof LeagueServiceError) {
@@ -27,9 +21,7 @@ function handle(err: unknown): LeagueActionResult {
   return { ok: false, error: "Unexpected error. Try again." };
 }
 
-export async function createLeagueAction(
-  input: unknown,
-): Promise<LeagueActionResult> {
+export async function createLeagueAction(input: unknown): Promise<LeagueActionResult> {
   try {
     const parsed = createLeagueSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid league details." };
@@ -54,9 +46,7 @@ export async function createLeagueAction(
   }
 }
 
-export async function updateLeagueAction(
-  input: unknown,
-): Promise<LeagueActionResult> {
+export async function updateLeagueAction(input: unknown): Promise<LeagueActionResult> {
   try {
     const parsed = updateLeagueSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid league details." };

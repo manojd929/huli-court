@@ -57,7 +57,7 @@ export function OwnerPicker({
         <SelectTrigger
           id={id}
           aria-label={hideLabel ? label : undefined}
-          className="w-full min-w-0 max-w-full"
+          className="w-full max-w-full min-w-0"
         >
           <SelectValue placeholder="Choose someone…">
             {selectValue === NONE_VALUE

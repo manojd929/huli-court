@@ -7,10 +7,7 @@ import {
 } from "@/lib/errors/safe-user-feedback";
 import { prisma } from "@/lib/prisma";
 
-import {
-  assertTournamentOwnership,
-  TournamentServiceError,
-} from "@/services/tournament-service";
+import { assertTournamentOwnership, TournamentServiceError } from "@/services/tournament-service";
 
 import type {
   CreateLeagueOwnerForPlayerInput,
@@ -21,10 +18,7 @@ export async function createLeagueOwnerAccount(
   commissionerUserId: string,
   input: CreateLeagueOwnerInput,
 ): Promise<{ userId: string; email: string; linkedExisting: boolean }> {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    commissionerUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, commissionerUserId);
 
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId },
@@ -33,10 +27,7 @@ export async function createLeagueOwnerAccount(
   if (!tournament) {
     throw new TournamentServiceError("Tournament not found.");
   }
-  if (
-    tournament.draftPhase !== DraftPhase.SETUP &&
-    tournament.draftPhase !== DraftPhase.READY
-  ) {
+  if (tournament.draftPhase !== DraftPhase.SETUP && tournament.draftPhase !== DraftPhase.READY) {
     throw new TournamentServiceError(
       "Cannot create franchise owner logins after the draft configuration is sealed.",
     );
@@ -142,10 +133,7 @@ export async function createLeagueOwnerForPlayerAccount(
   commissionerUserId: string,
   input: CreateLeagueOwnerForPlayerInput,
 ): Promise<{ email: string; linkedExisting: boolean }> {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    commissionerUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, commissionerUserId);
 
   const player = await prisma.player.findFirst({
     where: {
@@ -161,24 +149,18 @@ export async function createLeagueOwnerForPlayerAccount(
   }
 
   if (player.linkedOwnerUserId !== null) {
-    throw new TournamentServiceError(
-      "This roster row already has a franchise login.",
-    );
+    throw new TournamentServiceError("This roster row already has a franchise login.");
   }
 
   const displayTrimmed = input.displayName?.trim() ?? "";
-  const displayForInvite =
-    displayTrimmed !== "" ? displayTrimmed : player.name.trim();
+  const displayForInvite = displayTrimmed !== "" ? displayTrimmed : player.name.trim();
 
-  const { userId, email, linkedExisting } = await createLeagueOwnerAccount(
-    commissionerUserId,
-    {
-      tournamentSlug: input.tournamentSlug,
-      email: input.email,
-      password: input.password,
-      displayName: displayForInvite,
-    },
-  );
+  const { userId, email, linkedExisting } = await createLeagueOwnerAccount(commissionerUserId, {
+    tournamentSlug: input.tournamentSlug,
+    email: input.email,
+    password: input.password,
+    displayName: displayForInvite,
+  });
 
   if (linkedExisting) {
     const alreadyLinkedInTournament = await prisma.player.findFirst({
@@ -206,7 +188,6 @@ export async function createLeagueOwnerForPlayerAccount(
 
 export function isLeagueOwnerInviteConfigured(): boolean {
   return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() &&
-      process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(),
+    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(),
   );
 }

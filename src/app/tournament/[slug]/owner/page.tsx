@@ -131,7 +131,7 @@ export default async function OwnerViewPage({ params }: PageProps) {
                   </div>
                 )}
               </div>
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                 {item.label}
               </p>
               <p className="text-base font-semibold">{item.playerName}</p>

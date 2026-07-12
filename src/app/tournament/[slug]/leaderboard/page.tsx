@@ -29,14 +29,12 @@ export default async function LeaderboardPage({ params }: PageProps) {
       <header className="space-y-2">
         <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Knockout board</h2>
         <p className="max-w-3xl text-sm text-muted-foreground">
-          Standings and full match results in one read-only view. Owners can use this board to track every tie, scoreline, and elimination state without entering the admin run workflow.
+          Standings and full match results in one read-only view. Owners can use this board to track
+          every tie, scoreline, and elimination state without entering the admin run workflow.
         </p>
       </header>
 
-      <LeaderboardTable
-        format={summary.tournament.format}
-        standings={summary.standings}
-      />
+      <LeaderboardTable format={summary.tournament.format} standings={summary.standings} />
 
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -69,7 +67,8 @@ export default async function LeaderboardPage({ params }: PageProps) {
                         </p>
                       </div>
                       <Badge variant="outline" className="rounded-full px-3 py-1">
-                        {tieMatches.filter((match) => match.status === "COMPLETED").length}/{tieMatches.length} completed
+                        {tieMatches.filter((match) => match.status === "COMPLETED").length}/
+                        {tieMatches.length} completed
                       </Badge>
                     </div>
                   </div>
@@ -87,7 +86,9 @@ export default async function LeaderboardPage({ params }: PageProps) {
                             </div>
                             <div className="space-y-1 text-sm text-muted-foreground">
                               <p>
-                                <span className="font-medium text-foreground">{tie.teamOne.name}:</span>{" "}
+                                <span className="font-medium text-foreground">
+                                  {tie.teamOne.name}:
+                                </span>{" "}
                                 {getFixtureSideLabel({
                                   match,
                                   side: "SIDE_ONE",
@@ -95,7 +96,9 @@ export default async function LeaderboardPage({ params }: PageProps) {
                                 })}
                               </p>
                               <p>
-                                <span className="font-medium text-foreground">{tie.teamTwo.name}:</span>{" "}
+                                <span className="font-medium text-foreground">
+                                  {tie.teamTwo.name}:
+                                </span>{" "}
                                 {getFixtureSideLabel({
                                   match,
                                   side: "SIDE_TWO",
@@ -106,7 +109,7 @@ export default async function LeaderboardPage({ params }: PageProps) {
                           </div>
 
                           <div className="rounded-2xl border border-border/70 bg-background/70 px-4 py-3 text-center">
-                            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                            <p className="text-xs tracking-[0.18em] text-muted-foreground uppercase">
                               Score
                             </p>
                             <p className="mt-1 text-lg font-semibold text-foreground">
@@ -150,7 +153,7 @@ export default async function LeaderboardPage({ params }: PageProps) {
                   </div>
 
                   <div className="rounded-2xl border border-border/70 bg-background/70 px-4 py-3 text-center">
-                    <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                    <p className="text-xs tracking-[0.18em] text-muted-foreground uppercase">
                       Score
                     </p>
                     <p className="mt-1 text-lg font-semibold text-foreground">

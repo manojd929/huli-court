@@ -7,12 +7,17 @@ import {
 import { SquadRulesAutoFillButton } from "@/features/tournaments/squad-rules-auto-fill-button";
 import { SquadRulesForm } from "@/features/tournaments/squad-rules-form";
 import { RosterCategoryPill } from "@/features/roster/roster-category-pill";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { getSessionUser } from "@/lib/auth/session";
 import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
-import {
-  rosterCategoryOrderIds,
-} from "@/lib/squad-rules/compute-per-team-caps";
+import { rosterCategoryOrderIds } from "@/lib/squad-rules/compute-per-team-caps";
 import { prisma } from "@/lib/prisma";
 import type { SquadRuleDto } from "@/types/draft";
 
@@ -113,9 +118,7 @@ export default async function RulesPage({ params }: PageProps) {
       },
     ];
   });
-  const formKey = initialRules
-    .map((rule) => `${rule.rosterCategoryId}:${rule.maxCount}`)
-    .join("|");
+  const formKey = initialRules.map((rule) => `${rule.rosterCategoryId}:${rule.maxCount}`).join("|");
 
   return (
     <div className="space-y-6 sm:space-y-10">
@@ -125,12 +128,12 @@ export default async function RulesPage({ params }: PageProps) {
             Pick limits
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base">
-            Cap how many picks each franchise may spend on each roster group. If a group does not divide
-            evenly across teams, an{" "}
+            Cap how many picks each franchise may spend on each roster group. If a group does not
+            divide evenly across teams, an{" "}
             <strong className="font-semibold text-foreground">amber notice under that group</strong>{" "}
             lists how many players need recategorizing or how many to add. Use{" "}
-            <strong className="font-semibold text-foreground">Auto-set limits from roster</strong> for ⌊pool ÷
-            teams⌋ defaults.
+            <strong className="font-semibold text-foreground">Auto-set limits from roster</strong>{" "}
+            for ⌊pool ÷ teams⌋ defaults.
           </p>
         </div>
         {isCommissioner ? <SquadRulesAutoFillButton tournamentSlug={slug} /> : null}

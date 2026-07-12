@@ -16,13 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   closeAuctionLotAction,
@@ -46,8 +40,7 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
   const [busy, setBusy] = useState(false);
   const [poolQuery, setPoolQuery] = useState("");
 
-  const accelerated =
-    snapshot.draftPhase === "LIVE" || snapshot.draftPhase === "PAUSED";
+  const accelerated = snapshot.draftPhase === "LIVE" || snapshot.draftPhase === "PAUSED";
   const { refresh } = useDraftLiveSync(slug, snapshot.tournamentId, setSnapshot, {
     accelerated,
   });
@@ -55,10 +48,10 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
   const auction = snapshot.auction;
   const currentLot = auction?.currentLot ?? null;
   const lotPlayer = currentLot
-    ? snapshot.players.find((p) => p.id === currentLot.playerId) ?? null
+    ? (snapshot.players.find((p) => p.id === currentLot.playerId) ?? null)
     : null;
   const leadingTeam = currentLot?.currentBidTeamId
-    ? snapshot.teams.find((t) => t.id === currentLot.currentBidTeamId) ?? null
+    ? (snapshot.teams.find((t) => t.id === currentLot.currentBidTeamId) ?? null)
     : null;
 
   const unsoldIds = useMemo(
@@ -76,9 +69,7 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
           !player.isUnavailable &&
           !player.isLocked,
       )
-      .filter(
-        (player) => query === "" || player.name.toLowerCase().includes(query),
-      );
+      .filter((player) => query === "" || player.name.toLowerCase().includes(query));
   }, [snapshot.players, poolQuery]);
 
   const runAction = useCallback(
@@ -100,9 +91,7 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
   );
 
   const isLive = snapshot.draftPhase === "LIVE";
-  const purseByTeamId = new Map(
-    (auction?.purses ?? []).map((p) => [p.teamId, p]),
-  );
+  const purseByTeamId = new Map((auction?.purses ?? []).map((p) => [p.teamId, p]));
 
   return (
     <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
@@ -116,15 +105,11 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
               </CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">
-              {(snapshot.draftPhase === "SETUP" ||
-                snapshot.draftPhase === "READY") && (
+              {(snapshot.draftPhase === "SETUP" || snapshot.draftPhase === "READY") && (
                 <Button
                   disabled={busy}
                   onClick={() =>
-                    runAction(
-                      () => startDraftAction({ tournamentSlug: slug }),
-                      "Auction is live!",
-                    )
+                    runAction(() => startDraftAction({ tournamentSlug: slug }), "Auction is live!")
                   }
                 >
                   Start auction
@@ -134,9 +119,7 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
                 <Button
                   variant="outline"
                   disabled={busy}
-                  onClick={() =>
-                    runAction(() => pauseDraftAction({ tournamentSlug: slug }))
-                  }
+                  onClick={() => runAction(() => pauseDraftAction({ tournamentSlug: slug }))}
                 >
                   Pause
                 </Button>
@@ -144,9 +127,7 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
               {snapshot.draftPhase === "PAUSED" && (
                 <Button
                   disabled={busy}
-                  onClick={() =>
-                    runAction(() => resumeDraftAction({ tournamentSlug: slug }))
-                  }
+                  onClick={() => runAction(() => resumeDraftAction({ tournamentSlug: slug }))}
                 >
                   Resume
                 </Button>
@@ -164,8 +145,8 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
                     <AlertDialogHeader>
                       <AlertDialogTitle>End the auction?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Unsold players stay unassigned. This completes the
-                        allocation phase and unlocks fixtures.
+                        Unsold players stay unassigned. This completes the allocation phase and
+                        unlocks fixtures.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -191,9 +172,7 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
         <Card className={cn(currentLot && "border-brand/60 bg-brand-soft/30 ring-1 ring-brand/20")}>
           <CardHeader>
             <CardTitle>
-              {currentLot && lotPlayer
-                ? `Under the hammer: ${lotPlayer.name}`
-                : "No lot open"}
+              {currentLot && lotPlayer ? `Under the hammer: ${lotPlayer.name}` : "No lot open"}
             </CardTitle>
             <CardDescription>
               {currentLot && lotPlayer
@@ -206,7 +185,7 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
           {currentLot && (
             <CardContent className="space-y-4">
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold tabular-nums text-brand-accent">
+                <span className="text-4xl font-bold text-brand-accent tabular-nums">
                   {currentLot.currentBid ?? currentLot.basePrice}
                 </span>
                 <span className="text-sm text-muted-foreground">
@@ -223,7 +202,7 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
                       ? "No bids yet. A franchise must bid before you can hammer the sale. Use Unsold to send this player back to the pool."
                       : undefined
                   }
-                  className="bg-brand text-brand-foreground hover:bg-brand/90 focus-visible:ring-brand/50 disabled:opacity-50 disabled:hover:bg-brand disabled:cursor-not-allowed"
+                  className="bg-brand text-brand-foreground hover:bg-brand/90 focus-visible:ring-brand/50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-brand"
                   onClick={() =>
                     runAction(
                       () =>
@@ -361,18 +340,19 @@ export function AuctionDeskClient({ slug, initialSnapshot }: AuctionDeskClientPr
                     <span className="truncate font-medium">
                       {team.name}
                       {isLeading && (
-                        <Badge className="ml-2 border-brand/40 bg-brand/15 text-brand-accent" variant="secondary">
+                        <Badge
+                          className="ml-2 border-brand/40 bg-brand/15 text-brand-accent"
+                          variant="secondary"
+                        >
                           leading
                         </Badge>
                       )}
                     </span>
-                    <span className="text-sm tabular-nums text-muted-foreground">
+                    <span className="text-sm text-muted-foreground tabular-nums">
                       {purse ? (
                         <>
-                          <span className="font-semibold text-foreground">
-                            {purse.remaining}
-                          </span>{" "}
-                          / {purse.purse}
+                          <span className="font-semibold text-foreground">{purse.remaining}</span> /{" "}
+                          {purse.purse}
                         </>
                       ) : (
                         "—"

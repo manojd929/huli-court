@@ -11,9 +11,7 @@ import { cn } from "@/lib/utils";
 import { useDashboardAppearance } from "./dashboard-appearance-provider";
 import { DashboardFloorBackdropShell } from "./dashboard-floor-backdrop-layers";
 
-export function DashboardThemeShell({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function DashboardThemeShell({ children }: Readonly<{ children: React.ReactNode }>) {
   const { floorTheme } = useDashboardAppearance();
 
   return (

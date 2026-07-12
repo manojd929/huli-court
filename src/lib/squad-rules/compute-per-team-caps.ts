@@ -9,7 +9,8 @@ export interface RosterCategoryOrderRow {
 export function rosterCategoryOrderIds(categories: RosterCategoryOrderRow[]): string[] {
   const sorted = [...categories].sort(
     (a, b) =>
-      a.displayOrder - b.displayOrder || a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+      a.displayOrder - b.displayOrder ||
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
   );
   return sorted.map((c) => c.id);
 }
@@ -47,9 +48,10 @@ export function computePerTeamCategoryCaps(params: {
 
 /** Sort squad rule rows to match commissioner category ordering. */
 
-export function sortSquadRulesByRosterCategoryOrder<
-  T extends { rosterCategoryId: string },
->(rows: T[], categoryOrder: readonly string[]): T[] {
+export function sortSquadRulesByRosterCategoryOrder<T extends { rosterCategoryId: string }>(
+  rows: T[],
+  categoryOrder: readonly string[],
+): T[] {
   const orderIndex = new Map(categoryOrder.map((id, idx) => [id, idx]));
   return [...rows].sort(
     (a, b) =>

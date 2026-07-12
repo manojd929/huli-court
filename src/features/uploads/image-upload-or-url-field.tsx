@@ -93,8 +93,8 @@ export function ImageUploadOrUrlField({
       </div>
       {!uploadsEnabled ? (
         <p className="text-xs text-muted-foreground">
-          Uploads aren&apos;t enabled on this workspace yet. Paste a public HTTPS image URL below, or ask
-          your administrator to turn on file uploads.
+          Uploads aren&apos;t enabled on this workspace yet. Paste a public HTTPS image URL below,
+          or ask your administrator to turn on file uploads.
         </p>
       ) : (
         <p className="text-xs text-muted-foreground">
@@ -117,14 +117,7 @@ export function ImageUploadOrUrlField({
       {showPreview ? (
         <div className="flex items-center gap-3 rounded-lg border border-border/60 bg-muted/30 p-2">
           <div className="relative size-12 shrink-0 overflow-hidden rounded-md ring-1 ring-border">
-            <Image
-              src={trimmedUrl}
-              alt=""
-              fill
-              sizes="48px"
-              className="object-cover"
-              unoptimized
-            />
+            <Image src={trimmedUrl} alt="" fill sizes="48px" className="object-cover" unoptimized />
           </div>
           <span className="truncate text-xs text-muted-foreground">{trimmedUrl}</span>
         </div>

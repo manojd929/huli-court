@@ -25,8 +25,7 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
   useDraftLiveSync(slug, snapshot.tournamentId, setSnapshot, {
     enabled: true,
     accelerated:
-      snapshot.draftPhase === DraftPhase.LIVE ||
-      snapshot.draftPhase === DraftPhase.PAUSED,
+      snapshot.draftPhase === DraftPhase.LIVE || snapshot.draftPhase === DraftPhase.PAUSED,
   });
 
   const teamsById = useMemo(() => {
@@ -65,9 +64,7 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
   }, [snapshot.players]);
 
   const currentTurnTeamId = useMemo(() => {
-    const slot = snapshot.draftSlots.find(
-      (s) => s.slotIndex === snapshot.currentSlotIndex,
-    );
+    const slot = snapshot.draftSlots.find((s) => s.slotIndex === snapshot.currentSlotIndex);
     return slot?.teamId ?? null;
   }, [snapshot.currentSlotIndex, snapshot.draftSlots]);
 
@@ -76,8 +73,7 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
   const completed = snapshot.draftPhase === DraftPhase.COMPLETED;
   const draftProgress = getDraftProgressDisplay(snapshot);
 
-  const progressDenominator =
-    snapshot.draftSlotsTotal > 0 ? snapshot.draftSlotsTotal : 1;
+  const progressDenominator = snapshot.draftSlotsTotal > 0 ? snapshot.draftSlotsTotal : 1;
 
   return (
     <div className="relative flex min-h-[100dvh] flex-col overflow-x-hidden bg-background text-foreground dark:bg-[#070b14] dark:text-white">
@@ -94,17 +90,17 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
         aria-hidden
       />
 
-      <header className="relative z-10 shrink-0 border-b border-border px-3 pb-8 pt-6 min-[400px]:px-4 sm:px-6 sm:pb-10 sm:pt-10 md:px-8 md:pb-12">
+      <header className="relative z-10 shrink-0 border-b border-border px-3 pt-6 pb-8 min-[400px]:px-4 sm:px-6 sm:pt-10 sm:pb-10 md:px-8 md:pb-12">
         <div className="mx-auto flex max-w-4xl flex-col gap-6 md:max-w-[1920px] md:flex-row md:items-end md:justify-between md:gap-10 lg:gap-12">
           <div className="min-w-0 space-y-2 sm:space-y-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-brand-accent sm:text-[11px] sm:tracking-[0.28em]">
+            <p className="text-[10px] font-semibold tracking-[0.24em] text-brand-accent uppercase sm:text-[11px] sm:tracking-[0.28em]">
               {snapshot.allocationMethod === "LIVE_AUCTION"
                 ? "Live Auction"
                 : snapshot.allocationMethod === "RANDOM_ASSIGNMENT"
                   ? "Team Assignment"
                   : "Live Draft"}
             </p>
-            <h1 className="text-balance text-[clamp(1.5rem,6vw,3.5rem)] font-bold leading-[1.08] tracking-tight md:text-[clamp(1.85rem,3.8vw,3.85rem)]">
+            <h1 className="text-[clamp(1.5rem,6vw,3.5rem)] leading-[1.08] font-bold tracking-tight text-balance md:text-[clamp(1.85rem,3.8vw,3.85rem)]">
               {snapshot.name}
             </h1>
             <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-[clamp(0.95rem,1.35vw,1.15rem)] dark:text-white/65">
@@ -114,12 +110,15 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
 
           <div className="flex w-full shrink-0 flex-col gap-3 sm:gap-4 md:max-w-md lg:max-w-lg">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <Badge variant="secondary" className="border-border px-3 py-1.5 text-xs font-medium dark:border-white/20 dark:bg-white/10 dark:text-white">
+              <Badge
+                variant="secondary"
+                className="border-border px-3 py-1.5 text-xs font-medium dark:border-white/20 dark:bg-white/10 dark:text-white"
+              >
                 {DRAFT_PHASE_LABEL[snapshot.draftPhase]}
               </Badge>
               {live && snapshot.auctionSpotlightRosterCategoryId ? (
-                <div className="flex flex-wrap items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-2.5 py-1 dark:border-brand/40 dark:bg-brand/15 sm:gap-3 sm:px-3 sm:py-1.5">
-                  <span className="text-[9px] font-semibold uppercase tracking-widest text-brand-accent sm:text-[10px]">
+                <div className="flex flex-wrap items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-2.5 py-1 sm:gap-3 sm:px-3 sm:py-1.5 dark:border-brand/40 dark:bg-brand/15">
+                  <span className="text-[9px] font-semibold tracking-widest text-brand-accent uppercase sm:text-[10px]">
                     Active round
                   </span>
                   <RosterCategoryPill
@@ -135,13 +134,15 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
               <div className="flex flex-wrap items-end justify-between gap-4">
                 {!completed ? (
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px] dark:text-white/50">
+                    <p className="text-[10px] font-semibold tracking-[0.2em] text-muted-foreground uppercase sm:text-[11px] dark:text-white/50">
                       On the clock
                     </p>
                     <p
                       className={cn(
-                        "mt-1 text-[clamp(1.1rem,4.5vw,1.95rem)] font-bold leading-tight md:text-[clamp(1.25rem,2.4vw,2rem)]",
-                        live ? "text-foreground dark:text-white" : "text-muted-foreground dark:text-white/45",
+                        "mt-1 text-[clamp(1.1rem,4.5vw,1.95rem)] leading-tight font-bold md:text-[clamp(1.25rem,2.4vw,2rem)]",
+                        live
+                          ? "text-foreground dark:text-white"
+                          : "text-muted-foreground dark:text-white/45",
                       )}
                     >
                       {activeTeam?.name ?? "—"}
@@ -149,10 +150,10 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
                   </div>
                 ) : null}
                 <div className="shrink-0 text-right">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px] dark:text-white/50">
+                  <p className="text-[10px] font-semibold tracking-[0.2em] text-muted-foreground uppercase sm:text-[11px] dark:text-white/50">
                     Draft progress
                   </p>
-                  <p className="mt-1 font-mono text-base font-semibold tabular-nums text-foreground sm:text-lg dark:text-white">
+                  <p className="mt-1 font-mono text-base font-semibold text-foreground tabular-nums sm:text-lg dark:text-white">
                     Pick {draftProgress.displayPickCount}/{progressDenominator}
                   </p>
                   <p className="text-[11px] text-muted-foreground tabular-nums sm:text-xs dark:text-white/45">
@@ -172,14 +173,12 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
         </div>
       </header>
 
-      {snapshot.allocationMethod === "LIVE_AUCTION" && (
-        <AuctionTvBanner snapshot={snapshot} />
-      )}
+      {snapshot.allocationMethod === "LIVE_AUCTION" && <AuctionTvBanner snapshot={snapshot} />}
 
       {snapshot.lastConfirmedPick && !completed ? (
         <section className="relative z-10 border-b border-emerald-200 bg-emerald-50/90 px-3 py-5 text-foreground sm:px-6 md:px-8 dark:border-emerald-500/20 dark:bg-emerald-950/35 dark:text-white">
           <div className="mx-auto flex max-w-4xl flex-col gap-3 sm:gap-4 md:max-w-[1920px] md:flex-row md:items-center md:gap-10 lg:gap-12">
-            <p className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.24em] text-emerald-800 sm:text-[11px] dark:text-emerald-200/95">
+            <p className="shrink-0 text-[10px] font-semibold tracking-[0.24em] text-emerald-800 uppercase sm:text-[11px] dark:text-emerald-200/95">
               Latest drafted pick
             </p>
             <AnimatePresence mode="wait">
@@ -192,7 +191,7 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
                 className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4 md:gap-8"
               >
                 <div className="min-w-0">
-                  <p className="text-[clamp(1.2rem,5vw,2.1rem)] font-bold leading-snug tracking-tight md:text-[clamp(1.35rem,2.8vw,2.25rem)]">
+                  <p className="text-[clamp(1.2rem,5vw,2.1rem)] leading-snug font-bold tracking-tight md:text-[clamp(1.35rem,2.8vw,2.25rem)]">
                     {snapshot.lastConfirmedPick.playerName}
                   </p>
                   <div className="mt-2 flex flex-wrap items-center gap-2 sm:gap-3">
@@ -215,7 +214,7 @@ export function TvDisplayClient({ slug, initialSnapshot }: TvDisplayClientProps)
         </section>
       ) : null}
 
-      <main className="relative z-10 flex-1 px-3 py-8 sm:px-6 sm:py-10 md:px-8 md:pb-14 md:pt-14">
+      <main className="relative z-10 flex-1 px-3 py-8 sm:px-6 sm:py-10 md:px-8 md:pt-14 md:pb-14">
         <div className="mx-auto mb-6 max-w-4xl sm:mb-8 md:max-w-[1920px]">
           <h2 className="text-base font-bold tracking-tight text-foreground sm:text-lg md:text-[clamp(1rem,1.5vw,1.25rem)] dark:text-white">
             Franchise boards

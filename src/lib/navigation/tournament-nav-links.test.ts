@@ -8,11 +8,7 @@ describe("tournamentChromeNavGroups", () => {
       showFixtures: true,
     });
 
-    expect(groups.map((group) => group.label)).toEqual([
-      "League",
-      "Auction",
-      "Tournament",
-    ]);
+    expect(groups.map((group) => group.label)).toEqual(["League", "Auction", "Tournament"]);
     expect(groups[0]?.links.map((link) => link.label)).toEqual([
       "Home",
       "Roster groups",
@@ -49,13 +45,7 @@ describe("tournamentChromeNavGroups", () => {
       showFixtures: false,
     });
 
-    expect(commissionerGroups.map((group) => group.label)).toEqual([
-      "League",
-      "Auction",
-    ]);
-    expect(participantGroups.map((group) => group.label)).toEqual([
-      "League",
-      "Auction",
-    ]);
+    expect(commissionerGroups.map((group) => group.label)).toEqual(["League", "Auction"]);
+    expect(participantGroups.map((group) => group.label)).toEqual(["League", "Auction"]);
   });
 });

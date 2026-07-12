@@ -100,8 +100,8 @@ export function GrantFranchiseLoginDialog({
           <DialogTitle>Grant franchise owner login</DialogTitle>
           <DialogDescription>
             Creates an email and password login for{" "}
-            <span className="font-medium text-foreground">{playerName}</span>. After this, assign them to a team
-            from Teams if you have not already.
+            <span className="font-medium text-foreground">{playerName}</span>. After this, assign
+            them to a team from Teams if you have not already.
           </DialogDescription>
         </DialogHeader>
         <form className="grid gap-4 py-2" onSubmit={(event) => void handleSubmit(event)}>
@@ -148,7 +148,9 @@ export function GrantFranchiseLoginDialog({
             </p>
           ) : null}
           <DialogFooter className="gap-2 sm:gap-2">
-            <DialogClose render={<Button type="button" variant="outline" disabled={isSubmitting} />}>
+            <DialogClose
+              render={<Button type="button" variant="outline" disabled={isSubmitting} />}
+            >
               Close
             </DialogClose>
             <Button type="submit" pending={isSubmitting} pendingLabel="Creating…">

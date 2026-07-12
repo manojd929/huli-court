@@ -1,9 +1,4 @@
-import {
-  AllocationMethod,
-  DraftLogAction,
-  DraftPhase,
-  PickStatus,
-} from "@/generated/prisma/enums";
+import { AllocationMethod, DraftLogAction, DraftPhase, PickStatus } from "@/generated/prisma/enums";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { buildRandomAssignmentPlan } from "@/lib/draft/random-assignment";
@@ -44,22 +39,13 @@ export async function runRandomAssignment(params: {
     });
     if (!tournament) throw new DraftServiceError("Tournament not found.");
     if (tournament.createdById !== params.actorUserId) {
-      throw new DraftServiceError(
-        "Only the tournament admin can run random assignment.",
-      );
+      throw new DraftServiceError("Only the tournament admin can run random assignment.");
     }
     if (tournament.allocationMethod !== AllocationMethod.RANDOM_ASSIGNMENT) {
-      throw new DraftServiceError(
-        "This tournament is not configured for random assignment.",
-      );
+      throw new DraftServiceError("This tournament is not configured for random assignment.");
     }
-    if (
-      tournament.draftPhase !== DraftPhase.SETUP &&
-      tournament.draftPhase !== DraftPhase.READY
-    ) {
-      throw new DraftServiceError(
-        "Random assignment can only run before the draft has started.",
-      );
+    if (tournament.draftPhase !== DraftPhase.SETUP && tournament.draftPhase !== DraftPhase.READY) {
+      throw new DraftServiceError("Random assignment can only run before the draft has started.");
     }
     if (tournament.teams.length === 0) {
       throw new DraftServiceError("Add teams before running random assignment.");
@@ -70,9 +56,7 @@ export async function runRandomAssignment(params: {
       if (team.ownerUserId) ownerTeamIdsByUserId.set(team.ownerUserId, team.id);
     }
     const pickedPlayerIds = new Set(tournament.picks.map((p) => p.playerId));
-    const pickTeamByPlayer = new Map(
-      tournament.picks.map((p) => [p.playerId, p.teamId]),
-    );
+    const pickTeamByPlayer = new Map(tournament.picks.map((p) => [p.playerId, p.teamId]));
 
     // Existing occupancy: confirmed picks + owner-stub rows tied to a team.
     const existingTotal = new Map<string, number>();
@@ -114,10 +98,7 @@ export async function runRandomAssignment(params: {
         existingByCategory: existingByCategory.get(team.id) ?? {},
       })),
       categoryCaps: Object.fromEntries(
-        tournament.squadRules.map((rule) => [
-          rule.rosterCategoryId,
-          rule.maxCount,
-        ]),
+        tournament.squadRules.map((rule) => [rule.rosterCategoryId, rule.maxCount]),
       ),
       picksPerTeam: tournament.picksPerTeam,
     });

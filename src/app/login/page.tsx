@@ -33,7 +33,7 @@ export default async function LoginPage({
         <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-border/40 pb-3 text-sm md:border-0 md:pb-0">
           <Link
             href={ROUTES.home}
-            className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-md py-1.5 pr-1.5 text-muted-foreground ring-offset-background transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-md py-1.5 pr-1.5 text-muted-foreground ring-offset-background transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             ← Back to landing
           </Link>
@@ -53,11 +53,11 @@ export default async function LoginPage({
         </main>
 
         <footer className="shrink-0 border-t border-border/40 px-0.5 pt-5 text-center text-sm leading-snug text-foreground/72 md:border-0 md:pt-6 md:leading-relaxed dark:text-foreground/78">
-          First time at auction time? Ask your organizer for this league&apos;s sign-in link (it opens
-          this page, then sends you to the right screen after you enter email and password). Franchise
-          owners usually bookmark{" "}
-          <span className="font-medium text-foreground">Owner</span> in the tournament menu. Players on the
-          roster only need an account if they were invited as an owner.
+          First time at auction time? Ask your organizer for this league&apos;s sign-in link (it
+          opens this page, then sends you to the right screen after you enter email and password).
+          Franchise owners usually bookmark{" "}
+          <span className="font-medium text-foreground">Owner</span> in the tournament menu. Players
+          on the roster only need an account if they were invited as an owner.
         </footer>
       </div>
     </div>

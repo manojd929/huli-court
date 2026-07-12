@@ -1,10 +1,7 @@
 /**
  * Restricts redirects after sign-in to same-origin relative paths (blocks open redirects).
  */
-export function sanitizeNextPath(
-  raw: string | null | undefined,
-  fallback: string,
-): string {
+export function sanitizeNextPath(raw: string | null | undefined, fallback: string): string {
   if (raw == null || typeof raw !== "string") {
     return fallback;
   }

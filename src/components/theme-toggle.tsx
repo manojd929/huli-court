@@ -21,7 +21,11 @@ interface ThemeToggleProps {
 const subscribeNothing = (): (() => void) => (): void => {};
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
-  const clientReady = useSyncExternalStore(subscribeNothing, () => true, () => false);
+  const clientReady = useSyncExternalStore(
+    subscribeNothing,
+    () => true,
+    () => false,
+  );
 
   const { theme, setTheme } = useAppTheme();
   const resolved = useResolvedTheme();
@@ -42,7 +46,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         aria-busy
         aria-label="Appearance menu loading…"
         className={cn(
-          "size-10 min-h-10 min-w-10 shrink-0 touch-manipulation rounded-full border border-border/25 bg-background/55 text-muted-foreground shadow-none opacity-85",
+          "size-10 min-h-10 min-w-10 shrink-0 touch-manipulation rounded-full border border-border/25 bg-background/55 text-muted-foreground opacity-85 shadow-none",
           "dark:border-white/14 dark:bg-white/[0.05]",
           className,
         )}
@@ -98,15 +102,27 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
             }}
           >
             <DropdownMenuRadioItem value="light" closeOnClick className="gap-2">
-              <SunIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden strokeWidth={2.25} />
+              <SunIcon
+                className="size-4 shrink-0 text-muted-foreground"
+                aria-hidden
+                strokeWidth={2.25}
+              />
               Light
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="dark" closeOnClick className="gap-2">
-              <MoonIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden strokeWidth={2.25} />
+              <MoonIcon
+                className="size-4 shrink-0 text-muted-foreground"
+                aria-hidden
+                strokeWidth={2.25}
+              />
               Dark
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="system" closeOnClick className="gap-2">
-              <SunMoonIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden strokeWidth={2.25} />
+              <SunMoonIcon
+                className="size-4 shrink-0 text-muted-foreground"
+                aria-hidden
+                strokeWidth={2.25}
+              />
               System
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>

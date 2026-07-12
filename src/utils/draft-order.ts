@@ -2,10 +2,7 @@
  * Builds a flat draft sequence of team IDs with length `picksPerTeam * teamIds.length`.
  * Each round is shuffled independently.
  */
-export function buildSnakeDraftTeamSequence(
-  teamIds: string[],
-  picksPerTeam: number,
-): string[] {
+export function buildSnakeDraftTeamSequence(teamIds: string[], picksPerTeam: number): string[] {
   if (teamIds.length === 0 || picksPerTeam <= 0) return [];
   const slots: string[] = [];
   for (let round = 0; round < picksPerTeam; round += 1) {

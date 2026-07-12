@@ -19,9 +19,7 @@ export function tournamentChromeNavLinks(
   viewer: TournamentChromeNavViewer,
   options?: { showFixtures?: boolean },
 ): TournamentChromeNavLink[] {
-  return tournamentChromeNavGroups(slug, viewer, options).flatMap(
-    (group) => group.links,
-  );
+  return tournamentChromeNavGroups(slug, viewer, options).flatMap((group) => group.links);
 }
 
 export function tournamentChromeNavGroups(
@@ -50,15 +48,17 @@ export function tournamentChromeNavGroups(
       ],
     },
     ...(options?.showFixtures
-      ? [{
-          id: "tournament" as const,
-          label: "Tournament",
-          links: [
-            { href: ROUTES.fixtures(slug), label: "Fixtures" as const },
-            { href: ROUTES.run(slug), label: "Run tournament" as const },
-            { href: ROUTES.leaderboard(slug), label: "Knockout board" as const },
-          ],
-        }]
+      ? [
+          {
+            id: "tournament" as const,
+            label: "Tournament",
+            links: [
+              { href: ROUTES.fixtures(slug), label: "Fixtures" as const },
+              { href: ROUTES.run(slug), label: "Run tournament" as const },
+              { href: ROUTES.leaderboard(slug), label: "Knockout board" as const },
+            ],
+          },
+        ]
       : []),
   ];
 
@@ -85,14 +85,16 @@ export function tournamentChromeNavGroups(
         ],
       },
       ...(options?.showFixtures
-        ? [{
-            id: "tournament" as const,
-            label: "Tournament",
-            links: [
-              { href: ROUTES.fixtures(slug), label: "Fixtures" as const },
-              { href: ROUTES.leaderboard(slug), label: "Knockout board" as const },
-            ],
-          }]
+        ? [
+            {
+              id: "tournament" as const,
+              label: "Tournament",
+              links: [
+                { href: ROUTES.fixtures(slug), label: "Fixtures" as const },
+                { href: ROUTES.leaderboard(slug), label: "Knockout board" as const },
+              ],
+            },
+          ]
         : []),
     ];
   }
@@ -133,16 +135,16 @@ export const tournamentHubCards: TournamentHubCard[] = [
     title: "Roster groups",
     description: "Labels, tint colors, display order: what shows on every roster surface.",
   },
-    {
-      href: ROUTES.teams,
-      title: "All Teams",
-      description: "Names, colors, logos, and franchise-owner logins.",
-    },
-    {
-      href: ROUTES.players,
-      title: "All Players",
-      description: "Add nominees, attach photos, and sort them into roster groups.",
-    },
+  {
+    href: ROUTES.teams,
+    title: "All Teams",
+    description: "Names, colors, logos, and franchise-owner logins.",
+  },
+  {
+    href: ROUTES.players,
+    title: "All Players",
+    description: "Add nominees, attach photos, and sort them into roster groups.",
+  },
   {
     href: ROUTES.rules,
     title: "Rules",
@@ -187,25 +189,31 @@ export function tournamentHubCardsForViewer(options: {
       description: "View roster-group pick limits used during auction validation.",
     },
     ...(options.showFixtures
-      ? [{
-          href: ROUTES.fixtures,
-          title: "Fixtures",
-          description: "View and manage tournament fixtures and results.",
-        } satisfies TournamentHubCard]
+      ? [
+          {
+            href: ROUTES.fixtures,
+            title: "Fixtures",
+            description: "View and manage tournament fixtures and results.",
+          } satisfies TournamentHubCard,
+        ]
       : []),
     ...(options.showFixtures
-      ? [{
-          href: ROUTES.leaderboard,
-          title: "Knockout board",
-          description: "See standings and all recorded match results in one read-only board.",
-        } satisfies TournamentHubCard]
+      ? [
+          {
+            href: ROUTES.leaderboard,
+            title: "Knockout board",
+            description: "See standings and all recorded match results in one read-only board.",
+          } satisfies TournamentHubCard,
+        ]
       : []),
     ...(options.showFixtures
-      ? [{
-          href: ROUTES.run,
-          title: "Run tournament",
-          description: "Update live match status, scores, winners, and standings.",
-        } satisfies TournamentHubCard]
+      ? [
+          {
+            href: ROUTES.run,
+            title: "Run tournament",
+            description: "Update live match status, scores, winners, and standings.",
+          } satisfies TournamentHubCard,
+        ]
       : []),
     {
       href: ROUTES.tv,
@@ -218,8 +226,7 @@ export function tournamentHubCardsForViewer(options: {
   ];
 
   const auctionLive =
-    options.draftPhase === DraftPhase.LIVE ||
-    options.draftPhase === DraftPhase.PAUSED;
+    options.draftPhase === DraftPhase.LIVE || options.draftPhase === DraftPhase.PAUSED;
   if (!auctionLive) {
     return participantCards;
   }

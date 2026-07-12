@@ -70,11 +70,7 @@ export default async function AdminControlRoomPage({ params }: PageProps) {
       ) : snapshot.allocationMethod === "RANDOM_ASSIGNMENT" ? (
         <RandomAssignmentPanel slug={slug} initialSnapshot={snapshot} />
       ) : (
-        <AdminControlRoomClient
-          slug={slug}
-          initialSnapshot={snapshot}
-          viewerUserId={user.id}
-        />
+        <AdminControlRoomClient slug={slug} initialSnapshot={snapshot} viewerUserId={user.id} />
       )}
     </div>
   );

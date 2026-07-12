@@ -39,16 +39,12 @@ export function SquadRulesForm({
   const canonicalOrder = rosterCategorySortOrder(initialRules);
   const ordered = sortSquadRulesByRosterCategoryOrder(initialRules, canonicalOrder);
   const [capValues, setCapValues] = useState<Record<string, string>>(() =>
-    Object.fromEntries(
-      ordered.map((rule) => [rule.rosterCategoryId, String(rule.maxCount)]),
-    ),
+    Object.fromEntries(ordered.map((rule) => [rule.rosterCategoryId, String(rule.maxCount)])),
   );
 
   const { teamCount, playersPerCategory, categoryFitRows } = rosterSummary;
 
-  const fitByCategory = new Map(
-    categoryFitRows.map((row) => [row.rosterCategoryId, row]),
-  );
+  const fitByCategory = new Map(categoryFitRows.map((row) => [row.rosterCategoryId, row]));
 
   return (
     <form
@@ -75,16 +71,12 @@ export function SquadRulesForm({
       <div className="grid gap-6 md:grid-cols-2">
         {ordered.map((rule) => {
           const pool = playersPerCategory[rule.rosterCategoryId] ?? 0;
-          const fairFloor =
-            teamCount > 0 ? Math.floor(pool / teamCount) : 0;
+          const fairFloor = teamCount > 0 ? Math.floor(pool / teamCount) : 0;
           const fit = fitByCategory.get(rule.rosterCategoryId);
           const remainder = fit?.remainderAfterEvenSplit ?? 0;
-          const allocated =
-            teamCount > 0 && fit ? teamCount * fit.fairCapPerTeam : 0;
+          const allocated = teamCount > 0 && fit ? teamCount * fit.fairCapPerTeam : 0;
           const addForEven =
-            teamCount > 0 && pool > 0
-              ? Math.ceil(pool / teamCount) * teamCount - pool
-              : 0;
+            teamCount > 0 && pool > 0 ? Math.ceil(pool / teamCount) * teamCount - pool : 0;
           const fieldId = `cap-${rule.rosterCategoryId}`;
           const fieldName = fieldId;
 
@@ -135,14 +127,13 @@ export function SquadRulesForm({
                   role="status"
                   className="rounded-md border border-amber-500/45 bg-amber-500/10 px-3 py-2 text-xs leading-relaxed text-foreground dark:bg-amber-950/35"
                 >
-                  <strong className="font-semibold">Uneven split:</strong> identical caps only
-                  cover <strong>{allocated}</strong> of <strong>{pool}</strong> players (
-                  {teamCount}×{fairFloor}).{" "}
+                  <strong className="font-semibold">Uneven split:</strong> identical caps only cover{" "}
+                  <strong>{allocated}</strong> of <strong>{pool}</strong> players ({teamCount}×
+                  {fairFloor}).{" "}
                   <strong>
                     {remainder} player{remainder === 1 ? "" : "s"}
                   </strong>{" "}
-                  still exceed that symmetric split:{" "}
-                  <strong>recategorize {remainder}</strong>,{" "}
+                  still exceed that symmetric split: <strong>recategorize {remainder}</strong>,{" "}
                   <strong>add {addForEven} more here</strong> so the pool divides evenly by{" "}
                   {teamCount}, or raise this cap manually.
                 </p>
@@ -152,10 +143,7 @@ export function SquadRulesForm({
         })}
       </div>
       {error ? (
-        <p
-          className="whitespace-pre-wrap text-sm text-destructive"
-          role="alert"
-        >
+        <p className="text-sm whitespace-pre-wrap text-destructive" role="alert">
           {error}
         </p>
       ) : null}

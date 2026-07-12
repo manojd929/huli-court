@@ -21,21 +21,113 @@ const QA_ADMIN = {
 } as const;
 
 const QA_OWNERS = [
-  { email: "ravi.qa@example.com", password: "RaviQa@2026", displayName: "Ravi", teamName: "QA Smash Bros" },
-  { email: "karthik.qa@example.com", password: "KarthikQa@2026", displayName: "Karthik", teamName: "QA Net Ninjas" },
-  { email: "ankit.qa@example.com", password: "AnkitQa@2026", displayName: "Ankit", teamName: "QA Shuttle Squad" },
-  { email: "rohit.qa@example.com", password: "RohitQa@2026", displayName: "Rohit", teamName: "QA Drop Shot Kings" },
+  {
+    email: "ravi.qa@example.com",
+    password: "RaviQa@2026",
+    displayName: "Ravi",
+    teamName: "QA Smash Bros",
+  },
+  {
+    email: "karthik.qa@example.com",
+    password: "KarthikQa@2026",
+    displayName: "Karthik",
+    teamName: "QA Net Ninjas",
+  },
+  {
+    email: "ankit.qa@example.com",
+    password: "AnkitQa@2026",
+    displayName: "Ankit",
+    teamName: "QA Shuttle Squad",
+  },
+  {
+    email: "rohit.qa@example.com",
+    password: "RohitQa@2026",
+    displayName: "Rohit",
+    teamName: "QA Drop Shot Kings",
+  },
 ] as const;
 
 const QA_PLAYER_BASE_NAMES = [
-  "Rahul","Arjun","Vikram","Sandeep","Prakash","Nikhil","Varun","Abhishek","Deepak","Manoj",
-  "Shreyas","Ajay","Saurav","Amit","Naveen","Tarun","Harish","Vignesh","Ganesh","Sunil",
-  "Ramesh","Imran","Faizan","Sameer","Kunal","Pavan","Raghav","Siddharth","Tejas","Mohit",
-  "Aditya","Karthik","Rohit","Ankit","Vivek","Lokesh","Pranav","Srinath","Dinesh","Jagadeesh",
-  "Yash","Ritwik","Ashwin","Murali","Sai","Pradeep","Rohit","Shubham","Aakash","Hemant",
-  "Naveen","Sanjay","Krishna","Bharath","Nitin","Uday","Ravi","Jatin","Kishore","Vasu",
-  "Hitesh","Niraj","Dhruv","Parth","Harsha","Lakshman","Anirudh","Chirag","Rupesh","Tanish",
-  "Yogesh","Prem","Saketh","Arvind","Suhas","Ronit","Mayank","Girish","Naresh","Suraj",
+  "Rahul",
+  "Arjun",
+  "Vikram",
+  "Sandeep",
+  "Prakash",
+  "Nikhil",
+  "Varun",
+  "Abhishek",
+  "Deepak",
+  "Manoj",
+  "Shreyas",
+  "Ajay",
+  "Saurav",
+  "Amit",
+  "Naveen",
+  "Tarun",
+  "Harish",
+  "Vignesh",
+  "Ganesh",
+  "Sunil",
+  "Ramesh",
+  "Imran",
+  "Faizan",
+  "Sameer",
+  "Kunal",
+  "Pavan",
+  "Raghav",
+  "Siddharth",
+  "Tejas",
+  "Mohit",
+  "Aditya",
+  "Karthik",
+  "Rohit",
+  "Ankit",
+  "Vivek",
+  "Lokesh",
+  "Pranav",
+  "Srinath",
+  "Dinesh",
+  "Jagadeesh",
+  "Yash",
+  "Ritwik",
+  "Ashwin",
+  "Murali",
+  "Sai",
+  "Pradeep",
+  "Rohit",
+  "Shubham",
+  "Aakash",
+  "Hemant",
+  "Naveen",
+  "Sanjay",
+  "Krishna",
+  "Bharath",
+  "Nitin",
+  "Uday",
+  "Ravi",
+  "Jatin",
+  "Kishore",
+  "Vasu",
+  "Hitesh",
+  "Niraj",
+  "Dhruv",
+  "Parth",
+  "Harsha",
+  "Lakshman",
+  "Anirudh",
+  "Chirag",
+  "Rupesh",
+  "Tanish",
+  "Yogesh",
+  "Prem",
+  "Saketh",
+  "Arvind",
+  "Suhas",
+  "Ronit",
+  "Mayank",
+  "Girish",
+  "Naresh",
+  "Suraj",
 ] as const;
 
 function requireEnv(name: string): string {
@@ -150,7 +242,10 @@ async function ensureAuthUserWithProfile(params: {
   return data.user.id;
 }
 
-async function ensureTournament(commissionerId: string, name: string): Promise<{ id: string; slug: string }> {
+async function ensureTournament(
+  commissionerId: string,
+  name: string,
+): Promise<{ id: string; slug: string }> {
   const existing = await prisma.tournament.findFirst({
     where: { name, deletedAt: null },
     select: { id: true, slug: true },
@@ -169,8 +264,16 @@ async function ensureTournament(commissionerId: string, name: string): Promise<{
   return created;
 }
 
-async function ensureTeam(tournamentSlug: string, commissionerId: string, name: string, ownerUserId: string): Promise<void> {
-  const tournament = await prisma.tournament.findFirst({ where: { slug: tournamentSlug, deletedAt: null }, select: { id: true } });
+async function ensureTeam(
+  tournamentSlug: string,
+  commissionerId: string,
+  name: string,
+  ownerUserId: string,
+): Promise<void> {
+  const tournament = await prisma.tournament.findFirst({
+    where: { slug: tournamentSlug, deletedAt: null },
+    select: { id: true },
+  });
   if (!tournament) throw new Error("Tournament missing when ensuring teams.");
 
   const existing = await prisma.team.findFirst({

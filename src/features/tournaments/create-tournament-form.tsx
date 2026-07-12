@@ -74,11 +74,8 @@ export function CreateTournamentForm({
             ...(allocationMethod === "LIVE_AUCTION" && auctionBasePriceRaw !== ""
               ? { auctionDefaultBasePrice: Number(auctionBasePriceRaw) }
               : {}),
-            description:
-              String(formData.get("description") ?? "").trim() || undefined,
-            ...(picksPerTeamRaw !== ""
-              ? { picksPerTeam: Number(picksPerTeamRaw) }
-              : {}),
+            description: String(formData.get("description") ?? "").trim() || undefined,
+            ...(picksPerTeamRaw !== "" ? { picksPerTeam: Number(picksPerTeamRaw) } : {}),
             logoUrl: String(formData.get("logoUrl") ?? "").trim(),
             colorHex: String(formData.get("colorHex") ?? "").trim(),
             ...(playerEntryFeeRaw !== ""
@@ -122,8 +119,7 @@ export function CreateTournamentForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="tournament-league">
-              League{" "}
-              <span className="font-normal text-muted-foreground">(optional)</span>
+              League <span className="font-normal text-muted-foreground">(optional)</span>
             </Label>
             <select
               id="tournament-league"
@@ -141,8 +137,7 @@ export function CreateTournamentForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="tournament-season">
-              Season{" "}
-              <span className="font-normal text-muted-foreground">(optional)</span>
+              Season <span className="font-normal text-muted-foreground">(optional)</span>
             </Label>
             <Input
               id="tournament-season"
@@ -189,9 +184,7 @@ export function CreateTournamentForm({
               />
               <span>
                 <span className="block text-sm font-medium">{method.label}</span>
-                <span className="block text-xs text-muted-foreground">
-                  {method.hint}
-                </span>
+                <span className="block text-xs text-muted-foreground">{method.hint}</span>
               </span>
             </label>
           ))}
@@ -233,8 +226,8 @@ export function CreateTournamentForm({
             />
           </div>
           <p className="text-xs text-muted-foreground sm:col-span-3">
-            All values are in points (not currency). Per-player base prices can
-            be set later on the players screen.
+            All values are in points (not currency). Per-player base prices can be set later on the
+            players screen.
           </p>
         </div>
       )}
@@ -270,7 +263,8 @@ export function CreateTournamentForm({
       </div>
       <div className="space-y-2">
         <Label htmlFor="picksPerTeam">
-          Picks each team makes <span className="font-normal text-muted-foreground">(optional)</span>
+          Picks each team makes{" "}
+          <span className="font-normal text-muted-foreground">(optional)</span>
         </Label>
         <Input
           id="picksPerTeam"
@@ -282,7 +276,8 @@ export function CreateTournamentForm({
           aria-describedby="picksPerTeam-hint"
         />
         <p id="picksPerTeam-hint" className="text-xs text-muted-foreground">
-          Leave blank to use {DEFAULT_PICKS_PER_TEAM} snake-draft picks per team. Enter a number between 1 and 50 only if you want a different draft length.
+          Leave blank to use {DEFAULT_PICKS_PER_TEAM} snake-draft picks per team. Enter a number
+          between 1 and 50 only if you want a different draft length.
         </p>
       </div>
       <div className="space-y-2">
@@ -302,8 +297,8 @@ export function CreateTournamentForm({
           aria-describedby="player-entry-fee-hint"
         />
         <p id="player-entry-fee-hint" className="text-xs text-muted-foreground">
-          Whole rupees per athlete; stored internally on the tournament row with currency metadata for INR
-          today. Omit when no published participation fee applies.
+          Whole rupees per athlete; stored internally on the tournament row with currency metadata
+          for INR today. Omit when no published participation fee applies.
         </p>
       </div>
       {error ? (
@@ -315,10 +310,7 @@ export function CreateTournamentForm({
         <Button type="submit" pending={pending} pendingLabel="Creating…" className="min-h-11">
           Create tournament
         </Button>
-        <Link
-          href={ROUTES.dashboard}
-          className={cn(buttonVariants({ variant: "outline" }))}
-        >
+        <Link href={ROUTES.dashboard} className={cn(buttonVariants({ variant: "outline" }))}>
           Cancel
         </Link>
       </div>

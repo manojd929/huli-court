@@ -24,15 +24,18 @@ export default async function NewLeaguePage() {
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link href={ROUTES.dashboard} className="text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          href={ROUTES.dashboard}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
           ← Dashboard
         </Link>
         <AccountHeaderActions />
       </div>
       <h1 className="mt-8 text-4xl font-semibold tracking-tight">Create a league</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
-        A league is a recurring, branded competition: a home for every season
-        and tournament you run, with its own shareable public page.
+        A league is a recurring, branded competition: a home for every season and tournament you
+        run, with its own shareable public page.
       </p>
       <div className="mt-12">
         <LeagueForm />

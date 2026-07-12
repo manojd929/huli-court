@@ -7,10 +7,7 @@ import { sanitizeNextPath } from "@/lib/navigation/sanitize-next-path";
 const PRIVATE_NO_STORE = "private, no-store, max-age=0";
 
 /** Supabase rotates cookies during `getUser()`; redirects must reuse them or the browser keeps stale tokens. */
-function redirectPreservingSessionCookies(
-  sessionResponse: NextResponse,
-  url: URL,
-): NextResponse {
+function redirectPreservingSessionCookies(sessionResponse: NextResponse, url: URL): NextResponse {
   const redirect = NextResponse.redirect(url);
   for (const cookie of sessionResponse.cookies.getAll()) {
     redirect.cookies.set(cookie);
@@ -20,11 +17,7 @@ function redirectPreservingSessionCookies(
 }
 
 function isProtectedPath(pathname: string): boolean {
-  if (
-    pathname === "/" ||
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/auth")
-  ) {
+  if (pathname === "/" || pathname.startsWith("/login") || pathname.startsWith("/auth")) {
     return false;
   }
 
@@ -85,16 +78,10 @@ export async function updateSession(request: NextRequest) {
     supabaseResponse.headers.set("Cache-Control", PRIVATE_NO_STORE);
   }
 
-  if (
-    user &&
-    (pathname === ROUTES.login || pathname === ROUTES.home)
-  ) {
+  if (user && (pathname === ROUTES.login || pathname === ROUTES.home)) {
     const destination =
       pathname === ROUTES.login
-        ? sanitizeNextPath(
-            request.nextUrl.searchParams.get("next"),
-            ROUTES.dashboard,
-          )
+        ? sanitizeNextPath(request.nextUrl.searchParams.get("next"), ROUTES.dashboard)
         : ROUTES.dashboard;
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = destination;

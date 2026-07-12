@@ -11,8 +11,6 @@ export default defineConfig({
   },
   datasource: {
     // Supabase ORM snippet: migrations need port 5432 pooler; app runtime uses 6543 + pgbouncer.
-    url:
-      process.env["DIRECT_URL"] ??
-      process.env["DATABASE_URL"],
+    url: process.env["DIRECT_URL"] ?? process.env["DATABASE_URL"],
   },
 });

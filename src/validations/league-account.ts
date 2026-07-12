@@ -17,18 +17,14 @@ export const createLeagueOwnerForPlayerSchema = z.object({
   displayName: z.string().max(120).optional().or(z.literal("")),
 });
 
-export type CreateLeagueOwnerForPlayerInput = z.infer<
-  typeof createLeagueOwnerForPlayerSchema
->;
+export type CreateLeagueOwnerForPlayerInput = z.infer<typeof createLeagueOwnerForPlayerSchema>;
 
 export const deleteFranchiseOwnerSchema = z.object({
   tournamentSlug: z.string().min(1),
   ownerUserId: z.string().uuid(),
 });
 
-export type DeleteFranchiseOwnerInput = z.infer<
-  typeof deleteFranchiseOwnerSchema
->;
+export type DeleteFranchiseOwnerInput = z.infer<typeof deleteFranchiseOwnerSchema>;
 
 export const revokeFranchiseLoginFromPlayerSchema = z.object({
   tournamentSlug: z.string().min(1),

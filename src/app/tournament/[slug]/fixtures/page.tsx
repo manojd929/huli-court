@@ -8,10 +8,7 @@ import {
 } from "@/features/tournament-run/match-presentation";
 import { getSessionUser } from "@/lib/auth/session";
 import { requireTournamentViewAccess } from "@/lib/data/tournament-access";
-import {
-  getFixturesAdminOptions,
-  getFixturesSummary,
-} from "@/services/fixtures-service";
+import { getFixturesAdminOptions, getFixturesSummary } from "@/services/fixtures-service";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -33,7 +30,8 @@ export default async function FixturesPage({ params }: PageProps) {
   if (!fixturesReady) {
     return (
       <p className="text-sm text-muted-foreground">
-        Fixtures are not initialized in this environment yet. Run <code>npm run db:migrate</code> and restart dev server.
+        Fixtures are not initialized in this environment yet. Run <code>npm run db:migrate</code>{" "}
+        and restart dev server.
       </p>
     );
   }
@@ -47,8 +45,8 @@ export default async function FixturesPage({ params }: PageProps) {
       <header className="space-y-2">
         <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Fixtures</h2>
         <p className="max-w-3xl text-sm text-muted-foreground">
-          Team ties and scheduled matches live here. Admins can now auto-generate the
-          schedule or build it manually, while viewers always see the same fixture board.
+          Team ties and scheduled matches live here. Admins can now auto-generate the schedule or
+          build it manually, while viewers always see the same fixture board.
         </p>
       </header>
 
@@ -114,7 +112,8 @@ export default async function FixturesPage({ params }: PageProps) {
                         </p>
                       </div>
                       <Badge variant="outline" className="rounded-full px-3 py-1">
-                        {tieMatches.filter((match) => match.status === "COMPLETED").length}/{tieMatches.length} completed
+                        {tieMatches.filter((match) => match.status === "COMPLETED").length}/
+                        {tieMatches.length} completed
                       </Badge>
                     </div>
                   </div>
@@ -132,7 +131,9 @@ export default async function FixturesPage({ params }: PageProps) {
                             </div>
                             <div className="space-y-1 text-sm text-muted-foreground">
                               <p>
-                                <span className="font-medium text-foreground">{tie.teamOne.name}:</span>{" "}
+                                <span className="font-medium text-foreground">
+                                  {tie.teamOne.name}:
+                                </span>{" "}
                                 {getFixtureSideLabel({
                                   match,
                                   side: "SIDE_ONE",
@@ -140,7 +141,9 @@ export default async function FixturesPage({ params }: PageProps) {
                                 })}
                               </p>
                               <p>
-                                <span className="font-medium text-foreground">{tie.teamTwo.name}:</span>{" "}
+                                <span className="font-medium text-foreground">
+                                  {tie.teamTwo.name}:
+                                </span>{" "}
                                 {getFixtureSideLabel({
                                   match,
                                   side: "SIDE_TWO",
@@ -152,7 +155,7 @@ export default async function FixturesPage({ params }: PageProps) {
 
                           {match.sideOneScore !== null && match.sideTwoScore !== null ? (
                             <div className="rounded-2xl border border-border/70 bg-background/70 px-4 py-3 text-center">
-                              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                              <p className="text-xs tracking-[0.18em] text-muted-foreground uppercase">
                                 Score
                               </p>
                               <p className="mt-1 text-lg font-semibold text-foreground">
@@ -200,7 +203,7 @@ export default async function FixturesPage({ params }: PageProps) {
 
                   {match.sideOneScore !== null && match.sideTwoScore !== null ? (
                     <div className="rounded-2xl border border-border/70 bg-background/70 px-4 py-3 text-center">
-                      <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                      <p className="text-xs tracking-[0.18em] text-muted-foreground uppercase">
                         Score
                       </p>
                       <p className="mt-1 text-lg font-semibold text-foreground">

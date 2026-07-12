@@ -26,8 +26,7 @@ type CleanupCounts = {
   userProfilesRemoved: number;
 };
 
-const COMMISSIONER_EMAIL =
-  process.env.LAUNCH_COMMISSIONER_EMAIL?.trim() || "admin@draftforge.com";
+const COMMISSIONER_EMAIL = process.env.LAUNCH_COMMISSIONER_EMAIL?.trim() || "admin@draftforge.com";
 const COMMISSIONER_PASSWORD =
   process.env.LAUNCH_COMMISSIONER_PASSWORD?.trim() || "admin@draftforge";
 const COMMISSIONER_DISPLAY_NAME =
@@ -101,9 +100,7 @@ async function deleteAuthUsers(users: AuthUserSummary[]): Promise<number> {
   for (const user of users) {
     const { error } = await adminClient.auth.admin.deleteUser(user.id);
     if (error) {
-      throw new Error(
-        `Could not delete Supabase user ${user.email ?? user.id}: ${error.message}`,
-      );
+      throw new Error(`Could not delete Supabase user ${user.email ?? user.id}: ${error.message}`);
     }
     deletedCount += 1;
   }

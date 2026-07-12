@@ -9,24 +9,14 @@ import { put } from "@vercel/blob";
 import { requireSessionUser } from "@/lib/auth/session";
 import { ADMIN_IMAGE_UPLOAD_UNAVAILABLE } from "@/lib/errors/safe-user-feedback";
 import { normalizeLeagueImageForBlob } from "@/lib/uploads/normalize-league-image";
-import {
-  assertTournamentOwnership,
-  TournamentServiceError,
-} from "@/services/tournament-service";
+import { assertTournamentOwnership, TournamentServiceError } from "@/services/tournament-service";
 
 /** Original upload limit before server-side compression (compressed output is capped separately). */
 const INPUT_MAX_BYTES = 15 * 1024 * 1024;
 
-const ALLOWED_TYPES = new Set([
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-]);
+const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 
-export type UploadLeagueImageResult =
-  | { ok: true; url: string }
-  | { ok: false; error: string };
+export type UploadLeagueImageResult = { ok: true; url: string } | { ok: false; error: string };
 
 export async function uploadLeagueImageAction(
   formData: FormData,
@@ -80,8 +70,7 @@ export async function uploadLeagueImageAction(
       if (normalized.reason === "still_too_large") {
         return {
           ok: false,
-          error:
-            "That image could not be compressed under 2.5 MB. Try a smaller or simpler image.",
+          error: "That image could not be compressed under 2.5 MB. Try a smaller or simpler image.",
         };
       }
       return {

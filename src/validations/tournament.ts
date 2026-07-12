@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-export const allocationMethodSchema = z.enum([
-  "SNAKE_DRAFT",
-  "RANDOM_ASSIGNMENT",
-  "LIVE_AUCTION",
-]);
+export const allocationMethodSchema = z.enum(["SNAKE_DRAFT", "RANDOM_ASSIGNMENT", "LIVE_AUCTION"]);
 
 export const sportSchema = z.enum([
   "BADMINTON",
@@ -54,10 +50,7 @@ export const updateTournamentSchema = z
       .or(z.literal("")),
   })
   .refine(
-    (data) =>
-      data.name !== undefined ||
-      data.logoUrl !== undefined ||
-      data.colorHex !== undefined,
+    (data) => data.name !== undefined || data.logoUrl !== undefined || data.colorHex !== undefined,
     { message: "Nothing to update.", path: ["tournamentSlug"] },
   );
 
@@ -78,10 +71,7 @@ export const createTeamSchema = z.object({
     .max(36)
     .optional()
     .refine(
-      (s) =>
-        s === undefined ||
-        s.trim() === "" ||
-        z.string().uuid().safeParse(s.trim()).success,
+      (s) => s === undefined || s.trim() === "" || z.string().uuid().safeParse(s.trim()).success,
       { message: "Owner ID must be blank or a valid UUID." },
     ),
 });
@@ -102,11 +92,9 @@ export const updateTeamSchema = z.object({
   ownerUserId: z
     .string()
     .max(36)
-    .refine(
-      (s) =>
-        s.trim() === "" || z.string().uuid().safeParse(s.trim()).success,
-      { message: "Owner ID must be blank or a valid UUID." },
-    ),
+    .refine((s) => s.trim() === "" || z.string().uuid().safeParse(s.trim()).success, {
+      message: "Owner ID must be blank or a valid UUID.",
+    }),
 });
 
 export type UpdateTeamInput = z.infer<typeof updateTeamSchema>;
@@ -147,11 +135,10 @@ export const bulkUpdatePlayersSchema = z
     rosterCategoryId: z.string().uuid().optional(),
     hasPaidEntryFee: z.boolean().optional(),
   })
-  .refine(
-    (data) =>
-      data.rosterCategoryId !== undefined || data.hasPaidEntryFee !== undefined,
-    { message: "Choose at least one bulk change.", path: ["playerIds"] },
-  );
+  .refine((data) => data.rosterCategoryId !== undefined || data.hasPaidEntryFee !== undefined, {
+    message: "Choose at least one bulk change.",
+    path: ["playerIds"],
+  });
 
 export type BulkUpdatePlayersInput = z.infer<typeof bulkUpdatePlayersSchema>;
 
@@ -206,11 +193,7 @@ export const assignManualSchema = z.object({
 /** `OPEN` clears the LIVE roster-group spotlight (owners see all categories again). */
 export const auctionSpotlightSchema = z.object({
   tournamentSlug: z.string().min(1),
-  rosterCategoryId: z.union([
-    z.string().uuid(),
-    z.literal("OPEN"),
-    z.literal(""),
-  ]),
+  rosterCategoryId: z.union([z.string().uuid(), z.literal("OPEN"), z.literal("")]),
 });
 
 export const playerIdSlugSchema = z.object({

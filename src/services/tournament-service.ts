@@ -52,9 +52,7 @@ import type {
 
 export { TournamentServiceError } from "@/services/tournament-errors";
 
-async function removeFranchiseOwnerCredentialsIfOrphaned(
-  userId: string,
-): Promise<void> {
+async function removeFranchiseOwnerCredentialsIfOrphaned(userId: string): Promise<void> {
   try {
     await deleteAuthUserIfNoOwnerReferences(userId);
   } catch (e) {
@@ -90,10 +88,7 @@ async function clearFranchiseOwnerLinksWhenNoTeamOwnership(
   });
 }
 
-
-export async function syncOwnerPlayersForTournament(
-  tournamentId: string,
-): Promise<void> {
+export async function syncOwnerPlayersForTournament(tournamentId: string): Promise<void> {
   await prisma.$transaction(async (tx) => {
     const stubCategoryId = await resolveOwnerStubCategoryIdTx(tx, tournamentId);
 
@@ -102,9 +97,7 @@ export async function syncOwnerPlayersForTournament(
       select: { ownerUserId: true },
     });
     const ownerIds = [
-      ...new Set(
-        teams.map((t) => t.ownerUserId).filter((id): id is string => Boolean(id)),
-      ),
+      ...new Set(teams.map((t) => t.ownerUserId).filter((id): id is string => Boolean(id))),
     ];
 
     const profiles =
@@ -124,10 +117,7 @@ export async function syncOwnerPlayersForTournament(
       select: { id: true, linkedOwnerUserId: true, name: true, notes: true },
     });
 
-    function desiredOwnerName(profile: {
-      displayName: string | null;
-      email: string;
-    }): string {
+    function desiredOwnerName(profile: { displayName: string | null; email: string }): string {
       const fromDisplay = profile.displayName?.trim();
       if (fromDisplay) return fromDisplay;
       const local = profile.email.split("@")[0]?.trim();
@@ -199,9 +189,7 @@ export async function createTournament(
 
   const organizationId = await ensureOrganizationForUser(userId);
   const trimmedLeagueId = input.leagueId?.trim() ? input.leagueId.trim() : null;
-  const leagueId = trimmedLeagueId
-    ? await assertLeagueManageable(userId, trimmedLeagueId)
-    : null;
+  const leagueId = trimmedLeagueId ? await assertLeagueManageable(userId, trimmedLeagueId) : null;
   const season = input.season?.trim() ? input.season.trim() : null;
   const slug = tournamentSlugFromName(input.name);
   await prisma.$transaction(async (tx) => {
@@ -279,10 +267,7 @@ export async function updateTournament(
   userId: string,
   input: UpdateTournamentInput,
 ): Promise<void> {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    userId,
-  );
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, userId);
   const data: {
     name?: string;
     logoUrl?: string | null;
@@ -379,19 +364,13 @@ async function resolveTeamOwnerUserId(
 }
 
 export async function createTeam(userId: string, input: CreateTeamInput) {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    userId,
-  );
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, userId);
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId },
     select: { draftPhase: true, createdById: true },
   });
   if (!tournament) throw new TournamentServiceError("Tournament not found.");
-  if (
-    tournament.draftPhase !== DraftPhase.SETUP &&
-    tournament.draftPhase !== DraftPhase.READY
-  ) {
+  if (tournament.draftPhase !== DraftPhase.SETUP && tournament.draftPhase !== DraftPhase.READY) {
     throw new TournamentServiceError(
       "Cannot modify teams after the draft configuration is sealed.",
     );
@@ -423,19 +402,13 @@ export async function createTeam(userId: string, input: CreateTeamInput) {
 }
 
 export async function updateTeam(userId: string, input: UpdateTeamInput): Promise<void> {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    userId,
-  );
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, userId);
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId },
     select: { draftPhase: true, createdById: true },
   });
   if (!tournament) throw new TournamentServiceError("Tournament not found.");
-  if (
-    tournament.draftPhase !== DraftPhase.SETUP &&
-    tournament.draftPhase !== DraftPhase.READY
-  ) {
+  if (tournament.draftPhase !== DraftPhase.SETUP && tournament.draftPhase !== DraftPhase.READY) {
     throw new TournamentServiceError(
       "Cannot modify teams after the draft configuration is sealed.",
     );
@@ -469,14 +442,8 @@ export async function updateTeam(userId: string, input: UpdateTeamInput): Promis
   });
   await syncOwnerPlayersForTournament(tournamentId);
 
-  if (
-    previousOwnerUserId !== null &&
-    previousOwnerUserId !== ownerUserId
-  ) {
-    await clearFranchiseOwnerLinksWhenNoTeamOwnership(
-      tournamentId,
-      previousOwnerUserId,
-    );
+  if (previousOwnerUserId !== null && previousOwnerUserId !== ownerUserId) {
+    await clearFranchiseOwnerLinksWhenNoTeamOwnership(tournamentId, previousOwnerUserId);
     await removeFranchiseOwnerCredentialsIfOrphaned(previousOwnerUserId);
   }
 }
@@ -486,10 +453,7 @@ export async function deleteFranchiseOwnerFromTournament(
   tournamentSlug: string,
   ownerUserId: string,
 ): Promise<void> {
-  const tournamentId = await assertTournamentOwnership(
-    tournamentSlug,
-    commissionerUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(tournamentSlug, commissionerUserId);
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId },
     select: { draftPhase: true, createdById: true },
@@ -497,10 +461,7 @@ export async function deleteFranchiseOwnerFromTournament(
   if (!tournament) {
     throw new TournamentServiceError("Tournament not found.");
   }
-  if (
-    tournament.draftPhase !== DraftPhase.SETUP &&
-    tournament.draftPhase !== DraftPhase.READY
-  ) {
+  if (tournament.draftPhase !== DraftPhase.SETUP && tournament.draftPhase !== DraftPhase.READY) {
     throw new TournamentServiceError(
       "Cannot modify franchise owners after the draft configuration is sealed.",
     );
@@ -536,10 +497,7 @@ export async function revokeFranchiseLoginFromPlayer(
   tournamentSlug: string,
   playerId: string,
 ): Promise<void> {
-  const tournamentId = await assertTournamentOwnership(
-    tournamentSlug,
-    commissionerUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(tournamentSlug, commissionerUserId);
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId },
     select: { draftPhase: true },
@@ -547,10 +505,7 @@ export async function revokeFranchiseLoginFromPlayer(
   if (!tournament) {
     throw new TournamentServiceError("Tournament not found.");
   }
-  if (
-    tournament.draftPhase !== DraftPhase.SETUP &&
-    tournament.draftPhase !== DraftPhase.READY
-  ) {
+  if (tournament.draftPhase !== DraftPhase.SETUP && tournament.draftPhase !== DraftPhase.READY) {
     throw new TournamentServiceError(
       "Cannot modify franchise owner logins after the draft configuration is sealed.",
     );
@@ -571,9 +526,7 @@ export async function revokeFranchiseLoginFromPlayer(
 
   const linkedUserId = player.linkedOwnerUserId;
   if (!linkedUserId) {
-    throw new TournamentServiceError(
-      "This roster row does not have a franchise login.",
-    );
+    throw new TournamentServiceError("This roster row does not have a franchise login.");
   }
 
   const ownsTeam = await prisma.team.count({
@@ -599,10 +552,7 @@ export async function revokeFranchiseLoginFromPlayer(
 }
 
 export async function createPlayer(userId: string, input: CreatePlayerInput) {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    userId,
-  );
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, userId);
   await assertActiveRosterCategoryForPlayer(tournamentId, input.rosterCategoryId);
   await prisma.player.create({
     data: {
@@ -619,10 +569,7 @@ export async function createPlayer(userId: string, input: CreatePlayerInput) {
 }
 
 export async function updatePlayer(userId: string, input: UpdatePlayerInput) {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    userId,
-  );
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, userId);
 
   const existing = await prisma.player.findFirst({
     where: {
@@ -669,14 +616,8 @@ export async function updatePlayer(userId: string, input: UpdatePlayerInput) {
   }
 }
 
-export async function bulkUpdatePlayers(
-  userId: string,
-  input: BulkUpdatePlayersInput,
-) {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    userId,
-  );
+export async function bulkUpdatePlayers(userId: string, input: BulkUpdatePlayersInput) {
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, userId);
 
   if (input.rosterCategoryId) {
     await assertActiveRosterCategoryForPlayer(tournamentId, input.rosterCategoryId);
@@ -721,10 +662,7 @@ export async function bulkUpdatePlayers(
   }
 }
 
-export async function softDeleteTournament(
-  userId: string,
-  tournamentSlug: string,
-): Promise<void> {
+export async function softDeleteTournament(userId: string, tournamentSlug: string): Promise<void> {
   const tournamentId = await assertTournamentOwnership(tournamentSlug, userId);
   const pickCount = await prisma.pick.count({
     where: { tournamentId },
@@ -740,14 +678,8 @@ export async function softDeleteTournament(
   });
 }
 
-export async function softDeletePlayer(
-  userId: string,
-  input: DeletePlayerInput,
-): Promise<void> {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    userId,
-  );
+export async function softDeletePlayer(userId: string, input: DeletePlayerInput): Promise<void> {
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, userId);
 
   const existing = await prisma.player.findFirst({
     where: {
@@ -785,9 +717,7 @@ export async function softDeletePlayer(
   await reconcileSquadRulesForTournament(tournamentId);
 }
 
-export async function reconcileSquadRulesForTournament(
-  tournamentId: string,
-): Promise<void> {
+export async function reconcileSquadRulesForTournament(tournamentId: string): Promise<void> {
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId, deletedAt: null },
     select: { picksPerTeam: true },
@@ -822,9 +752,7 @@ export async function reconcileSquadRulesForTournament(
   });
   const categoryOrder = rosterCategoryOrderIds(categoryRows);
   const doublesCategoryIds = new Set(
-    categoryRows
-      .filter((row) => isDoublesCategoryName(row.name))
-      .map((row) => row.id),
+    categoryRows.filter((row) => isDoublesCategoryName(row.name)).map((row) => row.id),
   );
 
   const grouped = await prisma.player.groupBy({
@@ -845,9 +773,7 @@ export async function reconcileSquadRulesForTournament(
     doublesCategoryIds,
   });
 
-  const categoryLabels = Object.fromEntries(
-    categoryRows.map((c) => [c.id, c.name]),
-  );
+  const categoryLabels = Object.fromEntries(categoryRows.map((c) => [c.id, c.name]));
 
   const draftRules = categoryOrder.map((rosterCategoryId) => ({
     rosterCategoryId,
@@ -865,9 +791,7 @@ export async function reconcileSquadRulesForTournament(
   });
 
   if (!feasibility.ok) {
-    throw new TournamentServiceError(
-      formatSquadValidationErrors(feasibility.errors),
-    );
+    throw new TournamentServiceError(formatSquadValidationErrors(feasibility.errors));
   }
 
   await prisma.$transaction(async (tx) => {
@@ -881,10 +805,7 @@ export async function reconcileSquadRulesForTournament(
 }
 
 export async function saveSquadRules(userId: string, input: SquadRulesInput) {
-  const tournamentId = await assertTournamentOwnership(
-    input.tournamentSlug,
-    userId,
-  );
+  const tournamentId = await assertTournamentOwnership(input.tournamentSlug, userId);
 
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId, deletedAt: null },
@@ -909,7 +830,9 @@ export async function saveSquadRules(userId: string, input: SquadRulesInput) {
   const allowedIds = new Set(categoryRows.map((c) => c.id));
   for (const rule of input.rules) {
     if (!allowedIds.has(rule.rosterCategoryId)) {
-      throw new TournamentServiceError("Pick limits must reference roster groups from this tournament.");
+      throw new TournamentServiceError(
+        "Pick limits must reference roster groups from this tournament.",
+      );
     }
   }
   const categoryLabels = Object.fromEntries(categoryRows.map((c) => [c.id, c.name]));
@@ -935,9 +858,7 @@ export async function saveSquadRules(userId: string, input: SquadRulesInput) {
   });
 
   if (!feasibility.ok) {
-    throw new TournamentServiceError(
-      formatSquadValidationErrors(feasibility.errors),
-    );
+    throw new TournamentServiceError(formatSquadValidationErrors(feasibility.errors));
   }
 
   await prisma.$transaction(async (tx) => {

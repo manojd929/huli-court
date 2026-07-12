@@ -31,9 +31,7 @@ export function TournamentBrandingForm({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [logoUrl, setLogoUrl] = useState(initialLogoUrl ?? "");
-  const colorValue = initialColorHex?.match(/^#[0-9A-Fa-f]{6}$/u)
-    ? initialColorHex
-    : "#38bdf8";
+  const colorValue = initialColorHex?.match(/^#[0-9A-Fa-f]{6}$/u) ? initialColorHex : "#38bdf8";
 
   return (
     <section className="rounded-xl border border-border/80 bg-card/40 p-4 backdrop-blur-md sm:p-6">
@@ -108,10 +106,7 @@ export function TournamentBrandingForm({
           </Button>
           <Link
             href={ROUTES.teams(tournamentSlug)}
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              "min-h-11 w-full",
-            )}
+            className={cn(buttonVariants({ variant: "outline" }), "min-h-11 w-full")}
           >
             Edit teams
           </Link>

@@ -39,8 +39,7 @@ export async function buildFranchiseOwnerAssigneeList(params: {
     if (row.linkedOwnerUserId) stakeholderIds.add(row.linkedOwnerUserId);
   }
 
-  const stakeholderIdList =
-    stakeholderIds.size > 0 ? [...stakeholderIds] : ([] as string[]);
+  const stakeholderIdList = stakeholderIds.size > 0 ? [...stakeholderIds] : ([] as string[]);
 
   const candidates = await prisma.userProfile.findMany({
     where: {
@@ -49,9 +48,7 @@ export async function buildFranchiseOwnerAssigneeList(params: {
       id: { not: params.commissionerUserId },
       OR: [
         { role: UserRole.OWNER },
-        ...(stakeholderIdList.length > 0
-          ? [{ id: { in: stakeholderIdList } }]
-          : []),
+        ...(stakeholderIdList.length > 0 ? [{ id: { in: stakeholderIdList } }] : []),
       ],
     },
     select: { id: true, email: true, displayName: true },
@@ -60,10 +57,7 @@ export async function buildFranchiseOwnerAssigneeList(params: {
   const assignableIds = new Set(candidates.map((person) => person.id));
 
   const orphanIds = params.existingTeamOwnerIds.filter(
-    (id) =>
-      id.trim() !== "" &&
-      id !== params.commissionerUserId &&
-      !assignableIds.has(id),
+    (id) => id.trim() !== "" && id !== params.commissionerUserId && !assignableIds.has(id),
   );
 
   const orphans =

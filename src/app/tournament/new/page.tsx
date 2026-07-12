@@ -46,15 +46,18 @@ export default async function NewTournamentPage({ searchParams }: PageProps) {
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link href={ROUTES.dashboard} className="text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          href={ROUTES.dashboard}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
           ← Dashboard
         </Link>
         <AccountHeaderActions />
       </div>
       <h1 className="mt-8 text-4xl font-semibold tracking-tight">Launch a tournament</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
-        Name it, choose how teams are formed, and you&apos;re ready to add franchises
-        and players. You can change most things later.
+        Name it, choose how teams are formed, and you&apos;re ready to add franchises and players.
+        You can change most things later.
       </p>
       <div className="mt-12">
         <CreateTournamentForm leagues={leagues} defaultLeagueId={defaultLeagueId} />

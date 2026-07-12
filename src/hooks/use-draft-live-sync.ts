@@ -35,9 +35,7 @@ export function useDraftLiveSync(
 ) {
   const { enabled = true, accelerated = false } = options;
 
-  const pollBaseMs = accelerated
-    ? DRAFT_POLL_INTERVAL_FAST_MS
-    : DRAFT_POLL_INTERVAL_SLOW_MS;
+  const pollBaseMs = accelerated ? DRAFT_POLL_INTERVAL_FAST_MS : DRAFT_POLL_INTERVAL_SLOW_MS;
 
   const jitterRef = useRef(0);
   useEffect(() => {

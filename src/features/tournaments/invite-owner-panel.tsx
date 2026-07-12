@@ -68,8 +68,7 @@ export function InviteOwnerPanel({
       <div
         className={cn(
           "text-sm",
-          cardFrame &&
-            "rounded-xl border border-amber-500/40 bg-amber-500/5 p-5",
+          cardFrame && "rounded-xl border border-amber-500/40 bg-amber-500/5 p-5",
         )}
       >
         <p className="font-medium text-foreground">Owner invites need administrator setup</p>
@@ -81,13 +80,17 @@ export function InviteOwnerPanel({
   return (
     <div
       className={cn(
-        cardFrame ? "rounded-xl border border-border/70 bg-card/40 p-6 backdrop-blur-md" : "space-y-4",
+        cardFrame
+          ? "rounded-xl border border-border/70 bg-card/40 p-6 backdrop-blur-md"
+          : "space-y-4",
       )}
     >
-      <h3 className="text-lg font-semibold tracking-tight">Optional: owner login without a roster row</h3>
+      <h3 className="text-lg font-semibold tracking-tight">
+        Optional: owner login without a roster row
+      </h3>
       <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-        Preferred flow is Players → add the person → Grant login → Teams → assign franchise.
-        Use this form only when you want a standalone franchise-owner login first.
+        Preferred flow is Players → add the person → Grant login → Teams → assign franchise. Use
+        this form only when you want a standalone franchise-owner login first.
       </p>
       {!canInviteOwners ? (
         <p className="mt-4 rounded-lg border border-border/60 bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
@@ -126,7 +129,12 @@ export function InviteOwnerPanel({
             <Input id="invite-name" name="displayName" placeholder="Priya K." />
           </div>
           <div className="flex sm:col-span-2 lg:col-span-1">
-            <Button type="submit" pending={isSubmitting} pendingLabel="Creating…" className="w-full lg:w-auto">
+            <Button
+              type="submit"
+              pending={isSubmitting}
+              pendingLabel="Creating…"
+              className="w-full lg:w-auto"
+            >
               Create owner
             </Button>
           </div>

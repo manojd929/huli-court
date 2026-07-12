@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import { useDashboardAppearance } from "./dashboard-appearance-provider";
@@ -19,14 +13,17 @@ export function DashboardFloorAppearanceSettingsCard() {
   const { hydrated, floorTheme, setFloorTheme } = useDashboardAppearance();
 
   return (
-    <Card id="commissioner-appearance" className="border-border/60 bg-card/60 shadow-sm backdrop-blur-sm">
+    <Card
+      id="commissioner-appearance"
+      className="border-border/60 bg-card/60 shadow-sm backdrop-blur-sm"
+    >
       <CardHeader className="border-b border-border/40 pb-4">
         <CardTitle className="text-base tracking-tight sm:text-[1.05rem]">
           Commissioner dashboard backdrop
         </CardTitle>
         <CardDescription>
-          Choose how the commissioner tournament home looks behind your cards and navigation. Lives on this
-          device only until we sync preferences to your profile.
+          Choose how the commissioner tournament home looks behind your cards and navigation. Lives
+          on this device only until we sync preferences to your profile.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-8 pt-6">
@@ -49,7 +46,7 @@ export function DashboardFloorAppearanceSettingsCard() {
         <Separator className="bg-border/50" />
 
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div className="min-w-0 max-w-xl space-y-1">
+          <div className="max-w-xl min-w-0 space-y-1">
             <p className="text-sm font-medium text-foreground">List picker</p>
             <p className="text-sm leading-snug text-muted-foreground">
               Same themes as above; alternate control for keyboard navigation or tighter layouts.

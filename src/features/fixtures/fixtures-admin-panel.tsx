@@ -53,11 +53,7 @@ interface FixturesAdminPanelProps {
 }
 
 function hasLockedResult(match: FixturesAdminPanelProps["matches"][number]): boolean {
-  return (
-    match.status === "COMPLETED" ||
-    match.sideOneScore !== null ||
-    match.sideTwoScore !== null
-  );
+  return match.status === "COMPLETED" || match.sideOneScore !== null || match.sideTwoScore !== null;
 }
 
 function getSidePlayerIds(
@@ -100,9 +96,7 @@ export function FixturesAdminPanel({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const doublesPlayersMap = new Map(
-    doublesPlayersByTeam.map((row) => [row.teamId, row.players]),
-  );
+  const doublesPlayersMap = new Map(doublesPlayersByTeam.map((row) => [row.teamId, row.players]));
   const matchesByTie = new Map<string, FixturesAdminPanelProps["matches"]>();
   for (const tie of ties) {
     matchesByTie.set(
@@ -137,8 +131,8 @@ export function FixturesAdminPanel({
           </Badge>
         </div>
         <p className="max-w-3xl text-sm text-muted-foreground">
-          Generate the full schedule automatically or build ties manually. Once match
-          results exist, destructive fixture changes are blocked to protect standings.
+          Generate the full schedule automatically or build ties manually. Once match results exist,
+          destructive fixture changes are blocked to protect standings.
         </p>
       </div>
 
@@ -153,8 +147,7 @@ export function FixturesAdminPanel({
                 generateRoundRobinTiesAction({
                   tournamentSlug,
                   matchesPerTie: Number(formData.get("matchesPerTie") ?? 5),
-                  categoryLabel:
-                    String(formData.get("categoryLabel") ?? "").trim() || undefined,
+                  categoryLabel: String(formData.get("categoryLabel") ?? "").trim() || undefined,
                 }),
               "Fixtures regenerated.",
             );
@@ -163,8 +156,8 @@ export function FixturesAdminPanel({
           <div>
             <h4 className="font-medium text-foreground">Auto generate</h4>
             <p className="text-sm text-muted-foreground">
-              Rebuild a doubles round robin for every team pairing. This is blocked after
-              results are recorded.
+              Rebuild a doubles round robin for every team pairing. This is blocked after results
+              are recorded.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -209,8 +202,7 @@ export function FixturesAdminPanel({
                       ? undefined
                       : Number(formData.get("roundNumber")),
                   matchesPerTie: Number(formData.get("matchesPerTie") ?? 1),
-                  categoryLabel:
-                    String(formData.get("categoryLabel") ?? "").trim() || undefined,
+                  categoryLabel: String(formData.get("categoryLabel") ?? "").trim() || undefined,
                 }),
               "Tie created.",
             );
@@ -310,8 +302,7 @@ export function FixturesAdminPanel({
                   tournamentSlug,
                   playerOneId: String(formData.get("playerOneId") ?? ""),
                   playerTwoId: String(formData.get("playerTwoId") ?? ""),
-                  categoryLabel:
-                    String(formData.get("categoryLabel") ?? "").trim() || undefined,
+                  categoryLabel: String(formData.get("categoryLabel") ?? "").trim() || undefined,
                 }),
               "Singles match created.",
             );
@@ -382,8 +373,8 @@ export function FixturesAdminPanel({
           <div>
             <h4 className="font-medium text-foreground">Editable tie builder</h4>
             <p className="text-sm text-muted-foreground">
-              Add matches, adjust doubles pairings, or remove future fixtures before results
-              are locked in.
+              Add matches, adjust doubles pairings, or remove future fixtures before results are
+              locked in.
             </p>
           </div>
           <Badge variant="outline" className="rounded-full px-3 py-1">
@@ -491,9 +482,7 @@ export function FixturesAdminPanel({
                           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                             <div>
                               <div className="flex flex-wrap items-center gap-2">
-                                <p className="font-medium text-foreground">
-                                  Match {index + 1}
-                                </p>
+                                <p className="font-medium text-foreground">Match {index + 1}</p>
                                 <Badge variant="secondary" className="rounded-full px-2.5 py-0.5">
                                   {fixtureStatusLabel(match.status)}
                                 </Badge>
@@ -669,9 +658,7 @@ export function FixturesAdminPanel({
                   <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-medium text-foreground">
-                          Match {index + 1}
-                        </p>
+                        <p className="font-medium text-foreground">Match {index + 1}</p>
                         <Badge variant="secondary" className="rounded-full px-2.5 py-0.5">
                           {fixtureStatusLabel(match.status)}
                         </Badge>

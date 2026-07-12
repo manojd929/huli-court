@@ -29,13 +29,19 @@ type TournamentRunMatch = Prisma.FixtureMatchGetPayload<{
 }>;
 
 export interface TournamentRunSummary {
-  tournament: { id: string; createdById: string; format: TournamentFormat; draftPhase: string; name: string };
+  tournament: {
+    id: string;
+    createdById: string;
+    format: TournamentFormat;
+    draftPhase: string;
+    name: string;
+  };
   ties: Prisma.FixtureTieGetPayload<{
     include: {
       teamOne: { select: { id: true; name: true; isEliminated: true } };
       teamTwo: { select: { id: true; name: true; isEliminated: true } };
     };
-  }> [];
+  }>[];
   matches: TournamentRunMatch[];
   standings: StandingRow[];
 }
@@ -117,7 +123,9 @@ export async function togglePlayerElimination(params: {
   });
 }
 
-export async function getTournamentRunSummary(tournamentSlug: string): Promise<TournamentRunSummary | null> {
+export async function getTournamentRunSummary(
+  tournamentSlug: string,
+): Promise<TournamentRunSummary | null> {
   await getFixturesSummary(tournamentSlug);
 
   const tournament = await prisma.tournament.findFirst({
@@ -168,7 +176,6 @@ function deriveStandings(params: {
   teams: Array<{ id: string; name: string; isEliminated: boolean }>;
   players: Array<{ id: string; name: string; isEliminated: boolean }>;
   matches: TournamentRunMatch[];
-
 }): StandingRow[] {
   const byId = new Map<string, StandingRow>();
 
@@ -206,7 +213,8 @@ function deriveStandings(params: {
 
   for (const match of params.matches) {
     if (match.status !== FixtureStatus.COMPLETED) continue;
-    if (match.sideOneScore === null || match.sideTwoScore === null || match.winnerSide === null) continue;
+    if (match.sideOneScore === null || match.sideTwoScore === null || match.winnerSide === null)
+      continue;
 
     if (params.format === TournamentFormat.DOUBLES_ONLY) {
       const sideOneTeam = match.participants.find((p) => p.side === "SIDE_ONE" && p.team)?.team;

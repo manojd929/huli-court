@@ -1,0 +1,14 @@
+.next/
+out/
+build/
+coverage/
+node_modules/
+next-env.d.ts
+src/generated/
+package-lock.json
+public/
+*.ico
+
+# Hand-formatted prose/docs — not source code, don't want Prettier rewriting them.
+*.md
+*.mdx

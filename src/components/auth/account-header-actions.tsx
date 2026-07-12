@@ -17,9 +17,17 @@ export function AccountHeaderActions({
   signOutButtonClassName,
 }: AccountHeaderActionsProps) {
   return (
-    <div className={cn("flex shrink-0 items-center gap-2 border-l border-transparent pl-0 sm:border-border/35 sm:pl-4 md:gap-2.5 md:pl-5", className)}>
+    <div
+      className={cn(
+        "flex shrink-0 items-center gap-2 border-l border-transparent pl-0 sm:border-border/35 sm:pl-4 md:gap-2.5 md:pl-5",
+        className,
+      )}
+    >
       <ThemeToggle />
-      <SignOutButton className={cn("min-h-10 sm:min-h-11", signOutButtonClassName)} variant="outline" />
+      <SignOutButton
+        className={cn("min-h-10 sm:min-h-11", signOutButtonClassName)}
+        variant="outline"
+      />
     </div>
   );
 }

@@ -35,10 +35,7 @@ async function uniqueOrgSlug(name: string): Promise<string> {
 
 function isUniqueViolation(e: unknown): boolean {
   return (
-    typeof e === "object" &&
-    e !== null &&
-    "code" in e &&
-    (e as { code?: string }).code === "P2002"
+    typeof e === "object" && e !== null && "code" in e && (e as { code?: string }).code === "P2002"
   );
 }
 
@@ -78,9 +75,7 @@ export async function createOrganizationWithOwner(params: {
 /**
  * Org IDs where the user can manage tournaments (OWNER or ADMIN membership).
  */
-export async function getManagedOrganizationIds(
-  userId: string,
-): Promise<string[]> {
+export async function getManagedOrganizationIds(userId: string): Promise<string[]> {
   const memberships = await prisma.organizationMembership.findMany({
     where: {
       userId,
@@ -96,9 +91,7 @@ export async function getManagedOrganizationIds(
  * The org new tournaments attach to. Existing users without one get a personal
  * org created lazily, so legacy commissioners onboard to tenancy transparently.
  */
-export async function ensureOrganizationForUser(
-  userId: string,
-): Promise<string> {
+export async function ensureOrganizationForUser(userId: string): Promise<string> {
   const membership = await prisma.organizationMembership.findFirst({
     where: {
       userId,
@@ -114,10 +107,7 @@ export async function ensureOrganizationForUser(
     where: { id: userId, deletedAt: null },
     select: { displayName: true, email: true },
   });
-  const fallbackName =
-    profile?.displayName?.trim() ||
-    profile?.email?.split("@")[0] ||
-    "My";
+  const fallbackName = profile?.displayName?.trim() || profile?.email?.split("@")[0] || "My";
   const { organizationId } = await createOrganizationWithOwner({
     userId,
     name: `${fallbackName} League`,

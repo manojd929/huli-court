@@ -2,11 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import {
-  ShieldBanIcon,
-  SparklesIcon,
-  ChevronDownIcon,
-} from "lucide-react";
+import { ShieldBanIcon, SparklesIcon, ChevronDownIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { AuctionPendingReviewSheet } from "@/components/draft/auction-pending-review-sheet";
@@ -82,8 +78,7 @@ export function AdminControlRoomClient({
   useDraftLiveSync(slug, liveSnapshot.tournamentId, setLiveSnapshot, {
     enabled: true,
     accelerated:
-      liveSnapshot.draftPhase === DraftPhase.LIVE ||
-      liveSnapshot.draftPhase === DraftPhase.PAUSED,
+      liveSnapshot.draftPhase === DraftPhase.LIVE || liveSnapshot.draftPhase === DraftPhase.PAUSED,
   });
 
   const slugRef = useRef(slug);
@@ -127,31 +122,23 @@ export function AdminControlRoomClient({
 
       if (event.code === "Space") {
         event.preventDefault();
-        void fire(
-          phase === DraftPhase.LIVE ? "Paused" : "Live again",
-          () =>
-            phase === DraftPhase.LIVE
-              ? pauseDraftAction({ tournamentSlug: currentSlug })
-              : resumeDraftAction({ tournamentSlug: currentSlug }),
+        void fire(phase === DraftPhase.LIVE ? "Paused" : "Live again", () =>
+          phase === DraftPhase.LIVE
+            ? pauseDraftAction({ tournamentSlug: currentSlug })
+            : resumeDraftAction({ tournamentSlug: currentSlug }),
         );
       }
       if (event.key === "Enter") {
         event.preventDefault();
-        void fire("Pick saved", () =>
-          confirmPickAction({ tournamentSlug: currentSlug }),
-        );
+        void fire("Pick saved", () => confirmPickAction({ tournamentSlug: currentSlug }));
       }
       if (event.key === "Backspace") {
         event.preventDefault();
-        void fire("Pick undone", () =>
-          undoPickAction({ tournamentSlug: currentSlug }),
-        );
+        void fire("Pick undone", () => undoPickAction({ tournamentSlug: currentSlug }));
       }
       if (event.key.toLowerCase() === "n") {
         event.preventDefault();
-        void fire("Next team", () =>
-          nextTurnAction({ tournamentSlug: currentSlug }),
-        );
+        void fire("Next team", () => nextTurnAction({ tournamentSlug: currentSlug }));
       }
     };
 
@@ -187,8 +174,7 @@ export function AdminControlRoomClient({
   const paused = liveSnapshot.draftPhase === DraftPhase.PAUSED;
   const draftProgress = getDraftProgressDisplay(liveSnapshot);
   const setupOrReady =
-    liveSnapshot.draftPhase === DraftPhase.SETUP ||
-    liveSnapshot.draftPhase === DraftPhase.READY;
+    liveSnapshot.draftPhase === DraftPhase.SETUP || liveSnapshot.draftPhase === DraftPhase.READY;
 
   const hasDraftSlots = liveSnapshot.draftSlotsTotal > 0;
 
@@ -259,7 +245,7 @@ export function AdminControlRoomClient({
 
   const currentTeam =
     currentTurnTeamId !== null
-      ? liveSnapshot.teams.find((t) => t.id === currentTurnTeamId) ?? null
+      ? (liveSnapshot.teams.find((t) => t.id === currentTurnTeamId) ?? null)
       : null;
   const firstRoundTeamIds = useMemo(() => {
     const uniqueTeamCount = new Set(liveSnapshot.teams.map((team) => team.id)).size;
@@ -270,8 +256,7 @@ export function AdminControlRoomClient({
       .map((slot) => slot.teamId);
   }, [liveSnapshot.draftSlots, liveSnapshot.teams]);
 
-  const spotlightSelectValue =
-    liveSnapshot.auctionSpotlightRosterCategoryId ?? "OPEN";
+  const spotlightSelectValue = liveSnapshot.auctionSpotlightRosterCategoryId ?? "OPEN";
 
   const spotlightTriggerLabel = useMemo(() => {
     if (spotlightSelectValue === "OPEN") {
@@ -314,7 +299,8 @@ export function AdminControlRoomClient({
               <span className="mt-2 block text-muted-foreground">
                 Squad category limits will not block nominations or confirmations. You may confirm a
                 pending pick even when it does not match the team on the clock. Usual checks still
-                apply: the player exists in this tournament, is available, and is not already drafted.
+                apply: the player exists in this tournament, is available, and is not already
+                drafted.
               </span>
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -323,7 +309,7 @@ export function AdminControlRoomClient({
             <AlertDialogAction
               type="button"
               variant="destructive"
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="text-destructive-foreground bg-destructive hover:bg-destructive/90"
               onClick={() => void confirmEnableRulesOverride()}
             >
               Turn on override
@@ -337,7 +323,8 @@ export function AdminControlRoomClient({
           <AlertDialogHeader>
             <AlertDialogTitle>Keyboard shortcuts</AlertDialogTitle>
             <AlertDialogDescription className="sr-only">
-              Optional accelerator keys for commissioners who prefer the keyboard during a live auction.
+              Optional accelerator keys for commissioners who prefer the keyboard during a live
+              auction.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <ul className="mx-1 list-none space-y-3 p-1 text-sm leading-snug sm:mx-3">
@@ -361,9 +348,7 @@ export function AdminControlRoomClient({
 
       <div className="space-y-4">
         <section
-          className={cn(
-            "rounded-2xl border border-border/70 bg-card p-4 shadow-sm sm:p-5",
-          )}
+          className={cn("rounded-2xl border border-border/70 bg-card p-4 shadow-sm sm:p-5")}
           aria-labelledby="admin-auction-heading"
         >
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
@@ -372,7 +357,7 @@ export function AdminControlRoomClient({
                 <span id="admin-auction-heading" className="sr-only">
                   Manage auction
                 </span>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                <p className="text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
                   Manage auction
                 </p>
               </div>
@@ -395,7 +380,7 @@ export function AdminControlRoomClient({
                 ) : null}
               </div>
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                   Franchise on the clock
                 </p>
                 <p className="mt-0.5 truncate text-xl font-semibold tracking-tight sm:text-2xl">
@@ -433,9 +418,7 @@ export function AdminControlRoomClient({
                   type="button"
                   variant="outline"
                   className="min-h-11 w-full whitespace-nowrap sm:w-auto sm:min-w-[9.5rem]"
-                  onClick={() =>
-                    void fire("Paused", () => pauseDraftAction({ tournamentSlug: s }))
-                  }
+                  onClick={() => void fire("Paused", () => pauseDraftAction({ tournamentSlug: s }))}
                 >
                   Pause auction
                 </Button>
@@ -493,9 +476,7 @@ export function AdminControlRoomClient({
                     <DropdownMenuLabel>Turn adjustments</DropdownMenuLabel>
                     <DropdownMenuItem
                       onClick={() =>
-                        void fire("Turn reversed", () =>
-                          previousTurnAction({ tournamentSlug: s }),
-                        )
+                        void fire("Turn reversed", () => previousTurnAction({ tournamentSlug: s }))
                       }
                     >
                       Reverse previous turn
@@ -527,9 +508,7 @@ export function AdminControlRoomClient({
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() =>
-                        void fire("Screens pinged", () =>
-                          forceSyncAction({ tournamentSlug: s }),
-                        )
+                        void fire("Screens pinged", () => forceSyncAction({ tournamentSlug: s }))
                       }
                     >
                       Ping all screens (sync bump)
@@ -564,9 +543,7 @@ export function AdminControlRoomClient({
                     <DropdownMenuItem
                       variant="destructive"
                       onClick={() =>
-                        void fire("Auction concluded", () =>
-                          endDraftAction({ tournamentSlug: s }),
-                        )
+                        void fire("Auction concluded", () => endDraftAction({ tournamentSlug: s }))
                       }
                     >
                       End auction
@@ -578,7 +555,7 @@ export function AdminControlRoomClient({
           </div>
 
           <details className="group mt-4 rounded-xl border border-border/70 bg-muted/25">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-3 text-sm font-medium text-foreground [&::-webkit-details-marker]:hidden sm:px-4">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-3 text-sm font-medium text-foreground sm:px-4 [&::-webkit-details-marker]:hidden">
               <span className="flex items-center gap-2">
                 <SparklesIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
                 Optional · limit owner board to one roster category
@@ -588,7 +565,7 @@ export function AdminControlRoomClient({
                 aria-hidden
               />
             </summary>
-            <div className="border-t border-border/60 px-3 pb-3 pt-2 sm:px-4">
+            <div className="border-t border-border/60 px-3 pt-2 pb-3 sm:px-4">
               <label className="sr-only" htmlFor={`admin-spotlight-${slug}`}>
                 Spotlight roster category for owner devices
               </label>
@@ -643,7 +620,7 @@ export function AdminControlRoomClient({
         </section>
 
         <section className="rounded-2xl border border-border/70 bg-card/90 p-4 shadow-sm backdrop-blur-xl sm:p-5">
-          <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+          <h2 className="text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
             Auction setup
           </h2>
           {!setupOrReady ? (
@@ -654,14 +631,15 @@ export function AdminControlRoomClient({
                 </h3>
                 <p className="min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground md:border-l md:border-border/60 md:pl-4 lg:pl-5">
                   <strong className="font-medium text-foreground">Shuffle pick order</strong> and{" "}
-                  <strong className="font-medium text-foreground">Start auction</strong> apply only before
-                  the room goes live; the server freezes pick order mid-auction for stability.
+                  <strong className="font-medium text-foreground">Start auction</strong> apply only
+                  before the room goes live; the server freezes pick order mid-auction for
+                  stability.
                 </p>
                 <p className="min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground md:border-l md:border-border/60 md:pl-4 lg:pl-5">
-                  Use the banner for <strong className="font-medium text-foreground">Pause</strong> /{" "}
-                  <strong className="font-medium text-foreground">Resume</strong> and{" "}
-                  <strong className="font-medium text-foreground">Advanced</strong> for freeze, end auction,
-                  or rare turn fixes.
+                  Use the banner for <strong className="font-medium text-foreground">Pause</strong>{" "}
+                  / <strong className="font-medium text-foreground">Resume</strong> and{" "}
+                  <strong className="font-medium text-foreground">Advanced</strong> for freeze, end
+                  auction, or rare turn fixes.
                 </p>
               </div>
             </div>
@@ -670,8 +648,8 @@ export function AdminControlRoomClient({
               <div className="min-w-0 space-y-3 lg:pr-8">
                 <h3 className="text-base font-semibold tracking-tight">Step 1 · Pick order</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Randomize franchises into a fair snake order. Reshuffle any time while status is still
-                  setup or ready.
+                  Randomize franchises into a fair snake order. Reshuffle any time while status is
+                  still setup or ready.
                 </p>
                 <RandomDraftOrderShuffle
                   tournamentSlug={s}
@@ -686,7 +664,8 @@ export function AdminControlRoomClient({
               <div className="min-w-0 space-y-3 border-border/70 pt-2 lg:border-l lg:pt-0 lg:pl-8">
                 <h3 className="text-base font-semibold tracking-tight">Step 2 · Open the room</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  After the order feels right, go live once. Owners nominate on their phones; you confirm here.
+                  After the order feels right, go live once. Owners nominate on their phones; you
+                  confirm here.
                 </p>
                 <Button
                   type="button"

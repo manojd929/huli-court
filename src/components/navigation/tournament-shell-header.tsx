@@ -32,7 +32,7 @@ function segmentForHref(slug: string, href: string): string | null {
   }
 
   const remainder = href.slice(`${tournamentRoot}/`.length);
-  return remainder.length > 0 ? remainder.split("/")[0] ?? null : null;
+  return remainder.length > 0 ? (remainder.split("/")[0] ?? null) : null;
 }
 
 export function TournamentShellHeader({
@@ -58,11 +58,7 @@ export function TournamentShellHeader({
   return (
     <header className="border-b border-border/70 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/85">
       {tournamentColorHex ? (
-        <div
-          className="h-1 w-full"
-          style={{ backgroundColor: tournamentColorHex }}
-          aria-hidden
-        />
+        <div className="h-1 w-full" style={{ backgroundColor: tournamentColorHex }} aria-hidden />
       ) : null}
 
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-5">
@@ -70,7 +66,7 @@ export function TournamentShellHeader({
           <div className="border-b border-border/60 px-4 py-4 sm:px-6 sm:py-5">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-2 text-[11px] tracking-[0.22em] text-muted-foreground uppercase">
                   <Link
                     href={ROUTES.dashboard}
                     className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
@@ -98,27 +94,26 @@ export function TournamentShellHeader({
 
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-3">
-                      <h1 className="text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                      <h1 className="text-2xl font-semibold tracking-tight text-balance text-foreground sm:text-3xl">
                         {tournamentName}
                       </h1>
                       <Badge
                         variant="secondary"
-                        className="rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-accent"
+                        className="rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-brand-accent uppercase"
                       >
                         {SPORT_META[sport].emoji} {SPORT_META[sport].label}
                       </Badge>
                       <Badge
                         variant="secondary"
-                        className="rounded-full border border-border/70 bg-background/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/80"
+                        className="rounded-full border border-border/70 bg-background/80 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-foreground/80 uppercase"
                       >
                         {DRAFT_PHASE_LABEL[draftPhase]}
                       </Badge>
                     </div>
-                    <p className="mt-1 font-mono text-xs text-muted-foreground">
-                      /{slug}
-                    </p>
+                    <p className="mt-1 font-mono text-xs text-muted-foreground">/{slug}</p>
                     <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
-                      A focused control surface for tournament operations, auction flow, and post-event reporting.
+                      A focused control surface for tournament operations, auction flow, and
+                      post-event reporting.
                     </p>
                   </div>
                 </div>
@@ -129,7 +124,7 @@ export function TournamentShellHeader({
                   href={ROUTES.dashboard}
                   className={cn(
                     buttonVariants({ variant: "outline", size: "sm" }),
-                    "min-h-10 flex-1 justify-center rounded-full border-border/80 bg-background/80 px-4 shadow-none sm:flex-none sm:min-w-[11rem]",
+                    "min-h-10 flex-1 justify-center rounded-full border-border/80 bg-background/80 px-4 shadow-none sm:min-w-[11rem] sm:flex-none",
                   )}
                 >
                   All tournaments
@@ -148,9 +143,10 @@ export function TournamentShellHeader({
                 {navGroups.map((group) => {
                   const isActiveGroup = group.id === activeGroup.id;
                   const groupHref =
-                    group.links.find(
-                      (link) => segmentForHref(slug, link.href) === activeSegment,
-                    )?.href ?? group.links[0]?.href ?? ROUTES.tournament(slug);
+                    group.links.find((link) => segmentForHref(slug, link.href) === activeSegment)
+                      ?.href ??
+                    group.links[0]?.href ??
+                    ROUTES.tournament(slug);
 
                   return (
                     <Link
@@ -163,7 +159,7 @@ export function TournamentShellHeader({
                           : "border-transparent bg-transparent text-muted-foreground hover:border-border/60 hover:bg-background/70 hover:text-foreground",
                       )}
                     >
-                      <div className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                      <div className="text-[11px] font-semibold tracking-[0.18em] uppercase">
                         {group.label}
                       </div>
                       <div className="mt-1 text-sm leading-relaxed">
@@ -180,8 +176,7 @@ export function TournamentShellHeader({
               className="mt-4 flex flex-wrap items-center gap-2"
             >
               {activeGroup.links.map((link) => {
-                const isActiveLink =
-                  segmentForHref(slug, link.href) === activeSegment;
+                const isActiveLink = segmentForHref(slug, link.href) === activeSegment;
 
                 return (
                   <Link

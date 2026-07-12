@@ -1,21 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  minAcceptableBid,
-  validateBidAmount,
-} from "@/lib/draft/auction-bidding";
+import { minAcceptableBid, validateBidAmount } from "@/lib/draft/auction-bidding";
 
 describe("minAcceptableBid", () => {
   it("uses the base price when nobody has bid", () => {
-    expect(
-      minAcceptableBid({ currentBid: null, basePrice: 500, minIncrement: 100 }),
-    ).toBe(500);
+    expect(minAcceptableBid({ currentBid: null, basePrice: 500, minIncrement: 100 })).toBe(500);
   });
 
   it("requires current bid plus increment once bidding has started", () => {
-    expect(
-      minAcceptableBid({ currentBid: 500, basePrice: 500, minIncrement: 100 }),
-    ).toBe(600);
+    expect(minAcceptableBid({ currentBid: 500, basePrice: 500, minIncrement: 100 })).toBe(600);
   });
 });
 
@@ -50,9 +43,10 @@ describe("validateBidAmount", () => {
   });
 
   it("rejects an opening bid below base price", () => {
-    expect(
-      validateBidAmount(400, { ...ctx, currentBid: null }),
-    ).toEqual({ reason: "TOO_LOW", minAcceptable: 500 });
+    expect(validateBidAmount(400, { ...ctx, currentBid: null })).toEqual({
+      reason: "TOO_LOW",
+      minAcceptable: 500,
+    });
   });
 
   it("allows an opening bid at base price even when purse equals it exactly", () => {
@@ -67,8 +61,9 @@ describe("validateBidAmount", () => {
   });
 
   it("checks purse before increment games: too-low takes precedence", () => {
-    expect(
-      validateBidAmount(50, { ...ctx, purseRemaining: 10 }),
-    ).toEqual({ reason: "TOO_LOW", minAcceptable: 1100 });
+    expect(validateBidAmount(50, { ...ctx, purseRemaining: 10 })).toEqual({
+      reason: "TOO_LOW",
+      minAcceptable: 1100,
+    });
   });
 });

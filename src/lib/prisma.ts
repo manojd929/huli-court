@@ -8,8 +8,7 @@ const globalForPrisma = globalThis as unknown as {
   pgPool: Pool | undefined;
 };
 
-const connectionString =
-  process.env.DATABASE_URL ?? "postgresql://localhost:5432/postgres";
+const connectionString = process.env.DATABASE_URL ?? "postgresql://localhost:5432/postgres";
 
 const pool = globalForPrisma.pgPool ?? new Pool({ connectionString });
 if (process.env.NODE_ENV !== "production") {

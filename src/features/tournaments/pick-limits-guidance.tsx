@@ -18,8 +18,7 @@ export function PickLimitsGuidance({
   picksPerTeam,
   totalPlayers,
 }: PickLimitsGuidanceProps) {
-  const draftPickSlots =
-    teamCount > 0 && picksPerTeam > 0 ? teamCount * picksPerTeam : 0;
+  const draftPickSlots = teamCount > 0 && picksPerTeam > 0 ? teamCount * picksPerTeam : 0;
   const playersMissingForFullDraft =
     draftPickSlots > 0 ? Math.max(0, draftPickSlots - totalPlayers) : 0;
   const extraPlayersBeyondDraft =
@@ -38,11 +37,10 @@ export function PickLimitsGuidance({
           How pick limits relate to your roster
         </h3>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Pick limits cap how many players each franchise may take from each roster group. They do not
-          change how many turns each team gets in the
-          snake draft. That comes from{" "}
-          <strong className="font-medium text-foreground">picks each team makes</strong> set when the
-          tournament was created.
+          Pick limits cap how many players each franchise may take from each roster group. They do
+          not change how many turns each team gets in the snake draft. That comes from{" "}
+          <strong className="font-medium text-foreground">picks each team makes</strong> set when
+          the tournament was created.
         </p>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
           <strong className="font-medium text-foreground">Auto-set limits from roster</strong> sets
@@ -66,13 +64,13 @@ export function PickLimitsGuidance({
         ) : (
           <>
             <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              The next few lines are{" "}
-              <strong className="font-medium text-foreground">only</strong> about how long the snake
-              is: <strong className="font-medium text-foreground">picks each team makes</strong>, which
+              The next few lines are <strong className="font-medium text-foreground">only</strong>{" "}
+              about how long the snake is:{" "}
+              <strong className="font-medium text-foreground">picks each team makes</strong>, which
               was set when this tournament was created (including if you kept the default). They do{" "}
-              <strong className="font-medium text-foreground">not</strong> come from the category pick
-              limits on this page. Those caps govern who can be taken from each group, not how many
-              total rounds the draft has.
+              <strong className="font-medium text-foreground">not</strong> come from the category
+              pick limits on this page. Those caps govern who can be taken from each group, not how
+              many total rounds the draft has.
             </p>
             <p className="text-sm leading-relaxed text-muted-foreground">
               With that setting, this tournament runs{" "}
@@ -81,13 +79,14 @@ export function PickLimitsGuidance({
               <strong className="font-medium text-foreground">{teamCount}</strong>{" "}
               {teamCount === 1 ? "team" : "teams"} ={" "}
               <strong className="font-medium text-foreground">{draftPickSlots}</strong>{" "}
-              {draftPickSlots === 1 ? "pick" : "picks"} in the snake (each uses one distinct player).
+              {draftPickSlots === 1 ? "pick" : "picks"} in the snake (each uses one distinct
+              player).
             </p>
             <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
               <li>
                 You currently have{" "}
-                <strong className="font-medium text-foreground">{totalPlayers}</strong> players on the
-                roster.
+                <strong className="font-medium text-foreground">{totalPlayers}</strong> players on
+                the roster.
               </li>
               {playersMissingForFullDraft > 0 ? (
                 <li>
@@ -97,8 +96,8 @@ export function PickLimitsGuidance({
                   you need at least <strong className="text-foreground">{draftPickSlots}</strong>{" "}
                   players for every slot to fill without re-using someone (
                   <strong className="text-foreground">{playersMissingForFullDraft}</strong> short).
-                  Add players or create a new tournament with more picks per team if you want a longer
-                  snake.
+                  Add players or create a new tournament with more picks per team if you want a
+                  longer snake.
                 </li>
               ) : draftPickSlots > 0 ? (
                 <li>
@@ -112,17 +111,17 @@ export function PickLimitsGuidance({
                       <strong className="font-medium text-foreground">
                         {extraPlayersBeyondDraft}
                       </strong>{" "}
-                      stay on the roster. That is normal, not an error. They are still subject to your
-                      category caps for any pick that reaches them; the short snake simply means not
-                      everyone will be picked in this run.
+                      stay on the roster. That is normal, not an error. They are still subject to
+                      your category caps for any pick that reaches them; the short snake simply
+                      means not everyone will be picked in this run.
                     </>
                   ) : (
                     <>
                       Player count matches this draft length:{" "}
                       <strong className="font-medium text-foreground">{draftPickSlots}</strong>{" "}
                       roster players for{" "}
-                      <strong className="font-medium text-foreground">{draftPickSlots}</strong> snake
-                      picks (each slot can take one person with no shortfall).
+                      <strong className="font-medium text-foreground">{draftPickSlots}</strong>{" "}
+                      snake picks (each slot can take one person with no shortfall).
                     </>
                   )}
                 </li>
@@ -133,14 +132,14 @@ export function PickLimitsGuidance({
       </div>
 
       <div className="space-y-3">
-        <h4 className="text-sm font-semibold text-foreground">
-          Even split per group (auto-set)
-        </h4>
+        <h4 className="text-sm font-semibold text-foreground">Even split per group (auto-set)</h4>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
           When every team shares the same max from a category, only{" "}
           <strong className="font-medium text-foreground">teams × floor(pool ÷ teams)</strong>{" "}
           players line up with that symmetric cap. If any group leaves a remainder, the{" "}
-          <strong className="font-medium text-foreground">inline amber notice under that group</strong>{" "}
+          <strong className="font-medium text-foreground">
+            inline amber notice under that group
+          </strong>{" "}
           lists numbers and options (recategorize, add players, or raise caps manually).
         </p>
       </div>

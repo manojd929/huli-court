@@ -146,12 +146,10 @@ export default async function TournamentHubPage({ params }: PageProps) {
         ].map((item) => (
           <Card key={item.label} className="border-border/80 bg-card/40">
             <CardHeader className="gap-2">
-              <CardDescription className="text-xs uppercase tracking-[0.16em]">
+              <CardDescription className="text-xs tracking-[0.16em] uppercase">
                 {item.label}
               </CardDescription>
-              <CardTitle className="text-3xl font-semibold tracking-tight">
-                {item.value}
-              </CardTitle>
+              <CardTitle className="text-3xl font-semibold tracking-tight">{item.value}</CardTitle>
               <CardDescription>{item.description}</CardDescription>
             </CardHeader>
           </Card>

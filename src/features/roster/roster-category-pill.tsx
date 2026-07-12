@@ -19,7 +19,11 @@ export function RosterCategoryPill({ name, colorHex, className }: RosterCategory
           "border-transparent bg-muted/55 text-foreground shadow-[inset_0_0_0_1px_rgba(15,23,42,0.08)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]",
         className,
       )}
-      style={tinted ? { borderColor: `${colorHex}55`, backgroundColor: `${colorHex}22`, color: "inherit" } : undefined}
+      style={
+        tinted
+          ? { borderColor: `${colorHex}55`, backgroundColor: `${colorHex}22`, color: "inherit" }
+          : undefined
+      }
     >
       <span className="truncate">{name}</span>
     </Badge>

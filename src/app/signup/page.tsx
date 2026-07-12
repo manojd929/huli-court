@@ -25,7 +25,7 @@ export default async function SignupPage() {
         <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-border/40 pb-3 text-sm md:border-0 md:pb-0">
           <Link
             href={ROUTES.home}
-            className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-md py-1.5 pr-1.5 text-muted-foreground ring-offset-background transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-md py-1.5 pr-1.5 text-muted-foreground ring-offset-background transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             ← Back to landing
           </Link>
@@ -45,9 +45,8 @@ export default async function SignupPage() {
         </main>
 
         <footer className="shrink-0 border-t border-border/40 px-0.5 pt-5 text-center text-sm leading-snug text-foreground/72 md:border-0 md:pt-6 md:leading-relaxed dark:text-foreground/78">
-          You get a free organizer workspace: snake drafts, random team
-          assignment, live projector boards, fixtures, and standings. Live
-          auctions with team purses are part of the paid tier.
+          You get a free organizer workspace: snake drafts, random team assignment, live projector
+          boards, fixtures, and standings. Live auctions with team purses are part of the paid tier.
         </footer>
       </div>
     </div>

@@ -145,7 +145,7 @@ export function RandomDraftOrderShuffle({
         pendingLabel="Shuffling…"
         aria-busy={shuffling}
         title={disabledTitle}
-        className={cn("min-h-11 text-sm sm:text-xs sm:uppercase sm:tracking-wide", className)}
+        className={cn("min-h-11 text-sm sm:text-xs sm:tracking-wide sm:uppercase", className)}
         onClick={() => void run()}
       >
         Shuffle pick order

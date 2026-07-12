@@ -11,9 +11,7 @@ interface SquadRulesAutoFillButtonProps {
   tournamentSlug: string;
 }
 
-export function SquadRulesAutoFillButton({
-  tournamentSlug,
-}: SquadRulesAutoFillButtonProps) {
+export function SquadRulesAutoFillButton({ tournamentSlug }: SquadRulesAutoFillButtonProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 

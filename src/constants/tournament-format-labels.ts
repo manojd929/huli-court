@@ -5,4 +5,3 @@ export const TOURNAMENT_FORMAT_LABEL: Record<TournamentFormat, string> = {
   SINGLES_ONLY: "Singles",
   MIXED: "Mixed",
 };
-

@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Private launch credentials — never commit
 docs/commissioner-accounts.md
+
+# husky's regenerated helper scripts (recreated by `npm install` via "prepare")
+.husky/_

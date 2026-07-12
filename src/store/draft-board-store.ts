@@ -33,8 +33,6 @@ export const useDraftBoardUiStore = create<DraftBoardUiState>((set) => ({
   setSortMode: (sortMode) => set({ sortMode }),
   togglePlayerBoardDensity: () =>
     set((state) => ({
-      playerBoardDensity:
-        state.playerBoardDensity === "comfortable" ? "compact" : "comfortable",
+      playerBoardDensity: state.playerBoardDensity === "comfortable" ? "compact" : "comfortable",
     })),
 }));
-

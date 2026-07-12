@@ -1,8 +1,4 @@
-import type {
-  AllocationMethod,
-  DraftPhase,
-  Gender,
-} from "@/generated/prisma/enums";
+import type { AllocationMethod, DraftPhase, Gender } from "@/generated/prisma/enums";
 
 export interface DraftTeamDto {
   id: string;

@@ -55,8 +55,9 @@ export function TeamsSetupToolbar({
           <SheetHeader className="border-b border-border/60 pb-4">
             <SheetTitle>Optional owner login</SheetTitle>
             <SheetDescription>
-              Create a standalone franchise-owner account before a roster row exists. Prefer Players →{" "}
-              <span className="font-medium text-foreground">Add player</span> → Grant login when you can.
+              Create a standalone franchise-owner account before a roster row exists. Prefer Players
+              → <span className="font-medium text-foreground">Add player</span> → Grant login when
+              you can.
             </SheetDescription>
           </SheetHeader>
           <div className="flex-1 overflow-y-auto px-6 py-6">
@@ -82,8 +83,8 @@ export function TeamsSetupToolbar({
           <SheetHeader className="border-b border-border/60 pb-4">
             <SheetTitle>Add franchise</SheetTitle>
             <SheetDescription>
-              Name the team, pick an owner from people you have already invited, then refine logo and
-              colors if needed.
+              Name the team, pick an owner from people you have already invited, then refine logo
+              and colors if needed.
             </SheetDescription>
           </SheetHeader>
           <div className="flex-1 overflow-y-auto px-6 py-6">

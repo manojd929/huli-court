@@ -14,11 +14,9 @@ export function AuctionTvBanner({ snapshot }: AuctionTvBannerProps) {
   if (!auction) return null;
 
   const lot = auction.currentLot;
-  const lotPlayer = lot
-    ? snapshot.players.find((p) => p.id === lot.playerId) ?? null
-    : null;
+  const lotPlayer = lot ? (snapshot.players.find((p) => p.id === lot.playerId) ?? null) : null;
   const leadingTeam = lot?.currentBidTeamId
-    ? snapshot.teams.find((t) => t.id === lot.currentBidTeamId) ?? null
+    ? (snapshot.teams.find((t) => t.id === lot.currentBidTeamId) ?? null)
     : null;
   const purseByTeamId = new Map(auction.purses.map((p) => [p.teamId, p]));
 
@@ -35,10 +33,10 @@ export function AuctionTvBanner({ snapshot }: AuctionTvBannerProps) {
               className="flex flex-1 items-center gap-4 rounded-xl border border-brand/50 bg-brand-soft/40 px-4 py-3 ring-1 ring-brand/20 sm:px-6 sm:py-4"
             >
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-brand-accent">
+                <p className="text-[10px] font-semibold tracking-[0.24em] text-brand-accent uppercase">
                   Under the hammer
                 </p>
-                <p className="truncate text-[clamp(1.25rem,3vw,2.25rem)] font-bold leading-tight">
+                <p className="truncate text-[clamp(1.25rem,3vw,2.25rem)] leading-tight font-bold">
                   {lotPlayer.name}
                 </p>
                 <p className="text-sm text-muted-foreground">
@@ -46,13 +44,11 @@ export function AuctionTvBanner({ snapshot }: AuctionTvBannerProps) {
                 </p>
               </div>
               <div className="shrink-0 text-right">
-                <p className="text-[clamp(1.75rem,4vw,3rem)] font-bold tabular-nums leading-none text-brand-accent">
+                <p className="text-[clamp(1.75rem,4vw,3rem)] leading-none font-bold text-brand-accent tabular-nums">
                   {lot.currentBid ?? lot.basePrice}
                 </p>
                 <p className="text-xs text-muted-foreground sm:text-sm">
-                  {lot.currentBid !== null && leadingTeam
-                    ? leadingTeam.name
-                    : "no bids yet"}
+                  {lot.currentBid !== null && leadingTeam ? leadingTeam.name : "no bids yet"}
                 </p>
               </div>
             </motion.div>
@@ -82,12 +78,8 @@ export function AuctionTvBanner({ snapshot }: AuctionTvBannerProps) {
                     : "rounded-lg border border-border px-3 py-1.5"
                 }
               >
-                <p className="truncate text-xs font-medium">
-                  {team.shortName ?? team.name}
-                </p>
-                <p className="text-sm font-bold tabular-nums">
-                  {purse?.remaining ?? "—"}
-                </p>
+                <p className="truncate text-xs font-medium">{team.shortName ?? team.name}</p>
+                <p className="text-sm font-bold tabular-nums">{purse?.remaining ?? "—"}</p>
               </div>
             );
           })}

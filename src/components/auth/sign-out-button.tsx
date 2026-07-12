@@ -14,10 +14,7 @@ interface SignOutButtonProps {
   variant?: "outline" | "ghost";
 }
 
-export function SignOutButton({
-  className,
-  variant = "outline",
-}: SignOutButtonProps) {
+export function SignOutButton({ className, variant = "outline" }: SignOutButtonProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
 
@@ -41,10 +38,7 @@ export function SignOutButton({
       type="button"
       data-testid="logout-button"
       variant={variant}
-      className={cn(
-        "min-h-11 w-full touch-manipulation sm:w-auto sm:min-w-[7rem]",
-        className,
-      )}
+      className={cn("min-h-11 w-full touch-manipulation sm:w-auto sm:min-w-[7rem]", className)}
       pending={busy}
       pendingLabel="Signing out…"
       onClick={() => void handleSignOut()}

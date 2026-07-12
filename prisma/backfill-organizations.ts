@@ -34,9 +34,7 @@ async function main() {
   });
 
   const existingSlugs = new Set(
-    (await prisma.organization.findMany({ select: { slug: true } })).map(
-      (org) => org.slug,
-    ),
+    (await prisma.organization.findMany({ select: { slug: true } })).map((org) => org.slug),
   );
 
   let orgsCreated = 0;

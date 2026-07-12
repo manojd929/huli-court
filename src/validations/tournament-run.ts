@@ -3,9 +3,7 @@ import { z } from "zod";
 export const updateMatchStateSchema = z.object({
   tournamentSlug: z.string().min(1),
   matchId: z.string().uuid(),
-  status: z
-    .enum(["SCHEDULED", "IN_PROGRESS", "COMPLETED", "CANCELLED"])
-    .optional(),
+  status: z.enum(["SCHEDULED", "IN_PROGRESS", "COMPLETED", "CANCELLED"]).optional(),
   sideOneScore: z.coerce.number().int().min(0).nullable().optional(),
   sideTwoScore: z.coerce.number().int().min(0).nullable().optional(),
 });

@@ -122,9 +122,7 @@ export function DraftOrderRevealOverlay({
   }, [open, moment, firstRoundIds.length]);
 
   const spinningTeamId =
-    spinDeck.length > 0
-      ? spinDeck[spinTick % spinDeck.length]!
-      : firstRoundIds[0]!;
+    spinDeck.length > 0 ? spinDeck[spinTick % spinDeck.length]! : firstRoundIds[0]!;
   const spinningLabel =
     teamsById[spinningTeamId]?.name ?? teamsById[firstRoundIds[0]!]?.name ?? "…";
 
@@ -149,7 +147,7 @@ export function DraftOrderRevealOverlay({
         >
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <motion.div
-              className="absolute -left-1/4 top-1/4 size-72 rounded-full bg-amber-400/15 blur-3xl"
+              className="absolute top-1/4 -left-1/4 size-72 rounded-full bg-amber-400/15 blur-3xl"
               animate={{ opacity: [0.35, 0.55, 0.35], scale: [1, 1.08, 1] }}
               transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -161,7 +159,7 @@ export function DraftOrderRevealOverlay({
           </div>
 
           <div className="relative z-10 max-w-lg space-y-3 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-600/90 dark:text-amber-400/90">
+            <p className="text-xs font-semibold tracking-[0.22em] text-amber-600/90 uppercase dark:text-amber-400/90">
               Round 1 · pick order
             </p>
             <h2
@@ -174,8 +172,8 @@ export function DraftOrderRevealOverlay({
               id="draft-order-reveal-desc"
               className="text-sm leading-relaxed text-muted-foreground sm:text-base"
             >
-              Order below was randomly set for owners, like a quick lottery before the auction.
-              Your snake rounds still reverse each pass.
+              Order below was randomly set for owners, like a quick lottery before the auction. Your
+              snake rounds still reverse each pass.
             </p>
           </div>
 
@@ -191,7 +189,7 @@ export function DraftOrderRevealOverlay({
                   className="flex flex-col items-center gap-4"
                 >
                   <motion.p
-                    className="text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                    className="text-xs font-medium tracking-wider text-muted-foreground uppercase"
                     animate={{ opacity: [0.65, 1, 0.65] }}
                     transition={{ duration: 1.2, repeat: Infinity }}
                   >

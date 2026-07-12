@@ -87,10 +87,9 @@ export function DeleteFranchiseOwnerLoginButton({
           <AlertDialogHeader>
             <AlertDialogTitle>Remove franchise owner login?</AlertDialogTitle>
             <AlertDialogDescription className="text-left">
-              Unassigns{" "}
-              <span className="font-medium text-foreground">{ownerLabel}</span> from every franchise in this
-              league, clears roster links tied to them here, and removes their sign-in credentials when nothing
-              else references that account.
+              Unassigns <span className="font-medium text-foreground">{ownerLabel}</span> from every
+              franchise in this league, clears roster links tied to them here, and removes their
+              sign-in credentials when nothing else references that account.
             </AlertDialogDescription>
           </AlertDialogHeader>
           {error ? (

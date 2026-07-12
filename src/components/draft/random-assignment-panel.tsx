@@ -15,13 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { runRandomAssignmentAction } from "@/features/draft/actions";
 import { useDraftLiveSync } from "@/hooks/use-draft-live-sync";
 import type { DraftSnapshotDto } from "@/types/draft";
@@ -31,10 +25,7 @@ interface RandomAssignmentPanelProps {
   initialSnapshot: DraftSnapshotDto;
 }
 
-export function RandomAssignmentPanel({
-  slug,
-  initialSnapshot,
-}: RandomAssignmentPanelProps) {
+export function RandomAssignmentPanel({ slug, initialSnapshot }: RandomAssignmentPanelProps) {
   const [snapshot, setSnapshot] = useState<DraftSnapshotDto>(initialSnapshot);
   const [busy, setBusy] = useState(false);
   const { refresh } = useDraftLiveSync(slug, snapshot.tournamentId, setSnapshot);
@@ -91,11 +82,7 @@ export function RandomAssignmentPanel({
           <AlertDialog>
             <AlertDialogTrigger
               render={(props) => (
-                <Button
-                  {...props}
-                  disabled={busy || snapshot.teams.length === 0}
-                  size="lg"
-                >
+                <Button {...props} disabled={busy || snapshot.teams.length === 0} size="lg">
                   Run random assignment
                 </Button>
               )}
@@ -104,17 +91,14 @@ export function RandomAssignmentPanel({
               <AlertDialogHeader>
                 <AlertDialogTitle>Assign teams now?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This shuffles all {eligibleCount} available players into{" "}
-                  {snapshot.teams.length} teams and completes the allocation
-                  phase. You can still fine-tune squads afterwards with manual
-                  assignment.
+                  This shuffles all {eligibleCount} available players into {snapshot.teams.length}{" "}
+                  teams and completes the allocation phase. You can still fine-tune squads
+                  afterwards with manual assignment.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Not yet</AlertDialogCancel>
-                <AlertDialogAction onClick={run}>
-                  Shuffle &amp; assign
-                </AlertDialogAction>
+                <AlertDialogAction onClick={run}>Shuffle &amp; assign</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

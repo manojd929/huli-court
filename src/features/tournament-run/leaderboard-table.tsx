@@ -6,10 +6,7 @@ interface LeaderboardTableProps {
   standings: StandingRow[];
 }
 
-export function LeaderboardTable({
-  format,
-  standings,
-}: LeaderboardTableProps) {
+export function LeaderboardTable({ format, standings }: LeaderboardTableProps) {
   return (
     <div className="overflow-x-auto rounded-2xl border border-border/70 bg-card/40 shadow-sm backdrop-blur-sm">
       <table className="w-full min-w-[48rem] text-sm">
@@ -43,9 +40,7 @@ export function LeaderboardTable({
               <td className="px-4 py-3">{row.pointsScored}</td>
               <td className="px-4 py-3">{row.pointsConceded}</td>
               <td className="px-4 py-3">{row.pointDifference}</td>
-              <td className="px-4 py-3">
-                {row.eliminated ? "Eliminated" : "Active"}
-              </td>
+              <td className="px-4 py-3">{row.eliminated ? "Eliminated" : "Active"}</td>
             </tr>
           ))}
         </tbody>

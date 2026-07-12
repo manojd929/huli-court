@@ -6,6 +6,4 @@ export const passwordLoginSessionTokensSchema = z.object({
   refresh_token: z.string().min(1),
 });
 
-export type PasswordLoginSessionTokens = z.infer<
-  typeof passwordLoginSessionTokensSchema
->;
+export type PasswordLoginSessionTokens = z.infer<typeof passwordLoginSessionTokensSchema>;

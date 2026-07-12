@@ -37,10 +37,12 @@ export function DashboardFloorThemeSwatches({
             disabled={disabled}
             onClick={() => onSelect(opt.id)}
             className={cn(
-              "group relative flex min-h-[10.75rem] touch-manipulation flex-col overflow-hidden rounded-xl border bg-card text-left shadow-sm outline-none transition-all",
+              "group relative flex min-h-[10.75rem] touch-manipulation flex-col overflow-hidden rounded-xl border bg-card text-left shadow-sm transition-all outline-none",
               "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/55",
               "enabled:hover:border-primary/35 enabled:hover:shadow-md",
-              active ? "border-primary/80 ring-2 ring-primary ring-offset-2 ring-offset-background" : "border-border/60",
+              active
+                ? "border-primary/80 ring-2 ring-primary ring-offset-2 ring-offset-background"
+                : "border-border/60",
               disabled && "opacity-60",
             )}
           >

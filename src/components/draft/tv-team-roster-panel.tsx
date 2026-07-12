@@ -60,8 +60,7 @@ export function TvTeamRosterPanel({
   isOnClock,
 }: TvTeamRosterPanelProps) {
   const totalOnRoster = confirmedPlayers.length + pendingPlayers.length;
-  const ownerPlayer =
-    confirmedPlayers.find((player) => player.runsFranchiseLogin) ?? null;
+  const ownerPlayer = confirmedPlayers.find((player) => player.runsFranchiseLogin) ?? null;
   const groups = groupPlayersByCategory(confirmedPlayers, rosterCategoryRank);
 
   return (
@@ -69,7 +68,7 @@ export function TvTeamRosterPanel({
       className={cn(
         "flex min-h-0 flex-col overflow-hidden rounded-3xl border border-border bg-card/90 shadow-sm backdrop-blur-md dark:bg-gradient-to-b dark:from-white/[0.07] dark:to-black/50 dark:shadow-inner",
         isOnClock
-          ? "ring-2 ring-primary/35 shadow-md shadow-primary/10 dark:border-sky-400/35 dark:shadow-[0_0_48px_-16px_rgba(56,189,248,0.45)]"
+          ? "shadow-md ring-2 shadow-primary/10 ring-primary/35 dark:border-sky-400/35 dark:shadow-[0_0_48px_-16px_rgba(56,189,248,0.45)]"
           : "",
       )}
     >
@@ -103,28 +102,34 @@ export function TvTeamRosterPanel({
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-balance text-[clamp(1rem,4vw,1.7rem)] font-bold tracking-tight text-foreground md:text-[clamp(1.1rem,1.5vw,1.75rem)] dark:text-white">
+            <h2 className="text-[clamp(1rem,4vw,1.7rem)] font-bold tracking-tight text-balance text-foreground md:text-[clamp(1.1rem,1.5vw,1.75rem)] dark:text-white">
               {team.name}
             </h2>
             {team.shortName ? (
-              <span className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-foreground sm:text-[11px] dark:border-white/15 dark:bg-white/10 dark:text-sky-100">
+              <span className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-[10px] font-medium tracking-wider text-foreground uppercase sm:text-[11px] dark:border-white/15 dark:bg-white/10 dark:text-sky-100">
                 {team.shortName}
               </span>
             ) : null}
             {isOnClock ? (
-              <Badge className="border-primary/35 bg-primary/15 text-[9px] font-semibold uppercase tracking-widest text-primary dark:border-sky-400/45 dark:bg-sky-500/25 dark:text-sky-50">
+              <Badge className="border-primary/35 bg-primary/15 text-[9px] font-semibold tracking-widest text-primary uppercase dark:border-sky-400/45 dark:bg-sky-500/25 dark:text-sky-50">
                 On the clock
               </Badge>
             ) : null}
           </div>
           <p className="mt-2 text-[12px] text-muted-foreground sm:text-[13px] dark:text-white/65">
-            Roster · <span className="font-semibold text-foreground dark:text-white">{totalOnRoster}</span>
+            Roster ·{" "}
+            <span className="font-semibold text-foreground dark:text-white">{totalOnRoster}</span>
             {" · "}
-            <span className="text-foreground dark:text-white/80">{confirmedPlayers.length}</span> confirmed
+            <span className="text-foreground dark:text-white/80">
+              {confirmedPlayers.length}
+            </span>{" "}
+            confirmed
             {pendingPlayers.length > 0 ? (
               <>
                 {" · "}
-                <span className="font-medium text-amber-700 dark:text-amber-200">{pendingPlayers.length}</span>{" "}
+                <span className="font-medium text-amber-700 dark:text-amber-200">
+                  {pendingPlayers.length}
+                </span>{" "}
                 pending
               </>
             ) : null}
@@ -141,10 +146,10 @@ export function TvTeamRosterPanel({
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col px-3 py-4 sm:min-h-[240px] sm:px-5 sm:py-5 md:px-6 md:py-6">
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch]">
+        <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto [-webkit-overflow-scrolling:touch]">
           {pendingPlayers.length > 0 ? (
             <div className="mb-8 space-y-3">
-              <h3 className="text-[10px] font-semibold uppercase tracking-[0.24em] text-amber-800 dark:text-amber-200/90 sm:text-[11px]">
+              <h3 className="text-[10px] font-semibold tracking-[0.24em] text-amber-800 uppercase sm:text-[11px] dark:text-amber-200/90">
                 Nomination pending commissioner
               </h3>
               <div className={playerTilesGrid}>
@@ -165,7 +170,7 @@ export function TvTeamRosterPanel({
             {groups.map((group) => (
               <div key={group.rosterCategoryId} className="space-y-4">
                 <div className="flex flex-wrap items-baseline gap-3 border-b border-border pb-2 dark:border-white/10">
-                  <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-[12px] dark:text-white/70">
+                  <h3 className="text-[11px] font-semibold tracking-[0.2em] text-muted-foreground uppercase sm:text-[12px] dark:text-white/70">
                     {group.rosterCategoryName}
                   </h3>
                   <span className="text-[11px] text-muted-foreground sm:text-[12px] dark:text-white/45">

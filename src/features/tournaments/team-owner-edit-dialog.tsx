@@ -14,10 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { updateTeamAction } from "@/features/tournaments/actions";
-import {
-  OwnerPicker,
-  type AssignablePerson,
-} from "@/features/tournaments/owner-picker";
+import { OwnerPicker, type AssignablePerson } from "@/features/tournaments/owner-picker";
 import type { TeamEditSnapshot } from "@/features/tournaments/team-edit-dialog";
 
 interface TeamOwnerEditDialogProps {
@@ -72,7 +69,7 @@ export function TeamOwnerEditDialog({
       <Button
         variant="outline"
         type="button"
-        className="h-8 min-h-8 px-3 text-xs touch-manipulation sm:h-8 sm:min-h-8"
+        className="h-8 min-h-8 touch-manipulation px-3 text-xs sm:h-8 sm:min-h-8"
         onClick={openDialog}
       >
         {team.ownerUserId?.trim() ? "Change owner" : "Assign owner"}

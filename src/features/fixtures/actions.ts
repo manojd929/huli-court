@@ -90,9 +90,7 @@ export async function createTieMatchAction(input: unknown): Promise<ActionResult
   }
 }
 
-export async function assignTieMatchParticipantsAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function assignTieMatchParticipantsAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = assignTieMatchParticipantsSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid request." };

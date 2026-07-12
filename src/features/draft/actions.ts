@@ -28,11 +28,7 @@ import {
   unlockDraft,
 } from "@/services/draft-service";
 import { runRandomAssignment } from "@/services/allocation-service";
-import {
-  closeAuctionLot,
-  openAuctionLot,
-  placeAuctionBid,
-} from "@/services/auction-service";
+import { closeAuctionLot, openAuctionLot, placeAuctionBid } from "@/services/auction-service";
 import {
   assignManualSchema,
   auctionSpotlightSchema,
@@ -63,9 +59,7 @@ function revalidateTournament(slug: string) {
   revalidatePath(`/tournament/${slug}`, "layout");
 }
 
-export type ActionResult<T = void> =
-  | { ok: true; data?: T }
-  | { ok: false; error: string };
+export type ActionResult<T = void> = { ok: true; data?: T } | { ok: false; error: string };
 
 function handle(err: unknown): { ok: false; error: string } {
   if (err instanceof DraftServiceError) {
@@ -78,9 +72,7 @@ function unauthorized(): { ok: false; error: string } {
   return { ok: false, error: "Unauthorized" };
 }
 
-export async function randomizeDraftOrderAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function randomizeDraftOrderAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = draftActionSlugSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -156,9 +148,7 @@ export async function resumeDraftAction(input: unknown): Promise<ActionResult> {
   }
 }
 
-export async function setAuctionSpotlightCategoryAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function setAuctionSpotlightCategoryAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = auctionSpotlightSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -276,9 +266,7 @@ export async function nextTurnAction(input: unknown): Promise<ActionResult> {
   }
 }
 
-export async function previousTurnAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function previousTurnAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = draftActionSlugSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -375,9 +363,7 @@ export async function undoPickAction(input: unknown): Promise<ActionResult> {
   }
 }
 
-export async function toggleOverrideValidationAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function toggleOverrideValidationAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = zToggle.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -416,9 +402,7 @@ export async function forceSyncAction(input: unknown): Promise<ActionResult> {
   }
 }
 
-export async function assignManualPickAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function assignManualPickAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = assignManualSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -461,9 +445,7 @@ export async function runRandomAssignmentAction(
   }
 }
 
-export async function openAuctionLotAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function openAuctionLotAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = openAuctionLotSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -483,9 +465,7 @@ export async function openAuctionLotAction(
   }
 }
 
-export async function placeAuctionBidAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function placeAuctionBidAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = placeAuctionBidSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -507,9 +487,7 @@ export async function placeAuctionBidAction(
   }
 }
 
-export async function closeAuctionLotAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function closeAuctionLotAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = closeAuctionLotSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -530,9 +508,7 @@ export async function closeAuctionLotAction(
   }
 }
 
-export async function markPlayerUnavailableAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function markPlayerUnavailableAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = zMarkAvail.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };
@@ -553,9 +529,7 @@ export async function markPlayerUnavailableAction(
   }
 }
 
-export async function markPlayerLockedAction(
-  input: unknown,
-): Promise<ActionResult> {
+export async function markPlayerLockedAction(input: unknown): Promise<ActionResult> {
   try {
     const parsed = zMarkLocked.safeParse(input);
     if (!parsed.success) return { ok: false, error: "Invalid payload." };

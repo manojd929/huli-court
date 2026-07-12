@@ -78,8 +78,7 @@ export function PlayersQuickAdd({
     <form
       className={cn(
         "grid gap-5",
-        variant === "card" &&
-          "rounded-xl border border-border/70 bg-card/40 p-6 backdrop-blur-md",
+        variant === "card" && "rounded-xl border border-border/70 bg-card/40 p-6 backdrop-blur-md",
       )}
       onSubmit={(event) => void handleSubmit(event)}
     >
@@ -128,12 +127,7 @@ export function PlayersQuickAdd({
         <div className="mt-4 grid gap-5">
           <div className="space-y-2">
             <Label htmlFor="gender">Gender marker</Label>
-            <select
-              id="gender"
-              name="gender"
-              defaultValue="MALE"
-              className={selectClass}
-            >
+            <select id="gender" name="gender" defaultValue="MALE" className={selectClass}>
               <option value="MALE">Male</option>
               <option value="FEMALE">Female</option>
               <option value="OTHER">Other</option>

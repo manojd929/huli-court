@@ -6,10 +6,7 @@ import {
   TournamentFormat,
 } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
-import {
-  assertTournamentOwnership,
-  TournamentServiceError,
-} from "@/services/tournament-service";
+import { assertTournamentOwnership, TournamentServiceError } from "@/services/tournament-service";
 
 interface FixturePlayerOption {
   id: string;
@@ -122,9 +119,7 @@ function matchHasLockedResult(match: {
   );
 }
 
-async function syncDoublesFixtureParticipantsForTournament(
-  tournamentId: string,
-): Promise<void> {
+async function syncDoublesFixtureParticipantsForTournament(tournamentId: string): Promise<void> {
   if (!fixturesDelegatesAvailable()) {
     return;
   }
@@ -151,9 +146,7 @@ async function syncDoublesFixtureParticipantsForTournament(
     return;
   }
 
-  const teamIds = [
-    ...new Set(ties.flatMap((tie) => [tie.teamOne.id, tie.teamTwo.id])),
-  ];
+  const teamIds = [...new Set(ties.flatMap((tie) => [tie.teamOne.id, tie.teamTwo.id]))];
   const playersByTeam = await getEligibleDoublesPlayersByTeam({
     tournamentId,
     teamIds,
@@ -298,19 +291,14 @@ export async function generateRoundRobinTies(params: {
   matchesPerTie: number;
   categoryLabel?: string;
 }) {
-  const tournamentId = await assertTournamentOwnership(
-    params.tournamentSlug,
-    params.actorUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(params.tournamentSlug, params.actorUserId);
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId, deletedAt: null },
     select: { id: true, draftPhase: true },
   });
   if (!tournament) throw new TournamentServiceError("Tournament not found.");
   if (tournament.draftPhase !== "COMPLETED") {
-    throw new TournamentServiceError(
-      "Complete the draft before generating doubles fixtures.",
-    );
+    throw new TournamentServiceError("Complete the draft before generating doubles fixtures.");
   }
 
   const teams = await prisma.team.findMany({
@@ -394,10 +382,7 @@ export async function createFixtureTie(params: {
     throw new TournamentServiceError("Choose two different teams.");
   }
 
-  const tournamentId = await assertTournamentOwnership(
-    params.tournamentSlug,
-    params.actorUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(params.tournamentSlug, params.actorUserId);
   const [tournament, teams, lastTie] = await Promise.all([
     prisma.tournament.findFirst({
       where: { id: tournamentId, deletedAt: null },
@@ -462,10 +447,7 @@ export async function createTieMatch(params: {
   tournamentSlug: string;
   tieId: string;
 }) {
-  const tournamentId = await assertTournamentOwnership(
-    params.tournamentSlug,
-    params.actorUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(params.tournamentSlug, params.actorUserId);
   const tie = await prisma.fixtureTie.findFirst({
     where: { id: params.tieId, tournamentId },
     include: {
@@ -511,10 +493,7 @@ export async function assignTieMatchParticipants(params: {
   sideOnePlayerIds: string[];
   sideTwoPlayerIds: string[];
 }) {
-  const tournamentId = await assertTournamentOwnership(
-    params.tournamentSlug,
-    params.actorUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(params.tournamentSlug, params.actorUserId);
   const match = await prisma.fixtureMatch.findFirst({
     where: { id: params.matchId, tournamentId },
     include: {
@@ -535,9 +514,7 @@ export async function assignTieMatchParticipants(params: {
     );
   }
   if (!match.tie) {
-    throw new TournamentServiceError(
-      "Only tie matches can be assigned from this screen.",
-    );
+    throw new TournamentServiceError("Only tie matches can be assigned from this screen.");
   }
   if (match.status === FixtureStatus.COMPLETED) {
     throw new TournamentServiceError("Completed matches cannot be edited.");
@@ -546,15 +523,11 @@ export async function assignTieMatchParticipants(params: {
   const sideOneIds = [...new Set(params.sideOnePlayerIds)];
   const sideTwoIds = [...new Set(params.sideTwoPlayerIds)];
   if (sideOneIds.length > 2 || sideTwoIds.length > 2) {
-    throw new TournamentServiceError(
-      "Each doubles side can have at most two players.",
-    );
+    throw new TournamentServiceError("Each doubles side can have at most two players.");
   }
   const allIds = [...sideOneIds, ...sideTwoIds];
   if (allIds.length !== new Set(allIds).size) {
-    throw new TournamentServiceError(
-      "A player cannot appear on both sides of the same match.",
-    );
+    throw new TournamentServiceError("A player cannot appear on both sides of the same match.");
   }
 
   const eligiblePlayersByTeam = await getEligibleDoublesPlayersByTeam({
@@ -562,14 +535,10 @@ export async function assignTieMatchParticipants(params: {
     teamIds: [match.tie.teamOneId, match.tie.teamTwoId],
   });
   const sideOneAllowedIds = new Set(
-    (eligiblePlayersByTeam.get(match.tie.teamOneId) ?? []).map(
-      (player) => player.id,
-    ),
+    (eligiblePlayersByTeam.get(match.tie.teamOneId) ?? []).map((player) => player.id),
   );
   const sideTwoAllowedIds = new Set(
-    (eligiblePlayersByTeam.get(match.tie.teamTwoId) ?? []).map(
-      (player) => player.id,
-    ),
+    (eligiblePlayersByTeam.get(match.tie.teamTwoId) ?? []).map((player) => player.id),
   );
 
   if (!sideOneIds.every((playerId) => sideOneAllowedIds.has(playerId))) {
@@ -616,10 +585,7 @@ export async function deleteFixtureTie(params: {
   tournamentSlug: string;
   tieId: string;
 }) {
-  const tournamentId = await assertTournamentOwnership(
-    params.tournamentSlug,
-    params.actorUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(params.tournamentSlug, params.actorUserId);
   const tie = await prisma.fixtureTie.findFirst({
     where: { id: params.tieId, tournamentId },
     include: {
@@ -638,9 +604,7 @@ export async function deleteFixtureTie(params: {
     throw new TournamentServiceError("Tie not found.");
   }
   if (tie.matches.some((match) => matchHasLockedResult(match))) {
-    throw new TournamentServiceError(
-      "Cannot delete a tie after results have been recorded.",
-    );
+    throw new TournamentServiceError("Cannot delete a tie after results have been recorded.");
   }
   await prisma.fixtureTie.delete({
     where: { id: tie.id },
@@ -652,10 +616,7 @@ export async function deleteFixtureMatch(params: {
   tournamentSlug: string;
   matchId: string;
 }) {
-  const tournamentId = await assertTournamentOwnership(
-    params.tournamentSlug,
-    params.actorUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(params.tournamentSlug, params.actorUserId);
   const match = await prisma.fixtureMatch.findFirst({
     where: { id: params.matchId, tournamentId },
     select: {
@@ -670,9 +631,7 @@ export async function deleteFixtureMatch(params: {
     throw new TournamentServiceError("Match not found.");
   }
   if (matchHasLockedResult(match)) {
-    throw new TournamentServiceError(
-      "Cannot delete a match after results have been recorded.",
-    );
+    throw new TournamentServiceError("Cannot delete a match after results have been recorded.");
   }
   await prisma.fixtureMatch.delete({
     where: { id: match.id },
@@ -689,10 +648,7 @@ export async function createSinglesMatch(params: {
   if (params.playerOneId === params.playerTwoId) {
     throw new TournamentServiceError("Select two different players.");
   }
-  const tournamentId = await assertTournamentOwnership(
-    params.tournamentSlug,
-    params.actorUserId,
-  );
+  const tournamentId = await assertTournamentOwnership(params.tournamentSlug, params.actorUserId);
   const tournament = await prisma.tournament.findFirst({
     where: { id: tournamentId, deletedAt: null },
     select: { id: true, format: true },
